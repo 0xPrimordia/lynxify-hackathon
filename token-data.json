@@ -1,0 +1,30 @@
+{
+  "tokens": {
+    "BTC": {
+      "tokenId": "0.0.5924920",
+      "name": "BTC-Demo",
+      "symbol": "BTC",
+      "transactionId": "0.0.4340026@1745948771.380816954"
+    },
+    "ETH": {
+      "tokenId": "0.0.5924921",
+      "name": "ETH-Demo",
+      "symbol": "ETH",
+      "transactionId": "0.0.4340026@1745948774.025820423"
+    },
+    "SOL": {
+      "tokenId": "0.0.5924922",
+      "name": "SOL-Demo",
+      "symbol": "SOL",
+      "transactionId": "0.0.4340026@1745948772.938875720"
+    },
+    "Lynxify-Index": {
+      "tokenId": "0.0.5924924",
+      "name": "Lynxify-Index-Demo",
+      "symbol": "LYX",
+      "transactionId": "0.0.4340026@1745948776.804950406"
+    }
+  },
+  "createdAt": "2025-04-29T17:46:23.147Z",
+  "network": "testnet"
+}

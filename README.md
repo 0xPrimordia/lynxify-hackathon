@@ -553,3 +553,16 @@ npm test
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Token Information
+
+The Lynxify Tokenized Index now includes real tokens created using Hedera Token Service (HTS). You can view the tokens on Hashscan:
+
+| Asset | Token ID | Hashscan Link |
+|-------|----------|---------------|
+| BTC-Demo | 0.0.5924920 | [View on Hashscan](https://hashscan.io/testnet/token/0.0.5924920) |
+| ETH-Demo | 0.0.5924921 | [View on Hashscan](https://hashscan.io/testnet/token/0.0.5924921) |
+| SOL-Demo | 0.0.5924922 | [View on Hashscan](https://hashscan.io/testnet/token/0.0.5924922) |
+| Lynxify-Index | 0.0.5924924 | [View on Hashscan](https://hashscan.io/testnet/token/0.0.5924924) |
+
+For detailed information about the tokens and transactions, see [token-documentation.md](token-documentation.md).
