@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "preserveConstEnums": true,
+    "removeComments": false
+  },
+  "include": [
+    "src/app/api/**/*",
+    "src/app/services/**/*",
+    "src/app/types/**/*",
+    "src/app/config.ts",
+    "src/app/env.ts"
+  ]
+} 

@@ -6,24 +6,47 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build-scripts": "tsc --project tsconfig.scripts.json",
+    "init-hcs": "npm run build-scripts && node dist/app/scripts/init-hcs.js",
+    "agent": "npm run build-scripts && node dist/app/scripts/run-agent.js",
+    "rebalance-agent": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' src/app/scripts/rebalance-agent.ts",
+    "build-server": "tsc --project tsconfig.server.json",
+    "ws": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' server.ts",
+    "demo": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' combined-server.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@hashgraph/sdk": "^2.62.0",
+    "@hashgraph/sdk": "2.63.0",
     "@nextui-org/react": "^2.6.11",
+    "@tanstack/react-query": "^5.74.4",
+    "chart.js": "^4.4.9",
+    "dotenv": "^16.5.0",
     "next": "15.3.0",
+    "openai": "^4.96.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
+    "jest": "^29.7.0",
     "tailwindcss": "^4",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

@@ -1,5 +1,6 @@
-import { Client, TopicMessageSubmitTransaction, TopicCreateTransaction, TopicMessageQuery, PrivateKey } from '@hashgraph/sdk';
+import { Client, TopicMessageSubmitTransaction, TopicCreateTransaction, TopicMessageQuery, PrivateKey, TopicId } from '@hashgraph/sdk';
 import { NextResponse } from 'next/server';
+import type { HCSMessage } from '../types/hcs';
 
 function getClient() {
     const operatorId = process.env.NEXT_PUBLIC_OPERATOR_ID;
@@ -40,65 +41,42 @@ export async function createTopic() {
     console.log("New topic created with ID:", topicId);
 }
 
-export async function publishMessage(message: string) {
-    if (!topicId) {
-        console.error("Topic ID is not set. Create a topic first.");
-        return;
-    }
-
+export async function publishMessage(topicId: string, message: HCSMessage) {
     const client = getClient();
-    const transaction = new TopicMessageSubmitTransaction({
-        topicId,
-        message,
-    });
+    const transaction = new TopicMessageSubmitTransaction()
+        .setTopicId(TopicId.fromString(topicId))
+        .setMessage(JSON.stringify(message));
 
     const response = await transaction.execute(client);
     const receipt = await response.getReceipt(client);
-    console.log("Message published with status:", receipt.status.toString());
+    console.log("Message published successfully");
+    return receipt;
 }
 
-export async function listenToMessages() {
-    if (!topicId) {
-        console.error("Topic ID is not set. Create a topic first.");
-        return;
-    }
-
+export async function listenToMessages(topicId: string, callback: (message: HCSMessage) => void) {
     const client = getClient();
-    new TopicMessageQuery()
-        .setTopicId(topicId)
-        .subscribe(client, null, (message) => {
-            if (!message?.contents) {
-                console.error("Received null or invalid message contents.");
-                return;
+    const query = new TopicMessageQuery()
+        .setTopicId(TopicId.fromString(topicId));
+
+    query.subscribe(
+        client,
+        (error) => {
+            console.error("Error in subscription:", error);
+        },
+        (message) => {
+            try {
+                const parsedMessage = JSON.parse(message.contents.toString());
+                callback(parsedMessage);
+            } catch (error) {
+                console.error("Error parsing message:", error);
             }
-            const decodedMessage = Buffer.from(message.contents).toString('utf8');
-            console.log("Received message:", decodedMessage);
-            // Simulate agent action based on message
-            if (decodedMessage.includes("rebalance")) {
-                console.log("Agent executing rebalancing action...");
-            }
-        });
+        }
+    );
 }
 
-export async function mockAgentAction() {
-    console.log("Mock agent listening for HCS messages...");
-
-    const client = getClient();
-    new TopicMessageQuery()
-        .setTopicId(topicId)
-        .subscribe(client, null, (message) => {
-            const decodedMessage = Buffer.from(message.contents.buffer).toString('utf8');
-            console.log("Agent received message:", decodedMessage);
-
-            if (decodedMessage.includes("rebalance")) {
-                console.log("Agent executing rebalancing action...");
-                // Simulate rebalancing logic
-                tokenizedIndex.composition.forEach((asset) => {
-                    asset.weight = Math.max(10, asset.weight - 5); // Example adjustment
-                });
-                console.log("Rebalanced tokenized index:", tokenizedIndex);
-            }
-        });
+export async function mockAgentAction(action: string, params: any) {
+    console.log("Mock agent action:", action, params);
+    return { success: true };
 }
 
 let tokenizedIndex = {
@@ -114,9 +92,9 @@ export async function getTokenizedIndex() {
     return NextResponse.json(tokenizedIndex);
 }
 
-export async function updateTokenComposition(newComposition: { asset: string; weight: number }[]) {
-    tokenizedIndex.composition = newComposition;
-    return NextResponse.json({ message: 'Token composition updated', tokenizedIndex });
+export async function updateTokenComposition(newWeights: { [key: string]: number }) {
+    console.log("Updating token composition with weights:", newWeights);
+    return { success: true };
 }
 
 export async function GET() {
@@ -166,27 +144,14 @@ interface GovernanceSettings {
   stopLoss: number;
 }
 
-export async function publishGovernanceSettings(settings: GovernanceSettings) {
-    if (!topicId) {
-        console.error("Topic ID is not set. Create a topic first.");
-        return;
-    }
-
+export async function publishGovernanceSettings(topicId: string, message: HCSMessage) {
     const client = getClient();
-    const message = {
-        messageType: "governance-settings",
-        commandDetails: settings,
-        agentIdentifier: "lynxify-agent",
-        timestamp: new Date().toISOString(),
-        context: "Governance settings update",
-    };
-
-    const transaction = new TopicMessageSubmitTransaction({
-        topicId,
-        message: JSON.stringify(message),
-    });
+    const transaction = new TopicMessageSubmitTransaction()
+        .setTopicId(TopicId.fromString(topicId))
+        .setMessage(JSON.stringify(message));
 
     const response = await transaction.execute(client);
     const receipt = await response.getReceipt(client);
-    console.log("Governance settings published with status:", receipt.status.toString());
+    console.log("Governance settings published successfully");
+    return receipt;
 }
