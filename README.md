@@ -2,6 +2,10 @@
 
 This project demonstrates a tokenized index platform using Hedera's HCS-10 standard for AI agent communication. The platform leverages community governance to determine index composition, token ratios, and operational policies, while automated agents act on governance directives and market conditions.
 
+## Demo Video
+
+https://drive.google.com/file/d/1xmlWDNUEphNS3rITuO_soqK0YWesTKGu/view?usp=sharing
+
 ## Features
 
 - **Community Governance**: Propose and vote on index composition and token ratios
