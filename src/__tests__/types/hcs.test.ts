@@ -30,40 +30,49 @@ describe('HCS Message Types', () => {
 
     it('should return true for valid RebalanceProposal', () => {
       const proposal: HCSMessage = {
+        id: 'test-id',
         type: 'RebalanceProposal',
         timestamp: Date.now(),
         sender: 'test',
-        proposalId: 'P123',
-        newWeights: { '0.0.123': 0.5, '0.0.456': 0.5 },
-        executeAfter: Date.now() + 3600000,
-        quorum: 1000
+        details: {
+          proposalId: 'P123',
+          newWeights: { '0.0.123': 0.5, '0.0.456': 0.5 },
+          executeAfter: Date.now() + 3600000,
+          quorum: 0.51
+        }
       };
       expect(isValidHCSMessage(proposal)).toBe(true);
     });
 
     it('should return true for valid PriceUpdate', () => {
       const update: HCSMessage = {
+        id: 'test-id',
         type: 'PriceUpdate',
         timestamp: Date.now(),
         sender: 'test',
-        tokenId: '0.0.123',
-        price: 100.50,
-        source: 'test-source'
+        details: {
+          tokenId: '0.0.123',
+          price: 100.50,
+          source: 'test-source'
+        }
       };
       expect(isValidHCSMessage(update)).toBe(true);
     });
 
     it('should return true for valid RiskAlert', () => {
       const alert: HCSMessage = {
+        id: 'test-id',
         type: 'RiskAlert',
         timestamp: Date.now(),
         sender: 'test',
-        severity: 'high',
-        description: 'Test alert',
-        affectedTokens: ['0.0.123'],
-        metrics: {
-          volatility: 0.1,
-          priceChange: 0.05
+        details: {
+          severity: 'high',
+          description: 'Test alert',
+          affectedTokens: ['0.0.123'],
+          metrics: {
+            volatility: 0.1,
+            priceChange: 0.05
+          }
         }
       };
       expect(isValidHCSMessage(alert)).toBe(true);
