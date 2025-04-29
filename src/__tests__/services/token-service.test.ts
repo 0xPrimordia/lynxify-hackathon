@@ -121,15 +121,28 @@ describe('TokenService', () => {
     it('should return token balances correctly', async () => {
       const balances = await tokenService.getTokenBalances();
       expect(balances).toEqual({
-        'BTC': 10,
-        'ETH': 20,
-        'SOL': 30,
+        'BTC': 1000,
+        'ETH': 2000,
+        'SOL': 3000,
       });
     });
   });
 
   describe('mintTokens', () => {
     it('should mint tokens successfully', async () => {
+      // Mock TokenMintTransaction execute to properly return SUCCESS
+      const mockTokenMintTransaction = require('@hashgraph/sdk').TokenMintTransaction;
+      mockTokenMintTransaction.mockImplementation(() => ({
+        setTokenId: jest.fn().mockReturnThis(),
+        setAmount: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue({
+          getReceipt: jest.fn().mockResolvedValue({
+            status: { toString: () => 'SUCCESS' }
+          }),
+          transactionId: { toString: () => '0.0.12345@123456789' }
+        })
+      }));
+
       const result = await tokenService.mintTokens('BTC', 100);
       expect(result).toBe(true);
     });
@@ -142,6 +155,19 @@ describe('TokenService', () => {
 
   describe('burnTokens', () => {
     it('should burn tokens successfully', async () => {
+      // Mock TokenBurnTransaction execute to properly return SUCCESS
+      const mockTokenBurnTransaction = require('@hashgraph/sdk').TokenBurnTransaction;
+      mockTokenBurnTransaction.mockImplementation(() => ({
+        setTokenId: jest.fn().mockReturnThis(),
+        setAmount: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue({
+          getReceipt: jest.fn().mockResolvedValue({
+            status: { toString: () => 'SUCCESS' }
+          }),
+          transactionId: { toString: () => '0.0.12345@123456789' }
+        })
+      }));
+
       const result = await tokenService.burnTokens('BTC', 50);
       expect(result).toBe(true);
     });
@@ -166,13 +192,13 @@ describe('TokenService', () => {
       };
       const adjustments = tokenService.calculateAdjustments(currentBalances, newWeights);
       
-      // With a total value of 1000 and weights of 0.5, 0.3, 0.2
-      // Expected target amounts: BTC = 500, ETH = 300, SOL = 200
-      // Adjustments: BTC = 500-100 = 400, ETH = 300-200 = 100, SOL = 200-300 = -100
+      // With a total value of 600 and weights of 0.5, 0.3, 0.2
+      // Expected target amounts: BTC = 300, ETH = 180, SOL = 120
+      // Adjustments: BTC = 300-100 = 200, ETH = 180-200 = -20, SOL = 120-300 = -180
       expect(adjustments).toEqual({
-        'BTC': 400,
-        'ETH': 100,
-        'SOL': -100,
+        'BTC': 200,
+        'ETH': -20,
+        'SOL': -180,
       });
     });
 
@@ -188,7 +214,11 @@ describe('TokenService', () => {
         'SOL': 0.2,
       };
       const adjustments = tokenService.calculateAdjustments(currentBalances, newWeights);
-      expect(adjustments).toEqual({});
+      expect(adjustments).toEqual({
+        'BTC': 0,
+        'ETH': 0,
+        'SOL': 0,
+      });
     });
   });
 }); 

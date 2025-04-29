@@ -59,15 +59,24 @@ npm run init-hcs
 
 ### All-in-one Demo Mode
 
-Run the combined server that starts both the WebSocket server and Next.js application:
+For the complete demo experience with real HTS token operations:
+
+1. First, start the Next.js development server:
+```bash
+npm run dev
+```
+
+2. In a separate terminal window, start the demo server with WebSocket and agent support:
 ```bash
 npm run demo
 ```
 
-Then open your browser and navigate to:
+3. Open your browser and navigate to:
 ```
 http://localhost:3000
 ```
+
+This two-server approach ensures that you get the full Next.js development environment along with the WebSocket server and agent functionality necessary for real-time messaging and token operations.
 
 ### Running Services Separately
 
@@ -107,6 +116,27 @@ npm run rebalance-agent
 5. **Watch HCS Messages**
    - Real-time feed of all HCS messages
    - Filter by message type
+
+## Token Operations Dashboard (For Judges)
+
+To view the token operations performed by the Rebalance Agent on the Hedera Token Service, visit:
+```
+http://localhost:3000/token-operations
+```
+
+This dashboard shows:
+- Real-time token minting and burning operations
+- Transaction IDs with Hashscan links for verification
+- Token details including IDs and balances
+
+Each transaction is logged with:
+- Operation type (MINT/BURN)
+- Token symbol and ID
+- Amount
+- Timestamp
+- Links to view on Hashscan
+
+**Note for Judges**: This dashboard provides clear evidence of the HTS integration and token operations performed as part of the rebalancing process. You can click on the Hashscan links to verify that these tokens exist on the Hedera testnet.
 
 ## Hedera Integration Details
 
@@ -341,134 +371,6 @@ private async processMessage(message: HCSMessage): Promise<void> {
         }
       }
     }
-  }
-}
-```
-
-## HCS-10 Messaging Flow
-
-Our application demonstrates the complete HCS-10 communication flow between users, governance, and AI agents.
-
-### Proposal Submission Flow
-
-1. **User initiates a rebalance proposal** through the UI:
-
-```typescript
-// src/app/components/RebalanceProposalModal.tsx (lines 72-90)
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  setError(null);
-  
-  // [...validation code...]
-  
-  const executeAfter = calculateExecutionTime(executionTimeframe);
-  
-  try {
-    const payload: ApiProposalPayload = {
-      newWeights: weights,
-      executeAfter,
-      quorum: quorum / 100, // Convert to decimal
-      trigger: triggerType,
-      justification
-    };
-
-    proposeRebalance(payload);
-    
-    if (!isPending && !isError) {
-      onClose();
-    }
-  } catch (err) {
-    console.error('Error submitting proposal:', err);
-    setError('Failed to submit proposal. Please try again.');
-  }
-};
-```
-
-2. **The proposal is published to the HCS governance topic**:
-
-```typescript
-// src/app/api/hcs/messages/route.ts (lines 81-90)
-if (action === 'propose') {
-  if (!newWeights || !executeAfter || !quorum) {
-    console.error('⚠️ API: Missing required fields for proposal');
-    return NextResponse.json({ error: 'Missing required fields for proposal' }, { status: 400 });
-  }
-  console.log('🔄 API: Calling proposeRebalance in HederaService...');
-  await hederaService.proposeRebalance(newWeights, executeAfter, quorum, trigger, justification);
-  console.log('✅ API: Successfully proposed rebalance!');
-}
-```
-
-3. **AI agent listens for approved proposals**:
-
-```typescript
-// src/app/services/hedera.ts (lines 468-486)
-public async approveRebalance(proposalId: string): Promise<TransactionResponse> {
-  try {
-    console.log(`Approving rebalance proposal: ${proposalId}`);
-    
-    // Create the approval message in HCS-10 format
-    const approvalMessage = {
-      type: 'RebalanceApproved',
-      sender: process.env.NEXT_PUBLIC_OPERATOR_ID,
-      details: {
-        proposalId: proposalId,
-        approvedAt: Date.now()
-      }
-    };
-    
-    // Submit the approval to the governance topic
-    const response = await this.submitMessageToTopic(
-      process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC!,
-      approvalMessage
-    );
-    
-    return response;
-  } catch (error) {
-    console.error(`Failed to approve rebalance proposal ${proposalId}:`, error);
-    throw error;
-  }
-}
-```
-
-4. **Agent executes the rebalance and logs completion**:
-
-```typescript
-// src/app/services/hedera.ts (lines 512-542)
-public async executeRebalance(proposalId: string, newWeights: Record<string, number>): Promise<TransactionResponse> {
-  try {
-    console.log(`Executing rebalance for proposal: ${proposalId}`, newWeights);
-    
-    // In a production environment, this would interact with token services
-    // For this demo, we simulate execution
-    
-    // Get current weights (simulated)
-    const currentWeights = this.getCurrentPortfolioWeights();
-    
-    // Create execution message in HCS-10 format
-    const executionMessage = {
-      type: 'RebalanceExecuted',
-      sender: process.env.NEXT_PUBLIC_OPERATOR_ID,
-      details: {
-        proposalId: proposalId,
-        preBalances: currentWeights,
-        postBalances: newWeights,
-        executedAt: Date.now(),
-        // AI analysis could be included here
-        message: "Rebalance executed based on approval from governance process. Portfolio now better aligned with current market conditions."
-      }
-    };
-    
-    // Publish execution confirmation to agent topic
-    const response = await this.submitMessageToTopic(
-      process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC!,
-      executionMessage
-    );
-    
-    return response;
-  } catch (error) {
-    console.error(`Failed to execute rebalance for proposal ${proposalId}:`, error);
-    throw error;
   }
 }
 ```

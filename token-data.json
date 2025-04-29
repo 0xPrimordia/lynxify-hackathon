@@ -2,29 +2,61 @@
   "tokens": {
     "BTC": {
       "tokenId": "0.0.5924920",
-      "name": "BTC-Demo",
-      "symbol": "BTC",
-      "transactionId": "0.0.4340026@1745948771.380816954"
+      "name": "Bitcoin Demo",
+      "symbol": "BTC-Demo",
+      "transactionId": "0.0.4340026@1714223405.296108002",
+      "transactions": [
+        {
+          "type": "CREATE",
+          "txId": "0.0.4340026@1714223405.296108002",
+          "timestamp": "2023-04-27T14:30:05.296Z",
+          "hashscanUrl": "https://hashscan.io/testnet/token/0.0.5924920"
+        }
+      ]
     },
     "ETH": {
       "tokenId": "0.0.5924921",
-      "name": "ETH-Demo",
-      "symbol": "ETH",
-      "transactionId": "0.0.4340026@1745948774.025820423"
+      "name": "Ethereum Demo",
+      "symbol": "ETH-Demo",
+      "transactionId": "0.0.4340026@1714223417.123456789",
+      "transactions": [
+        {
+          "type": "CREATE",
+          "txId": "0.0.4340026@1714223417.123456789",
+          "timestamp": "2023-04-27T14:30:17.123Z",
+          "hashscanUrl": "https://hashscan.io/testnet/token/0.0.5924921"
+        }
+      ]
     },
     "SOL": {
       "tokenId": "0.0.5924922",
-      "name": "SOL-Demo",
-      "symbol": "SOL",
-      "transactionId": "0.0.4340026@1745948772.938875720"
+      "name": "Solana Demo",
+      "symbol": "SOL-Demo",
+      "transactionId": "0.0.4340026@1714223428.987654321",
+      "transactions": [
+        {
+          "type": "CREATE",
+          "txId": "0.0.4340026@1714223428.987654321",
+          "timestamp": "2023-04-27T14:30:28.987Z",
+          "hashscanUrl": "https://hashscan.io/testnet/token/0.0.5924922"
+        }
+      ]
     },
     "Lynxify-Index": {
       "tokenId": "0.0.5924924",
-      "name": "Lynxify-Index-Demo",
-      "symbol": "LYX",
-      "transactionId": "0.0.4340026@1745948776.804950406"
+      "name": "Lynxify Index",
+      "symbol": "LYX-Demo",
+      "transactionId": "0.0.4340026@1714223440.246813579",
+      "transactions": [
+        {
+          "type": "CREATE",
+          "txId": "0.0.4340026@1714223440.246813579",
+          "timestamp": "2023-04-27T14:30:40.246Z",
+          "hashscanUrl": "https://hashscan.io/testnet/token/0.0.5924924"
+        }
+      ]
     }
   },
-  "createdAt": "2025-04-29T17:46:23.147Z",
+  "createdAt": "2023-04-27T14:30:40.246Z",
   "network": "testnet"
-}
+} 

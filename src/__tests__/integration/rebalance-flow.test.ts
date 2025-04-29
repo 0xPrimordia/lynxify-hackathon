@@ -54,12 +54,12 @@ describe('Token Operations', () => {
     
     const adjustments = tokenService.calculateAdjustments(currentBalances, newWeights);
     
-    // With a total value of 1000 and weights of 0.5, 0.3, 0.2
-    // Expected: BTC = 500-100 = 400, ETH = 300-200 = 100, SOL = 200-300 = -100
+    // With a total value of 600 and weights of 0.5, 0.3, 0.2
+    // Expected: BTC = 300-100 = 200, ETH = 180-200 = -20, SOL = 120-300 = -180
     expect(adjustments).toEqual({
-      'BTC': 400,
-      'ETH': 100,
-      'SOL': -100,
+      'BTC': 200,
+      'ETH': -20,
+      'SOL': -180,
     });
   });
 });

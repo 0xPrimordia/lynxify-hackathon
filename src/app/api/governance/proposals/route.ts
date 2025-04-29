@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { HederaService } from '@/app/services/hedera';
-import { RebalanceProposal } from '@/app/types/hcs';
+import { HCSMessage } from '@/app/types/hcs';
 
 const hederaService = new HederaService();
 
@@ -59,16 +59,40 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const proposal: RebalanceProposal = await request.json();
+    const proposal = await request.json();
     
-    await hederaService.publishMessage(
-      process.env.NEXT_PUBLIC_GOVERNANCE_TOPIC_ID!,
-      proposal
+    if (!process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC) {
+      throw new Error('Missing NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC environment variable');
+    }
+    
+    // Make sure we have a valid message format
+    const hcsMessage = {
+      id: `proposal-${Date.now()}`,
+      type: 'RebalanceProposal',
+      timestamp: Date.now(),
+      sender: 'ui-user',
+      ...proposal
+    };
+    
+    console.log(`📨 Submitting proposal to HCS: ${JSON.stringify(hcsMessage)}`);
+    
+    // Use the correct method to publish the message to HCS
+    await hederaService.publishHCSMessage(
+      process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC,
+      hcsMessage
     );
 
-    return NextResponse.json({ status: 'success' });
+    return NextResponse.json({ 
+      success: true,
+      message: "Proposal successfully submitted to HCS",
+      proposalId: hcsMessage.id
+    });
   } catch (error) {
     console.error('Error publishing proposal:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ 
+      success: false,
+      error: 'Failed to publish proposal to HCS',
+      message: error instanceof Error ? error.message : 'Internal server error'
+    }, { status: 500 });
   }
 } 

@@ -2,6 +2,7 @@ require('dotenv').config({ path: '.env.local' });
 process.env.BYPASS_TOPIC_CHECK = 'true';
 
 import { HederaService } from '../services/hedera';
+import { TokenService } from '../services/token-service';
 import OpenAI from 'openai';
 import { v4 as uuidv4 } from 'uuid';
 import { HCSMessage, TokenWeights } from '../types/hcs';
@@ -20,6 +21,7 @@ const MESSAGE_TYPES = {
 
 // Initialize Hedera service
 const hederaService = new HederaService();
+const tokenService = new TokenService(); // Initialize TokenService for HTS operations
 console.log('🤖 AGENT: Rebalance agent starting...');
 
 // Get topic IDs from environment
@@ -151,37 +153,75 @@ async function executeRebalance(proposal: HCSMessage) {
   // Use OpenAI to analyze the rebalance and generate reasoning
   const aiAnalysis = await analyzeRebalanceWithAI(proposal);
   
-  // Simulate execution (in a real system, this would call smart contracts)
+  // Get new weights from proposal
   const newWeights = proposal.details?.newWeights as TokenWeights || {};
   
-  // Track pre-balances (simulated)
-  const preBalances: Record<string, number> = {};
-  Object.keys(newWeights).forEach(token => {
-    // Simulate previous random allocation around 0-10000 tokens
-    preBalances[token] = Math.floor(Math.random() * 10000);
-  });
-  
-  // Publish execution message to agent topic
-  const message: HCSMessage = {
-    id: `exec-${Date.now()}`,
-    type: 'RebalanceExecuted',
-    timestamp: Date.now(),
-    sender: 'rebalance-agent',
-    details: {
-      proposalId: proposal.id,
-      preBalances: preBalances,
-      postBalances: newWeights,
-      executedAt: Date.now(),
-      message: aiAnalysis // Store AI analysis in the message field
+  try {
+    // Get current token balances from TokenService
+    console.log('🤖 AGENT: Fetching current token balances...');
+    const currentBalances = await tokenService.getTokenBalances();
+    console.log('🤖 AGENT: Current balances:', currentBalances);
+    
+    // Calculate required adjustments
+    console.log('🤖 AGENT: Calculating token adjustments...');
+    const adjustments = tokenService.calculateAdjustments(currentBalances, newWeights);
+    console.log('🤖 AGENT: Calculated adjustments:', adjustments);
+    
+    // Execute token operations using TokenService (real HTS calls)
+    for (const [token, amount] of Object.entries(adjustments)) {
+      if (Math.abs(amount) < 1) {
+        console.log(`🤖 AGENT: Adjustment too small for ${token}, skipping`);
+        continue;
+      }
+      
+      if (amount > 0) {
+        console.log(`🤖 AGENT: Minting ${amount} ${token} tokens...`);
+        const result = await tokenService.mintTokens(token, amount);
+        if (result) {
+          console.log(`🤖 AGENT: Successfully minted ${amount} ${token} tokens`);
+        } else {
+          console.error(`🤖 AGENT: Failed to mint ${token} tokens`);
+        }
+      } else if (amount < 0) {
+        const burnAmount = Math.abs(amount);
+        console.log(`🤖 AGENT: Burning ${burnAmount} ${token} tokens...`);
+        const result = await tokenService.burnTokens(token, burnAmount);
+        if (result) {
+          console.log(`🤖 AGENT: Successfully burned ${burnAmount} ${token} tokens`);
+        } else {
+          console.error(`🤖 AGENT: Failed to burn ${token} tokens`);
+        }
+      }
     }
-  };
-  
-  await hederaService.publishHCSMessage(agentTopic, message);
-  console.log(`🤖 AGENT: Rebalance execution message published to agent topic`);
-  
-  // Mark as executed
-  executedProposals.add(proposal.id);
-  console.log(`🤖 AGENT: Rebalance for proposal ${proposal.id} completed successfully`);
+    
+    // Get updated balances after operations
+    const updatedBalances = await tokenService.getTokenBalances();
+    console.log('🤖 AGENT: Updated balances after rebalance:', updatedBalances);
+    
+    // Publish execution message to agent topic
+    const message: HCSMessage = {
+      id: `exec-${Date.now()}`,
+      type: 'RebalanceExecuted',
+      timestamp: Date.now(),
+      sender: 'rebalance-agent',
+      details: {
+        proposalId: proposal.id,
+        preBalances: currentBalances,
+        postBalances: updatedBalances,
+        executedAt: Date.now(),
+        message: aiAnalysis // Store AI analysis in the message field
+      }
+    };
+    
+    await hederaService.publishHCSMessage(agentTopic, message);
+    console.log(`🤖 AGENT: Rebalance execution message published to agent topic`);
+    
+    // Mark as executed
+    executedProposals.add(proposal.id);
+    console.log(`🤖 AGENT: Rebalance for proposal ${proposal.id} completed successfully`);
+  } catch (error) {
+    console.error('🤖 AGENT ERROR: Failed to execute rebalance:', error);
+  }
 }
 
 // Main function to start the agent

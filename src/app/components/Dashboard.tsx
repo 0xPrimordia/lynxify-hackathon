@@ -7,6 +7,7 @@ import AgentStatus from './AgentStatus';
 import HCSMessageFeed from './HCSMessageFeed';
 import LoadingSkeleton from './LoadingSkeleton';
 import AIRebalanceWidget from './AIRebalanceWidget';
+import Link from 'next/link';
 
 export default function Dashboard() {
   const [selectedProposal, setSelectedProposal] = useState<string | null>(null);
@@ -47,6 +48,9 @@ export default function Dashboard() {
               <div className="text-sm text-gray-300">
                 Active Members: 42
               </div>
+              <Link href="/token-operations" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium">
+                Token Operations
+              </Link>
             </div>
           </div>
         </div>

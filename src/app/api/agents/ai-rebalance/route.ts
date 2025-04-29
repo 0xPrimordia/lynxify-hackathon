@@ -1,106 +1,110 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AIRebalanceAgent } from '@/app/services/agents/ai-rebalance-agent';
+import { aiRebalanceAgent } from '@/app/services/agents/ai-rebalance-agent';
 import { hederaService } from '@/app/services/hedera';
+import { TokenService } from '@/app/services/token-service';
 
-// Mock market data for demo purposes
+interface ProposalRequest {
+  trigger?: string;
+  executeAfter?: number;
+  quorum?: number;
+}
+
+// Mock market data for demo purposes - UPDATED with correct token symbols
 const marketData = {
   prices: {
-    HBAR: 0.12,
-    WBTC: 60000,
-    WETH: 3500,
-    USDC: 1.0,
-    USDT: 1.0,
-    DAI: 1.0,
-    SAUCE: 0.5,
-    HBARX: 0.15
+    BTC: 65000,
+    ETH: 3000,
+    SOL: 150,
+    'Lynxify-Index': 10
   },
   priceChanges: {
-    HBAR: 2.5,
-    WBTC: -1.2,
-    WETH: 0.8,
-    USDC: 0.01,
-    USDT: 0.0,
-    DAI: -0.02,
-    SAUCE: 5.0,
-    HBARX: 3.2
+    BTC: 2.5,
+    ETH: -1.2,
+    SOL: 5.8,
+    'Lynxify-Index': 1.5
   },
   volumes: {
-    HBAR: 50000000,
-    WBTC: 150000000,
-    WETH: 75000000,
-    USDC: 100000000,
-    USDT: 95000000,
-    DAI: 40000000,
-    SAUCE: 5000000,
-    HBARX: 8000000
+    BTC: 50000000,
+    ETH: 30000000,
+    SOL: 10000000,
+    'Lynxify-Index': 1000000
   },
   volatility: {
-    HBAR: 0.05,
-    WBTC: 0.04,
-    WETH: 0.05,
-    USDC: 0.001,
-    USDT: 0.001,
-    DAI: 0.002,
-    SAUCE: 0.08,
-    HBARX: 0.06
+    BTC: 0.05,
+    ETH: 0.07,
+    SOL: 0.09,
+    'Lynxify-Index': 0.03
   }
 };
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    // Parse the request body
-    const body = await req.json();
-    
-    // Get current treasury state if provided
-    const currentTreasury = body.currentTreasury;
-    
-    // Create an AI rebalance agent instance
-    const aiAgent = new AIRebalanceAgent();
-    
-    // Update with market data
-    aiAgent.updateMarketData(marketData);
-    
-    // Update treasury state if provided
-    if (currentTreasury) {
-      aiAgent.updateTreasuryState(currentTreasury);
-    }
-    
-    try {
-      // Generate a rebalance proposal
-      const { newWeights, analysis } = await aiAgent.generateRebalanceProposal();
-      
-      if (!newWeights) {
-        throw new Error('Failed to generate weights for rebalance proposal');
-      }
-      
-      // Submit to HCS using Hedera service
-      const proposalId = await proposeRebalanceToHCS(newWeights, analysis || '');
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Rebalance proposal generated and submitted to Hedera Consensus Service',
-        proposal: {
-          newWeights,
-          analysis,
-          proposalId
-        }
-      });
-    } catch (error) {
-      console.error('Error generating rebalance proposal:', error);
-      
+    // Parse request body
+    const body = await request.json() as ProposalRequest;
+
+    // Generate rebalance proposal using AI
+    const proposal = await aiRebalanceAgent.generateRebalanceProposal();
+
+    if (!proposal.success || !proposal.newWeights) {
       return NextResponse.json({
         success: false,
-        message: error instanceof Error 
-          ? `Failed to generate rebalance proposal: ${error.message}` 
-          : 'Failed to generate rebalance proposal',
-      });
+        message: proposal.message || 'Failed to generate rebalance proposal'
+      }, { status: 400 });
     }
-  } catch (error) {
-    console.error('Error processing rebalance request:', error);
+
+    // Get token service and valid tokens
+    const tokenService = new TokenService();
+    const validTokens = Object.keys(tokenService.getAllTokenIds());
     
+    // Filter weights to only include valid tokens that exist in token-data.json
+    const filteredWeights: Record<string, number> = {};
+    
+    // First pass: get only valid tokens
+    let totalWeight = 0;
+    for (const [token, weight] of Object.entries(proposal.newWeights)) {
+      if (validTokens.includes(token)) {
+        filteredWeights[token] = weight;
+        totalWeight += weight;
+      }
+    }
+    
+    // Second pass: normalize weights to sum to 1.0
+    for (const token of Object.keys(filteredWeights)) {
+      filteredWeights[token] = filteredWeights[token] / totalWeight;
+    }
+    
+    console.log('Filtered weights to include only valid tokens:', filteredWeights);
+
+    // Default values if not provided
+    const executeAfter = body.executeAfter || Date.now() + (24 * 60 * 60 * 1000); // Default 24h from now
+    const quorum = body.quorum || 5000; // Default quorum value
+    const trigger = body.trigger || 'scheduled'; // Default trigger type
+
+    // Submit proposal to HCS
+    await hederaService.proposeRebalance(
+      filteredWeights,
+      executeAfter,
+      quorum,
+      (trigger as "scheduled" | "price_deviation" | "risk_threshold"),
+      proposal.analysis || 'AI-generated rebalance proposal for optimal asset allocation'
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: 'Proposal submitted to HCS',
+      proposal: {
+        newWeights: filteredWeights,
+        executeAfter,
+        quorum,
+        trigger,
+        analysis: proposal.analysis
+      }
+    });
+  } catch (error) {
+    console.error('Error in AI rebalance proposal:', error);
     return NextResponse.json({
       success: false,
-      message: 'An error occurred processing the rebalance request',
+      message: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }

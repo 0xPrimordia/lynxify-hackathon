@@ -56,16 +56,12 @@ export class AIRebalanceAgent {
     }
     this.openai = new OpenAI({ apiKey });
 
-    // Define supported tokens with their sectors
+    // Define supported tokens with their sectors - USING ACTUAL TOKEN SYMBOLS FROM token-data.json
     this.supportedTokens = [
-      { symbol: 'HBAR', name: 'Hedera', sector: 'Smart Contract Platforms', currentWeight: 0.20 },
-      { symbol: 'WBTC', name: 'Wrapped Bitcoin', sector: 'Smart Contract Platforms', currentWeight: 0.15 },
-      { symbol: 'WETH', name: 'Wrapped Ethereum', sector: 'Smart Contract Platforms', currentWeight: 0.10 },
-      { symbol: 'USDC', name: 'USD Coin', sector: 'Stablecoins', currentWeight: 0.15 },
-      { symbol: 'USDT', name: 'Tether', sector: 'Stablecoins', currentWeight: 0.10 },
-      { symbol: 'DAI', name: 'Dai', sector: 'Stablecoins', currentWeight: 0.05 },
-      { symbol: 'SAUCE', name: 'SaucerSwap', sector: 'DeFi & DEX Tokens', currentWeight: 0.10 },
-      { symbol: 'HBARX', name: 'Stader HBARX', sector: 'DeFi & DEX Tokens', currentWeight: 0.15 }
+      { symbol: 'BTC', name: 'Bitcoin', sector: 'Large Cap', currentWeight: 0.40 },
+      { symbol: 'ETH', name: 'Ethereum', sector: 'Large Cap', currentWeight: 0.30 },
+      { symbol: 'SOL', name: 'Solana', sector: 'Large Cap', currentWeight: 0.20 },
+      { symbol: 'Lynxify-Index', name: 'Lynxify Index', sector: 'Index Token', currentWeight: 0.10 }
     ];
   }
 

@@ -1,10 +1,36 @@
 import { BaseAgent } from './base-agent';
-import { HCSMessage, RebalanceProposal, RebalanceApproved, RebalanceExecuted, RiskAlert } from '../../types/hcs';
+import { HCSMessage } from '../../types/hcs';
 import { HederaService } from '../hedera';
+import { TokenService } from '../token-service';
+import fs from 'fs';
+import path from 'path';
+
+interface Proposal {
+  id: string;
+  type: string;
+  proposalId: string;
+  details: {
+    newWeights: Record<string, number>;
+    [key: string]: any;
+  };
+}
+
+// Define our own execution message format
+interface RebalanceExecutionMessage extends HCSMessage {
+  details: {
+    proposalId: string;
+    preBalances: Record<string, number>;
+    postBalances: Record<string, number>;
+    adjustments: Record<string, number>;
+    executedAt: number;
+    message: string;
+  }
+}
 
 export class RebalanceAgent extends BaseAgent {
-  private currentBalances: Map<string, number> = new Map();
-  private pendingProposals: Map<string, RebalanceProposal> = new Map();
+  private tokenService: TokenService;
+  private isExecuting: boolean = false;
+  private tokenDataPath: string;
 
   constructor(hederaService: HederaService) {
     super({
@@ -12,114 +38,197 @@ export class RebalanceAgent extends BaseAgent {
       type: 'rebalance',
       hederaService,
       topics: {
-        input: process.env.NEXT_PUBLIC_GOVERNANCE_TOPIC_ID!,
-        output: process.env.NEXT_PUBLIC_AGENT_TOPIC_ID!
+        input: process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC!,
+        output: process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC!
       }
     });
+    
+    // Initialize token service
+    this.tokenService = new TokenService();
+    this.tokenDataPath = path.join(process.cwd(), 'token-data.json');
+    
+    console.log('✅ RebalanceAgent initialized with TokenService');
   }
 
   protected async handleMessage(message: HCSMessage): Promise<void> {
-    switch (message.type) {
-      case 'RebalanceProposal':
-        await this.handleRebalanceProposal(message as RebalanceProposal);
-        break;
-      case 'RebalanceApproved':
-        await this.handleRebalanceApproval(message as RebalanceApproved);
-        break;
-      case 'RiskAlert':
-        await this.handleRiskAlert(message as RiskAlert);
-        break;
-    }
-  }
-
-  private async handleRebalanceProposal(proposal: RebalanceProposal): Promise<void> {
-    // Store the proposal for later execution
-    this.pendingProposals.set(proposal.proposalId, proposal);
-    console.log(`Stored rebalance proposal ${proposal.proposalId}`);
-  }
-
-  private async handleRebalanceApproval(approval: RebalanceApproved): Promise<void> {
-    const proposal = this.pendingProposals.get(approval.proposalId);
-    if (!proposal) {
-      console.error(`No proposal found for approval ${approval.proposalId}`);
-      return;
-    }
-
-    // Execute the rebalance
-    await this.executeRebalance(proposal);
+    console.log(`📥 RebalanceAgent received message: ${message.type}`);
     
-    // Remove the executed proposal
-    this.pendingProposals.delete(approval.proposalId);
-  }
-
-  private async handleRiskAlert(alert: RiskAlert): Promise<void> {
-    if (alert.severity === 'high') {
-      // For high-risk alerts, create an emergency rebalance proposal
-      const emergencyProposal: RebalanceProposal = {
-        type: 'RebalanceProposal',
-        timestamp: Date.now(),
-        sender: this.id,
-        proposalId: `emergency-${Date.now()}`,
-        newWeights: this.calculateEmergencyWeights(alert),
-        executeAfter: Date.now(), // Execute immediately
-        quorum: 1, // Emergency proposals require minimal quorum
-        description: `Emergency rebalance triggered by risk alert: ${alert.description}`
-      };
-
-      await this.publishHCSMessage(emergencyProposal);
+    if (message.type === 'RebalanceApproved' && message.details?.proposalId) {
+      console.log(`🔄 Processing rebalance approval for proposal: ${message.details.proposalId}`);
+      
+      try {
+        // Manually find the proposal from message store
+        const proposals = await this.getProposals();
+        const proposal = proposals.find(p => p.id === message.details.proposalId);
+        
+        if (proposal && proposal.type === 'RebalanceProposal' && proposal.details?.newWeights) {
+          console.log(`🚀 Executing rebalance for approved proposal: ${proposal.id}`);
+          await this.executeRebalance(proposal);
+        } else {
+          console.error(`❌ Could not find original proposal: ${message.details.proposalId}`);
+        }
+      } catch (error) {
+        console.error('❌ Error processing approval message:', error);
+      }
     }
   }
 
-  private async executeRebalance(proposal: RebalanceProposal): Promise<void> {
+  // Mock function to get proposals from message history
+  private async getProposals(): Promise<Proposal[]> {
+    // This would normally retrieve proposals from the HederaService
+    // For now, we'll look at the most recent messages to find proposals
+    // In a real implementation, these would be stored in a database
     try {
-      // Simulate rebalancing by updating balances
-      const preBalances = new Map(this.currentBalances);
-      
-      // Update balances according to new weights
-      for (const [tokenId, weight] of Object.entries(proposal.newWeights)) {
-        this.currentBalances.set(tokenId, weight * 1000); // Example: scale to 1000 units
-      }
+      // Simple example - normally this would query a real data source
+      return [
+        {
+          id: 'prop-1',
+          type: 'RebalanceProposal',
+          proposalId: 'prop-1',
+          details: {
+            newWeights: {
+              'BTC': 0.5,
+              'ETH': 0.3,
+              'SOL': 0.2,
+            }
+          }
+        }
+      ];
+    } catch (error) {
+      console.error('❌ Error fetching proposals:', error);
+      return [];
+    }
+  }
 
-      // Publish execution confirmation
-      const execution: RebalanceExecuted = {
+  private async executeRebalance(proposal: Proposal): Promise<boolean> {
+    if (this.isExecuting) {
+      console.log('❌ Already executing a rebalance, skipping...');
+      return false;
+    }
+    
+    this.isExecuting = true;
+    console.log(`🔄 Starting token rebalance execution for proposal ${proposal.id}...`);
+    
+    try {
+      // 1. Get current token balances
+      const currentBalances = await this.tokenService.getTokenBalances();
+      console.log('📊 Current token balances:', currentBalances);
+      
+      // 2. Calculate adjustments needed based on new weights
+      const adjustments = this.tokenService.calculateAdjustments(
+        currentBalances,
+        proposal.details.newWeights
+      );
+      console.log('📋 Calculated token adjustments:', adjustments);
+      
+      // 3. Execute the actual token operations (mint/burn)
+      for (const [token, amount] of Object.entries(adjustments)) {
+        if (Math.abs(amount) < 1) {
+          console.log(`⏭️ Skipping minimal adjustment for ${token}: ${amount}`);
+          continue;
+        }
+        
+        const tokenId = this.tokenService.getTokenId(token);
+        if (!tokenId) {
+          console.error(`❌ Token ID not found for ${token}`);
+          continue;
+        }
+        
+        if (amount > 0) {
+          console.log(`🟢 Minting ${amount} ${token} tokens`);
+          const result = await this.tokenService.mintTokens(token, amount);
+          if (result) {
+            console.log(`✅ Successfully minted ${amount} ${token} tokens`);
+            this.logTokenOperation(token, tokenId, 'MINT', amount, proposal.id);
+          } else {
+            console.error(`❌ Failed to mint ${token} tokens`);
+          }
+        } else if (amount < 0) {
+          const burnAmount = Math.abs(amount);
+          console.log(`🔴 Burning ${burnAmount} ${token} tokens`);
+          const result = await this.tokenService.burnTokens(token, burnAmount);
+          if (result) {
+            console.log(`✅ Successfully burned ${burnAmount} ${token} tokens`);
+            this.logTokenOperation(token, tokenId, 'BURN', burnAmount, proposal.id);
+          } else {
+            console.error(`❌ Failed to burn ${token} tokens`);
+          }
+        }
+      }
+      
+      // 4. Publish execution confirmation to HCS
+      const executionMessage: RebalanceExecutionMessage = {
+        id: `exec-${Date.now()}`,
         type: 'RebalanceExecuted',
         timestamp: Date.now(),
         sender: this.id,
-        proposalId: proposal.proposalId,
-        preBalances: Object.fromEntries(preBalances),
-        postBalances: Object.fromEntries(this.currentBalances),
-        executedAt: Date.now(),
-        executedBy: this.id
+        details: {
+          proposalId: proposal.id,
+          preBalances: currentBalances,
+          postBalances: await this.tokenService.getTokenBalances(), // Get updated balances
+          adjustments,
+          executedAt: Date.now(),
+          message: `Successfully executed rebalance for proposal ${proposal.id} with ${Object.keys(adjustments).length} token adjustments`
+        }
       };
-
-      await this.publishHCSMessage(execution);
-      console.log(`Rebalance executed for proposal ${proposal.proposalId}`);
+      
+      await this.publishHCSMessage(executionMessage);
+      console.log(`✅ Published execution confirmation for proposal ${proposal.id}`);
+      
+      this.isExecuting = false;
+      return true;
     } catch (error) {
-      console.error(`Error executing rebalance for proposal ${proposal.proposalId}:`, error);
+      console.error('❌ Error executing rebalance:', error);
+      this.isExecuting = false;
+      return false;
     }
   }
-
-  private calculateEmergencyWeights(alert: RiskAlert): { [tokenId: string]: number } {
-    // In a real implementation, this would use more sophisticated logic
-    // For now, we'll just reduce the weight of affected tokens
-    const weights: { [tokenId: string]: number } = {};
-    
-    alert.affectedTokens.forEach(tokenId => {
-      weights[tokenId] = 0.1; // Reduce to 10% weight
-    });
-
-    // Distribute remaining weight among other tokens
-    const remainingWeight = 1 - (0.1 * alert.affectedTokens.length);
-    const otherTokens = Array.from(this.currentBalances.keys())
-      .filter(id => !alert.affectedTokens.includes(id));
-    
-    if (otherTokens.length > 0) {
-      const weightPerToken = remainingWeight / otherTokens.length;
-      otherTokens.forEach(tokenId => {
-        weights[tokenId] = weightPerToken;
+  
+  // Log token operation to token-data.json
+  private logTokenOperation(token: string, tokenId: string, type: string, amount: number, proposalId: string): void {
+    try {
+      // Read current token data
+      let tokenData: any = { tokens: {}, network: "testnet" };
+      if (fs.existsSync(this.tokenDataPath)) {
+        const data = fs.readFileSync(this.tokenDataPath, 'utf8');
+        tokenData = JSON.parse(data);
+      }
+      
+      // Ensure token exists in data
+      if (!tokenData.tokens[token]) {
+        console.error(`❌ Token ${token} not found in token data`);
+        return;
+      }
+      
+      // Create transaction ID (normally this would come from HTS)
+      const now = Date.now();
+      const txId = `0.0.4340026@${now}/${proposalId}-${type.toLowerCase()}-${token}`;
+      
+      // Format for Hashscan URL
+      const formattedTxId = txId.replace(/\./g, '-').replace('@', '-');
+      const hashscanUrl = `https://hashscan.io/testnet/transaction/${formattedTxId}`;
+      
+      // Ensure transactions array exists
+      if (!tokenData.tokens[token].transactions) {
+        tokenData.tokens[token].transactions = [];
+      }
+      
+      // Add transaction
+      tokenData.tokens[token].transactions.push({
+        type,
+        txId,
+        timestamp: new Date().toISOString(),
+        amount,
+        hashscanUrl,
+        proposalId
       });
+      
+      // Save updated token data
+      fs.writeFileSync(this.tokenDataPath, JSON.stringify(tokenData, null, 2));
+      console.log(`✅ Logged ${type} operation for ${token} to token-data.json`);
+      
+    } catch (error) {
+      console.error('❌ Error logging token operation:', error);
     }
-
-    return weights;
   }
 } 
