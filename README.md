@@ -39,9 +39,9 @@ NEXT_PUBLIC_OPERATOR_ID=your_operator_id
 OPERATOR_KEY=your_private_key
 
 # HCS Topic IDs
-NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC=your_governance_topic_id
-NEXT_PUBLIC_HCS_AGENT_TOPIC=your_agent_topic_id
-NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC=your_price_feed_topic_id
+NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC=0.0.5898548
+NEXT_PUBLIC_HCS_AGENT_TOPIC=0.0.5898549
+NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC=0.0.5898550
 
 # WebSocket configuration
 NEXT_PUBLIC_WS_URL=ws://localhost:3001
@@ -50,14 +50,10 @@ NEXT_PUBLIC_WS_URL=ws://localhost:3001
 PORT=3000
 WS_PORT=3001
 
-# Optional: OpenAI API key for AI rebalance agent
+# OpenAI API key for AI rebalance agent
 # OPENAI_API_KEY=your_openai_api_key
 ```
 
-4. Initialize HCS topics (if not already done):
-```bash
-npm run init-hcs
-```
 
 ## Running the Demo
 
