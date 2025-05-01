@@ -7,8 +7,7 @@ import './src/app/config/env';
 
 // Import WebSocket server components
 import type { WebSocket } from 'ws';
-const ws = require('ws');
-const WebSocketServer = ws.WebSocketServer;
+const { WebSocketServer, WebSocket: WS } = require('ws');
 const { HederaService } = require('./src/app/services/hedera');
 const { TokenService } = require('./src/app/services/token-service');
 const OpenAI = require('openai');
@@ -82,7 +81,7 @@ function broadcastMessage(message: any) {
   console.log(`📢 Broadcasting WebSocket message: ${messageStr.substring(0, 100)}...`);
   
   clients.forEach((client: WebSocket) => {
-    if (client.readyState === ws.OPEN) {
+    if (client.readyState === WS.OPEN) {
       try {
         client.send(messageStr);
       } catch (err) {
