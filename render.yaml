@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: lynxify-websocket
+    runtime: node
+    buildCommand: cd src/server && npm install && npm run build
+    startCommand: cd src/server && npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: WS_PORT
+        value: 3001
+      - key: OPERATOR_ID
+        sync: false
+      - key: OPERATOR_KEY
+        sync: false
+      - key: NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC
+        sync: false
+      - key: NEXT_PUBLIC_HCS_AGENT_TOPIC
+        sync: false
+      - key: NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    plan: free 

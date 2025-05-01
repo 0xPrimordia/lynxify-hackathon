@@ -468,3 +468,40 @@ The Lynxify Tokenized Index now includes real tokens created using Hedera Token 
 | Lynxify-Index | 0.0.5924924 | [View on Hashscan](https://hashscan.io/testnet/token/0.0.5924924) |
 
 For detailed information about the tokens and transactions, see [token-documentation.md](token-documentation.md).
+
+## Deployment
+
+The project is split into two parts for deployment:
+
+1. **Frontend (Next.js app)** - Deploy to Vercel
+2. **WebSocket Server + Agents** - Deploy to Render
+
+### Deploying the Frontend to Vercel
+
+1. Create a new project on Vercel
+2. Connect your GitHub repository
+3. Configure environment variables:
+   - `NEXT_PUBLIC_OPERATOR_ID`: Your Hedera account ID
+   - `NEXT_PUBLIC_WS_URL`: The URL of your deployed WebSocket server (e.g., `wss://lynxify-websocket.onrender.com`)
+   - `NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC`: HCS topic ID for governance messages
+   - `NEXT_PUBLIC_HCS_AGENT_TOPIC`: HCS topic ID for agent messages
+   - `NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC`: HCS topic ID for price feed messages
+4. Deploy
+
+### Deploying the WebSocket Server to Render
+
+1. Create a new Web Service on Render
+2. Connect your GitHub repository
+3. Use the built-in render.yaml configuration in the repository
+4. Configure environment variables:
+   - `OPERATOR_ID`: Your Hedera account ID
+   - `OPERATOR_KEY`: Your Hedera private key
+   - `NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC`: HCS topic ID for governance messages
+   - `NEXT_PUBLIC_HCS_AGENT_TOPIC`: HCS topic ID for agent messages
+   - `NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC`: HCS topic ID for price feed messages
+   - `OPENAI_API_KEY`: (Optional) OpenAI API key
+5. Deploy
+
+### Connecting the Frontend to the WebSocket Server
+
+After both deployments are complete, update the `NEXT_PUBLIC_WS_URL` environment variable in your Vercel project to point to your Render WebSocket server URL with the `wss://` protocol.
