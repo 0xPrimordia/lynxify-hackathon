@@ -1,8 +1,11 @@
-'use server';
-
 import { NextRequest, NextResponse } from 'next/server';
 import * as fs from 'fs';
 import * as path from 'path';
+
+// Only run on server, not during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 
 // Token data structure
 interface TokenInfo {

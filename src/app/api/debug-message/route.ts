@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import { HCSMessage } from '@/app/types/hcs';
 import messageStore from '@/app/services/message-store';
 
+// Only run on server, not during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+
 // This is a debug endpoint to add a message directly to our in-memory store
 export async function GET() {
   try {

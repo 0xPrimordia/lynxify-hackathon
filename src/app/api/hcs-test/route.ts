@@ -3,6 +3,11 @@ import { hederaService } from '@/app/services/hedera';
 import { HCSMessage } from '@/app/types/hcs';
 import messageStore from '@/app/services/message-store';
 
+// Only run on server, not during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+
 export async function GET() {
   try {
     console.log('🔍 HCS TEST: Starting HCS test...');

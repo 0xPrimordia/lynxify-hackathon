@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { AgentManager } from '@/app/services/agents/agent-manager';
 
+// Only run on server, not during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const agentManager = new AgentManager();
 
 export async function POST(

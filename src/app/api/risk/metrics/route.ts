@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { HederaService } from '@/app/services/hedera';
 
+// Only run on server, not during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+
 const hederaService = new HederaService();
 
 export async function GET() {

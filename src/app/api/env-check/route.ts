@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 
+// Only run on server, not during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+
 export async function GET() {
   // Check the environment variables
   const envStatus = {
