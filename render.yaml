@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: lynxify-websocket
+    name: lynxify-hackathon
     runtime: node
-    buildCommand: npm install && npm run build-server
-    startCommand: node combined-server.js
+    buildCommand: npm install
+    startCommand: npm run demo
     envVars:
       - key: NODE_ENV
         value: production
