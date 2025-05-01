@@ -1,9 +1,10 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { HCSMessage } from '../types/hcs';
 import { useHCSMessages } from '../services/api';
 import LoadingSkeleton from './LoadingSkeleton';
+import { websocketService } from '../services/websocket';
 
 interface HCSMessageFeedProps {
   maxMessages?: number;
@@ -193,13 +194,54 @@ function MessageList({ messages }: { messages: HCSMessage[] }) {
 }
 
 export default function HCSMessageFeed({ maxMessages = 10 }: HCSMessageFeedProps) {
-  const { data: messages, isLoading, error } = useHCSMessages();
+  const { data: apiMessages, isLoading, error } = useHCSMessages();
+  const [messages, setMessages] = useState<HCSMessage[]>([]);
+  const [wsConnected, setWsConnected] = useState(false);
 
-  if (isLoading) {
+  // Use the WebSocket service to get real-time updates
+  useEffect(() => {
+    console.log('🔌 CLIENT: Initializing WebSocket connection for HCS messages...');
+    
+    // First, set the messages from the API when they're loaded
+    if (apiMessages?.length) {
+      console.log(`🔌 CLIENT: Setting initial messages from API: ${apiMessages.length} messages`);
+      setMessages(apiMessages);
+    }
+    
+    // Then, subscribe to the WebSocket for real-time updates
+    const unsubscribe = websocketService.subscribe((message: HCSMessage) => {
+      console.log('🔌 CLIENT: Received WebSocket message:', message);
+      setWsConnected(true);
+      
+      // Add the message to our local state if it's not a duplicate
+      setMessages(prevMessages => {
+        // Check if message already exists
+        const exists = prevMessages.some(msg => msg.id === message.id);
+        if (exists) {
+          console.log(`🔌 CLIENT: Skipping duplicate message: ${message.id}`);
+          return prevMessages;
+        }
+        
+        console.log(`🔌 CLIENT: Adding new WebSocket message: ${message.id} (${message.type})`);
+        // Add the new message and sort by timestamp (newest first)
+        return [message, ...prevMessages]
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .slice(0, maxMessages);
+      });
+    });
+    
+    // Clean up WebSocket subscription when component unmounts
+    return () => {
+      console.log('🔌 CLIENT: Cleaning up WebSocket subscription');
+      unsubscribe();
+    };
+  }, [apiMessages, maxMessages]);
+
+  if (isLoading && messages.length === 0) {
     return <LoadingSkeleton type="list" count={3} />;
   }
 
-  if (error) {
+  if (error && messages.length === 0) {
     return (
       <div className="text-red-400">
         {error instanceof Error ? error.message : 'Failed to load messages'}
@@ -209,28 +251,25 @@ export default function HCSMessageFeed({ maxMessages = 10 }: HCSMessageFeedProps
 
   if (!messages?.length) {
     return (
-      <div className="text-gray-400 text-center py-4">No messages</div>
+      <div className="text-gray-400 text-center py-4">
+        {wsConnected ? 'Connected to WebSocket, waiting for messages...' : 'No messages'}
+      </div>
     );
   }
 
-  // Create a Map to deduplicate messages by ID (just in case)
-  const uniqueMessagesMap = new Map<string, HCSMessage>();
-  messages.forEach(msg => {
-    if (!uniqueMessagesMap.has(msg.id)) {
-      uniqueMessagesMap.set(msg.id, msg);
-    }
-  });
-  
-  // Convert back to array and sort by timestamp (newest first)
-  const uniqueMessages = Array.from(uniqueMessagesMap.values())
-    .sort((a, b) => b.timestamp - a.timestamp)
-    .slice(0, maxMessages);
-
-  console.log(`HCSMessageFeed: Displaying ${uniqueMessages.length} unique messages out of ${messages.length} total`);
+  console.log(`HCSMessageFeed: Displaying ${messages.length} messages`);
 
   return (
     <Suspense fallback={<LoadingSkeleton type="list" count={3} />}>
-      <MessageList messages={uniqueMessages} />
+      <div className="relative">
+        {wsConnected && (
+          <div className="absolute top-0 right-0 flex items-center text-xs text-green-400">
+            <span className="h-2 w-2 rounded-full bg-green-400 mr-1 animate-pulse"></span>
+            WebSocket Connected
+          </div>
+        )}
+        <MessageList messages={messages} />
+      </div>
     </Suspense>
   );
 } 
