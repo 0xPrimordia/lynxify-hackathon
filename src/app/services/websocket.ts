@@ -18,11 +18,19 @@ class WebSocketService {
   private connect() {
     try {
       const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3001';
+      
+      // Add detailed debug logging for the WebSocket URL
+      console.log(`🔌 WEBSOCKET DEBUG: Attempting connection with URL: ${wsUrl}`);
+      console.log(`🔌 WEBSOCKET DEBUG: URL Protocol: ${new URL(wsUrl).protocol}`);
+      console.log(`🔌 WEBSOCKET DEBUG: URL Host: ${new URL(wsUrl).host}`);
+      console.log(`🔌 WEBSOCKET DEBUG: Environment value NEXT_PUBLIC_WS_URL = "${process.env.NEXT_PUBLIC_WS_URL}"`);
+      
       console.log(`🔌 WEBSOCKET: Connecting to ${wsUrl}`);
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
         console.log('🔌 WEBSOCKET: Connected successfully');
+        console.log(`🔌 WEBSOCKET DEBUG: Successfully connected to ${wsUrl}`);
         this.reconnectAttempts = 0;
       };
 
@@ -57,19 +65,24 @@ class WebSocketService {
           }
         } catch (error) {
           console.error('🔌 WEBSOCKET ERROR: Error parsing WebSocket message:', error);
+          console.error('🔌 WEBSOCKET ERROR: Raw message data:', typeof event.data === 'string' ? event.data.substring(0, 200) + '...' : '[non-string data]');
         }
       };
 
-      this.ws.onclose = () => {
+      this.ws.onclose = (event) => {
+        console.log(`🔌 WEBSOCKET DEBUG: Connection closed with code: ${event.code}, reason: ${event.reason || 'No reason provided'}, clean: ${event.wasClean}`);
         console.log('🔌 WEBSOCKET: Disconnected');
         this.attemptReconnect();
       };
 
       this.ws.onerror = (error) => {
         console.error('🔌 WEBSOCKET ERROR:', error);
+        // Try to extract more details about the error
+        console.error(`🔌 WEBSOCKET DEBUG ERROR: ${JSON.stringify(error)}`);
       };
     } catch (error) {
       console.error('🔌 WEBSOCKET ERROR: Error connecting to WebSocket:', error);
+      console.error(`🔌 WEBSOCKET DEBUG CONNECT ERROR: ${JSON.stringify(error)}`);
       this.attemptReconnect();
     }
   }
