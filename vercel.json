@@ -1,0 +1,9 @@
+{
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "devCommand": "next dev",
+  "regions": ["sfo1"],
+  "ignoreCommand": ""
+} 

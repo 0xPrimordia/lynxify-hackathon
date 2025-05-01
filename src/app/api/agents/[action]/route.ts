@@ -5,11 +5,11 @@ const agentManager = new AgentManager();
 
 export async function POST(
   request: Request,
-  context: { params: { action: string } }
+  { params }: { params: { action: string } }
 ) {
   try {
     const { agentId } = await request.json();
-    const action = context.params.action;
+    const action = params.action;
 
     if (!agentId || !['start', 'stop'].includes(action)) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
