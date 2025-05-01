@@ -1,14 +1,23 @@
 import { NextResponse } from 'next/server';
 import { hederaService } from '@/app/services/hedera';
 import { HCSMessage } from '@/app/types/hcs';
-import { TopicMessageQuery, TopicId } from '@hashgraph/sdk';
 import messageStore from '@/app/services/message-store';
 
 // Track whether we've subscribed to topics
 let initializedTopics = false;
 
+// Only run on server, not during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 // Ensures subscription is only attempted once per server instance
 async function initializeSubscriptions() {
+  // Skip subscriptions during build time
+  if (process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production') {
+    console.log('ℹ️ API: Running in production build, deferring subscriptions to runtime');
+    return;
+  }
+  
   if (initializedTopics) {
     console.log('ℹ️ API: Topics already initialized, skipping subscription');
     return;
@@ -25,30 +34,39 @@ async function initializeSubscriptions() {
     throw new Error('HCS topic IDs not configured');
   }
   
-  // Subscribe to governance topic
-  await hederaService.subscribeToTopic(governanceTopicId, (message: HCSMessage) => {
-    console.log(`✅ API: Received message from governance topic: ${message.type}`);
-    messageStore.addMessage(governanceTopicId, message);
-  });
-  
-  // Subscribe to agent topic
-  await hederaService.subscribeToTopic(agentTopicId, (message: HCSMessage) => {
-    console.log(`✅ API: Received message from agent topic: ${message.type}`);
-    messageStore.addMessage(agentTopicId, message);
-  });
-  
-  // Subscribe to price feed topic
-  await hederaService.subscribeToTopic(priceFeedTopicId, (message: HCSMessage) => {
-    console.log(`✅ API: Received message from price feed topic: ${message.type}`);
-    messageStore.addMessage(priceFeedTopicId, message);
-  });
-  
-  initializedTopics = true;
-  console.log('✅ API: Successfully subscribed to all HCS topics');
+  try {
+    // Subscribe to governance topic
+    await hederaService.subscribeToTopic(governanceTopicId, (message: HCSMessage) => {
+      console.log(`✅ API: Received message from governance topic: ${message.type}`);
+      messageStore.addMessage(governanceTopicId, message);
+    });
+    
+    // Subscribe to agent topic
+    await hederaService.subscribeToTopic(agentTopicId, (message: HCSMessage) => {
+      console.log(`✅ API: Received message from agent topic: ${message.type}`);
+      messageStore.addMessage(agentTopicId, message);
+    });
+    
+    // Subscribe to price feed topic
+    await hederaService.subscribeToTopic(priceFeedTopicId, (message: HCSMessage) => {
+      console.log(`✅ API: Received message from price feed topic: ${message.type}`);
+      messageStore.addMessage(priceFeedTopicId, message);
+    });
+    
+    initializedTopics = true;
+    console.log('✅ API: Successfully subscribed to all HCS topics');
+  } catch (error) {
+    console.error('❌ API: Error initializing topic subscriptions:', error);
+  }
 }
 
 export async function GET() {
   try {
+    // During build, just return empty array
+    if (process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production') {
+      return NextResponse.json([]);
+    }
+    
     const governanceTopicId = process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC;
     const agentTopicId = process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC;
     const priceFeedTopicId = process.env.NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC;
