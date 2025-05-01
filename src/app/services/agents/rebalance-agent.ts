@@ -187,6 +187,13 @@ export class RebalanceAgent extends BaseAgent {
   // Log token operation to token-data.json
   private logTokenOperation(token: string, tokenId: string, type: string, amount: number, proposalId: string): void {
     try {
+      // Skip file operations in production/Vercel environment
+      if (process.env.NODE_ENV !== 'development') {
+        console.log(`⏭️ Skipping token data file operations in production/serverless environment`);
+        console.log(`ℹ️ Would have logged: ${type} operation for ${token} (${amount}) from proposal ${proposalId}`);
+        return;
+      }
+      
       // Read current token data
       let tokenData: any = { tokens: {}, network: "testnet" };
       if (fs.existsSync(this.tokenDataPath)) {

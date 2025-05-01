@@ -12,6 +12,8 @@ process.env.OPERATOR_KEY = 'mock-private-key';
 process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC = '0.0.12345';
 process.env.BYPASS_TOPIC_CHECK = 'true';
 
+// NOTE: NODE_ENV is read-only in some environments, but Jest sets it to 'test' automatically
+
 describe('Token Operations', () => {
   let tokenService: TokenService;
 
