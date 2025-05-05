@@ -1,0 +1,133 @@
+
+> lynxify-hackathon@0.1.0 rebalance-agent
+> ts-node --compilerOptions '{"module":"commonjs"}' src/app/scripts/rebalance-agent.ts
+
+🔄 MESSAGE STORE: Creating global message store
+🚀 HEDERA: Initializing HederaService with REAL Hedera network...
+🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
+🔄 HEDERA: Setting operator credentials...
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+✅ HEDERA: Successfully initialized client with REAL Hedera testnet
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+Using fallback token data (no file access or in production)
+✅ HederaService initialized successfully!
+🚀 HEDERA: Initializing HederaService with REAL Hedera network...
+🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
+🔄 HEDERA: Setting operator credentials...
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+✅ HEDERA: Successfully initialized client with REAL Hedera testnet
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+Using fallback token data (no file access or in production)
+✅ HederaService initialized successfully!
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+Using fallback token data (no file access or in production)
+🤖 AGENT: Rebalance agent starting...
+🤖 AGENT: Using standard topics: { governanceTopic: '0.0.5898548', agentTopic: '0.0.5898549' }
+🌙 AGENT: Using Moonscape channels: {
+  inbound: '0.0.5949494',
+  outbound: '0.0.5949493',
+  profile: '0.0.5949512'
+}
+🌙 AGENT: Moonscape integration enabled
+🤖 AGENT: Subscribing to governance topic
+🔄 HEDERA: Subscribing to topic: 0.0.5898548
+✅ HEDERA: Successfully subscribed to topic 0.0.5898548
+🌙 AGENT: Subscribing to Moonscape inbound channel
+🔄 HEDERA: Subscribing to topic: 0.0.5949494
+✅ HEDERA: Successfully subscribed to topic 0.0.5949494
+🌙 AGENT: Sending message to Moonscape outbound channel: AgentInfo
+🔄 HEDERA: Publishing REAL message to HCS topic 0.0.5949493: {
+  messageType: 'AgentInfo',
+  messageId: 'status-1746479330939',
+  timestamp: '2025-05-05T21:08:50.939Z',
+  sender: 'Rebalancer Agent'
+}
+📝 HEDERA: Full message content: {"id":"status-1746479330939","type":"AgentInfo","timestamp":1746479330939,"sender":"Rebalancer Agent","details":{"message":"Rebalancer Agent status update","rebalancerStatus":"active","agentId":"0.0.4340026","pendingProposals":0,"executedProposals":0}}
+🔄 HEDERA: Creating TopicMessageSubmitTransaction for topic 0.0.5949493...
+✅ HEDERA: Topic ID is valid: 0.0.5949493
+🔄 HEDERA: Executing transaction for topic 0.0.5949493...
+======================================================
+✅ HEDERA: Transaction executed for topic 0.0.5949493
+🔍 TRANSACTION ID: 1746479323.598877875"}
+🔗 VERIFY ON HASHSCAN: https://hashscan.io/testnet/transaction/1746479323.598877875"}
+======================================================
+🔄 HEDERA: Getting receipt for topic 0.0.5949493 transaction...
+✅ HEDERA: Message successfully published to real HCS topic 0.0.5949493 {
+  receipt: '{"status":"SUCCESS","accountId":null,"filedId":null,"contractId":null,"topicId":null,"tokenId":null,"scheduleId":null,"exchangeRate":{"hbars":30000,"cents":523847,"expirationTime":"2025-05-05T22:00:00.000Z","exchangeRateInCents":17.461566666666666},"nextExchangeRate":{"hbars":30000,"cents":519405,"expirationTime":"2025-05-05T23:00:00.000Z","exchangeRateInCents":17.3135},"topicSequenceNumber":"13","topicRunningHash":"bf78041504345ca4ada221a3db5e466643c6680863a02ca89cdef34a1bec81dc637d26bae2a7322072a13e2378ad1bed","totalSupply":"0","scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[],"nodeId":"0"}'
+}
+✅ MESSAGE STORE: Added message to topic 0.0.5949493, total: 1
+✅ MESSAGE STORE: Message details: type=AgentInfo, id=status-1746479330939
+🌙 AGENT: Message sent successfully to Moonscape
+🌙 AGENT: Updating agent profile on Moonscape
+🔄 HEDERA: Publishing REAL message to HCS topic 0.0.5949512: {
+  messageType: 'AgentInfo',
+  messageId: 'profile-1746479333130',
+  timestamp: '2025-05-05T21:08:53.130Z',
+  sender: 'Rebalancer Agent'
+}
+📝 HEDERA: Full message content: {"id":"profile-1746479333130","type":"AgentInfo","timestamp":1746479333130,"sender":"Rebalancer Agent","details":{"message":"Rebalancer Agent profile update","agentId":"0.0.4340026","capabilities":["rebalancing","market_analysis","token_management","portfolio_optimization"],"agentDescription":"AI-powered rebalancing agent for the Lynxify Tokenized Index"}}
+🔄 HEDERA: Creating TopicMessageSubmitTransaction for topic 0.0.5949512...
+✅ HEDERA: Topic ID is valid: 0.0.5949512
+🔄 HEDERA: Executing transaction for topic 0.0.5949512...
+======================================================
+✅ HEDERA: Transaction executed for topic 0.0.5949512
+🔍 TRANSACTION ID: 1746479326.557871261"}
+🔗 VERIFY ON HASHSCAN: https://hashscan.io/testnet/transaction/1746479326.557871261"}
+======================================================
+🔄 HEDERA: Getting receipt for topic 0.0.5949512 transaction...
+❌ HEDERA ERROR: Failed to get receipt for topic 0.0.5949512: ReceiptStatusError: receipt for transaction 0.0.4340026@1746479326.557871261 contained error status INVALID_SIGNATURE
+    at new ReceiptStatusError (/Users/kevincompton/Sites/lynxify-hackathon/node_modules/@hashgraph/sdk/lib/ReceiptStatusError.cjs:36:5)
+    at TransactionReceiptQuery._mapStatusError (/Users/kevincompton/Sites/lynxify-hackathon/node_modules/@hashgraph/sdk/lib/transaction/TransactionReceiptQuery.cjs:266:12)
+    at TransactionReceiptQuery.execute (/Users/kevincompton/Sites/lynxify-hackathon/node_modules/@hashgraph/sdk/lib/Executable.cjs:671:22)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async TransactionResponse.getReceipt (/Users/kevincompton/Sites/lynxify-hackathon/node_modules/@hashgraph/sdk/lib/transaction/TransactionResponse.cjs:79:21) {
+  status: Status { _code: 7 },
+  transactionId: TransactionId {
+    accountId: AccountId {
+      shard: [Long],
+      realm: [Long],
+      num: [Long],
+      aliasKey: null,
+      evmAddress: null,
+      _checksum: null
+    },
+    validStart: Timestamp { seconds: [Long], nanos: [Long] },
+    scheduled: false,
+    nonce: null
+  },
+  transactionReceipt: TransactionReceipt {
+    status: Status { _code: 7 },
+    accountId: null,
+    fileId: null,
+    contractId: null,
+    topicId: null,
+    tokenId: null,
+    scheduleId: null,
+    exchangeRate: ExchangeRate {
+      hbars: 30000,
+      cents: 523847,
+      expirationTime: 2025-05-05T22:00:00.000Z,
+      exchangeRateInCents: 17.461566666666666
+    },
+    nextExchangeRate: ExchangeRate {
+      hbars: 30000,
+      cents: 519405,
+      expirationTime: 2025-05-05T23:00:00.000Z,
+      exchangeRateInCents: 17.3135
+    },
+    topicSequenceNumber: Long { low: 0, high: 0, unsigned: false },
+    topicRunningHash: Uint8Array(0) [],
+    totalSupply: Long { low: 0, high: 0, unsigned: false },
+    scheduledTransactionId: null,
+    serials: [],
+    duplicates: [],
+    children: [],
+    nodeId: Long { low: 0, high: 0, unsigned: true }
+  }
+}
+⚠️ HEDERA: Message may still have been published despite receipt error
+✅ MESSAGE STORE: Added message to topic 0.0.5949512, total: 1
+✅ MESSAGE STORE: Message details: type=AgentInfo, id=profile-1746479333130
+🌙 AGENT: Profile updated successfully on Moonscape
+🤖 AGENT: Ready to process rebalance proposals
+🤖 AGENT: Submit a proposal from the UI to see the agent in action

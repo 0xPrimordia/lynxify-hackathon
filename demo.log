@@ -1,0 +1,53 @@
+
+> lynxify-hackathon@0.1.0 demo
+> ts-node --compilerOptions '{"module":"commonjs"}' combined-server.ts
+
+🔄 MESSAGE STORE: Creating global message store
+🚀 HEDERA: Initializing HederaService with REAL Hedera network...
+🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
+🔄 HEDERA: Setting operator credentials...
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+✅ HEDERA: Successfully initialized client with REAL Hedera testnet
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+Using fallback token data (no file access or in production)
+✅ HederaService initialized successfully!
+=== ENVIRONMENT VARIABLES DEBUGGING ===
+NEXT_PUBLIC_OPERATOR_ID exists: true
+OPERATOR_KEY exists: true
+OPERATOR_KEY length: 64
+NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC: 0.0.5898548
+NEXT_PUBLIC_HCS_AGENT_TOPIC: 0.0.5898549
+NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC: 0.0.5898550
+OPENAI_API_KEY exists: true
+==========================================
+🚀 HEDERA: Initializing HederaService with REAL Hedera network...
+🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
+🔄 HEDERA: Setting operator credentials...
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+✅ HEDERA: Successfully initialized client with REAL Hedera testnet
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+Using fallback token data (no file access or in production)
+✅ HederaService initialized successfully!
+WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+Using fallback token data (no file access or in production)
+🚀 Starting combined WebSocket server and agent...
+Environment variables: {
+  operatorId: '0.0.4340026',
+  governanceTopic: '0.0.5898548',
+  agentTopic: '0.0.5898549'
+}
+WebSocket server starting on port 3001...
+Subscribing to topics for WebSocket broadcasting: { governance: '0.0.5898548', agent: '0.0.5898549' }
+🔄 HEDERA: Subscribing to topic: 0.0.5898548
+✅ HEDERA: Successfully subscribed to topic 0.0.5898548
+🔄 HEDERA: Subscribing to topic: 0.0.5898549
+✅ HEDERA: Successfully subscribed to topic 0.0.5898549
+Subscribed to HCS topics for WebSocket broadcasting
+Starting rebalance agent...
+🤖 AGENT: Subscribing to governance topic
+🔄 HEDERA: Subscribing to topic: 0.0.5898548
+ℹ️ HEDERA: Already subscribed to topic: 0.0.5898548
+🤖 AGENT: Ready to process rebalance proposals
+🤖 AGENT: Submit a proposal from the UI to see the agent in action
+✅ Combined server started successfully!
+📋 READY FOR DEMO: Submit a proposal from the UI to see automated rebalancing in action

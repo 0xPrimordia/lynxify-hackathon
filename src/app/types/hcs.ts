@@ -1,6 +1,6 @@
 export interface HCSMessage {
   id: string;
-  type: 'PriceUpdate' | 'RiskAlert' | 'RebalanceProposal' | 'RebalanceApproved' | 'RebalanceExecuted' | 'PolicyChange';
+  type: 'PriceUpdate' | 'RiskAlert' | 'RebalanceProposal' | 'RebalanceApproved' | 'RebalanceExecuted' | 'PolicyChange' | 'AgentInfo' | 'AgentResponse' | 'AgentRequest';
   timestamp: number;
   sender: string;
   details: {
@@ -13,7 +13,7 @@ export interface HCSMessage {
     source?: string;
     // RiskAlert fields
     severity?: 'low' | 'medium' | 'high';
-    description?: string;
+    riskDescription?: string;
     affectedTokens?: string[];
     metrics?: {
       volatility?: number;
@@ -43,6 +43,16 @@ export interface HCSMessage {
       rebalanceThreshold?: number;
     };
     effectiveFrom?: number;
+    // Moonscape fields
+    originalMessageId?: string;
+    rebalancerStatus?: string;
+    agentId?: string;
+    request?: string;
+    analysis?: string;
+    capabilities?: string[];
+    agentDescription?: string;
+    pendingProposals?: number;
+    executedProposals?: number;
   };
   votes?: {
     for: number;
@@ -77,4 +87,8 @@ export function isRiskAlert(message: HCSMessage): message is HCSMessage & { type
 
 export function isPolicyChange(message: HCSMessage): message is HCSMessage & { type: 'PolicyChange' } {
   return message.type === 'PolicyChange';
+}
+
+export function isMoonscapeMessage(message: HCSMessage): message is HCSMessage & { type: 'AgentInfo' | 'AgentResponse' | 'AgentRequest' } {
+  return message.type === 'AgentInfo' || message.type === 'AgentResponse' || message.type === 'AgentRequest';
 } 

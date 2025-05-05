@@ -26,6 +26,9 @@ console.log('NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC:', process.env.NEXT_PUBLIC_HCS_GOV
 console.log('NEXT_PUBLIC_HCS_AGENT_TOPIC:', process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC);
 console.log('NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC:', process.env.NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC);
 console.log('OPENAI_API_KEY exists:', !!process.env.OPENAI_API_KEY);
+console.log('NEXT_PUBLIC_HCS_INBOUND_TOPIC:', process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC);
+console.log('NEXT_PUBLIC_HCS_OUTBOUND_TOPIC:', process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC);
+console.log('NEXT_PUBLIC_HCS_PROFILE_TOPIC:', process.env.NEXT_PUBLIC_HCS_PROFILE_TOPIC);
 console.log('==========================================');
 
 // Set environment variables for development
@@ -42,6 +45,12 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // Get topic IDs
 const governanceTopic = process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC || '';
 const agentTopic = process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC || '';
+
+// Get Moonscape topic IDs
+const moonscapeInboundTopic = process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC?.trim().replace(/\"/g, '') || '';
+const moonscapeOutboundTopic = process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC?.trim().replace(/\"/g, '') || '';
+const moonscapeProfileTopic = process.env.NEXT_PUBLIC_HCS_PROFILE_TOPIC?.trim().replace(/\"/g, '') || '';
+const hasMoonscapeChannels = Boolean(moonscapeInboundTopic && moonscapeOutboundTopic);
 
 // Initialize WebSocket server
 const wss = new WebSocketServer({ port: 3001 });
@@ -91,6 +100,51 @@ function broadcastMessage(message: any) {
   });
 }
 
+// Send message to Moonscape outbound channel
+async function sendToMoonscape(message: HCSMessage) {
+  if (!hasMoonscapeChannels) {
+    console.log('⚠️ MOONSCAPE: Cannot send message - Moonscape channels not configured');
+    return;
+  }
+  
+  try {
+    console.log(`🌙 MOONSCAPE: Sending message to outbound channel: ${message.type}`);
+    await hederaService.publishHCSMessage(moonscapeOutboundTopic, message);
+    console.log('🌙 MOONSCAPE: Message sent successfully');
+  } catch (error) {
+    console.error('❌ MOONSCAPE ERROR: Failed to send message:', error);
+  }
+}
+
+// Update agent profile on Moonscape
+async function updateAgentProfile() {
+  if (!moonscapeProfileTopic) {
+    console.log('⚠️ MOONSCAPE: Cannot update profile - profile channel not configured');
+    return;
+  }
+  
+  try {
+    console.log('🌙 MOONSCAPE: Updating agent profile');
+    const profileMessage: HCSMessage = {
+      id: `profile-${Date.now()}`,
+      type: 'AgentInfo',
+      timestamp: Date.now(),
+      sender: 'Rebalancer Agent',
+      details: {
+        message: 'Rebalancer Agent profile update',
+        agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
+        capabilities: ['rebalancing', 'market_analysis', 'token_management', 'portfolio_optimization'],
+        agentDescription: 'AI-powered rebalancing agent for the Lynxify Tokenized Index'
+      }
+    };
+    
+    await hederaService.publishHCSMessage(moonscapeProfileTopic, profileMessage);
+    console.log('🌙 MOONSCAPE: Profile updated successfully');
+  } catch (error) {
+    console.error('❌ MOONSCAPE ERROR: Failed to update profile:', error);
+  }
+}
+
 // === AGENT FUNCTIONS ===
 
 async function analyzeRebalanceWithAI(proposal: HCSMessage): Promise<string> {
@@ -138,6 +192,22 @@ async function handleProposal(message: HCSMessage) {
     // Store the proposal for future reference
     pendingProposals.set(message.id, message);
     
+    // Send notification to Moonscape
+    if (hasMoonscapeChannels) {
+      await sendToMoonscape({
+        id: `moonscape-proposal-${Date.now()}`,
+        type: 'AgentInfo',
+        timestamp: Date.now(),
+        sender: 'Rebalancer Agent',
+        details: {
+          message: `Received new rebalance proposal with ID: ${message.id}`,
+          rebalancerStatus: 'processing',
+          proposalId: message.id,
+          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
+        }
+      });
+    }
+    
     // Auto-approve the proposal (for demo purposes)
     // In a real system, this would wait for voting to complete
     setTimeout(async () => {
@@ -153,6 +223,32 @@ async function handleProposal(message: HCSMessage) {
       await executeRebalance(proposal);
     } else {
       console.log(`🤖 AGENT: Cannot find proposal ${proposalId} for execution`);
+    }
+  }
+}
+
+async function handleMoonscapeInbound(message: HCSMessage) {
+  console.log(`🌙 MOONSCAPE: Received inbound message: ${message.type}`);
+  
+  if (message.type === 'AgentRequest') {
+    // Process agent request from Moonscape
+    const requestType = message.details?.request;
+    
+    if (requestType === 'status') {
+      // Send status update
+      await sendToMoonscape({
+        id: `status-${Date.now()}`,
+        type: 'AgentResponse',
+        timestamp: Date.now(),
+        sender: 'Rebalancer Agent',
+        details: {
+          message: 'Rebalancer Agent status response',
+          rebalancerStatus: 'active',
+          pendingProposals: pendingProposals.size,
+          executedProposals: executedProposals.size,
+          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
+        }
+      });
     }
   }
 }
@@ -184,6 +280,22 @@ async function approveProposal(proposalId: string) {
   
   await hederaService.publishHCSMessage(governanceTopic, message);
   console.log(`🤖 AGENT: Approval message published to governance topic`);
+  
+  // Also send notification to Moonscape
+  if (hasMoonscapeChannels) {
+    await sendToMoonscape({
+      id: `moonscape-approval-${Date.now()}`,
+      type: 'AgentInfo',
+      timestamp: Date.now(),
+      sender: 'Rebalancer Agent',
+      details: {
+        message: `Approved rebalance proposal with ID: ${proposalId}`,
+        rebalancerStatus: 'executing',
+        proposalId: proposalId,
+        agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
+      }
+    });
+  }
 }
 
 async function executeRebalance(proposal: HCSMessage) {
@@ -275,8 +387,8 @@ async function executeRebalance(proposal: HCSMessage) {
     const updatedBalances = await tokenService.getTokenBalances();
     console.log('🤖 AGENT: Updated balances after rebalance:', updatedBalances);
     
-    // Publish execution message to agent topic
-    const message: HCSMessage = {
+    // Prepare execution message
+    const executionMessage: HCSMessage = {
       id: `exec-${Date.now()}`,
       type: 'RebalanceExecuted',
       timestamp: Date.now(),
@@ -290,18 +402,82 @@ async function executeRebalance(proposal: HCSMessage) {
       }
     };
     
-    await hederaService.publishHCSMessage(agentTopic, message);
+    // Publish to standard agent topic
+    await hederaService.publishHCSMessage(agentTopic, executionMessage);
     console.log(`🤖 AGENT: Rebalance execution message published to agent topic`);
+    
+    // Also publish to Moonscape if configured
+    if (hasMoonscapeChannels) {
+      await sendToMoonscape({
+        id: `moonscape-execution-${Date.now()}`,
+        type: 'AgentInfo',
+        timestamp: Date.now(),
+        sender: 'Rebalancer Agent',
+        details: {
+          message: `Successfully executed rebalance proposal ${proposal.id}`,
+          rebalancerStatus: 'completed',
+          proposalId: proposal.id,
+          executedAt: Date.now(),
+          analysis: aiAnalysis,
+          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
+        }
+      });
+    }
     
     // Mark as executed
     executedProposals.add(proposal.id);
     console.log(`🤖 AGENT: Rebalance for proposal ${proposal.id} completed successfully`);
   } catch (error) {
     console.error('❌ AGENT ERROR: Failed to execute rebalance:', error);
+    
+    // Send error notification to Moonscape
+    if (hasMoonscapeChannels) {
+      await sendToMoonscape({
+        id: `moonscape-error-${Date.now()}`,
+        type: 'AgentInfo',
+        timestamp: Date.now(),
+        sender: 'Rebalancer Agent',
+        details: {
+          message: `Error executing rebalance for proposal ${proposal.id}: ${error}`,
+          rebalancerStatus: 'error',
+          proposalId: proposal.id,
+          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
+        }
+      });
+    }
   }
 }
 
 // === MAIN FUNCTIONS ===
+
+// Send agent status to Moonscape
+async function sendAgentStatus() {
+  if (!hasMoonscapeChannels) {
+    console.log('⚠️ MOONSCAPE: Cannot send status - Moonscape channels not configured');
+    return;
+  }
+  
+  try {
+    console.log('🌙 MOONSCAPE: Sending agent status message');
+    const statusMessage: HCSMessage = {
+      id: `status-${Date.now()}`,
+      type: 'AgentInfo',
+      timestamp: Date.now(),
+      sender: 'Rebalancer Agent',
+      details: {
+        message: 'Rebalancer Agent status update',
+        rebalancerStatus: 'active',
+        agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
+        pendingProposals: pendingProposals.size,
+        executedProposals: executedProposals.size
+      }
+    };
+    
+    await sendToMoonscape(statusMessage);
+  } catch (error) {
+    console.error('❌ MOONSCAPE ERROR: Failed to send status message:', error);
+  }
+}
 
 // Subscribe to HCS topics for WebSocket
 async function subscribeToTopicsWS() {
@@ -333,6 +509,12 @@ async function subscribeToTopicsWS() {
       }
     );
 
+    // Subscribe to Moonscape inbound channel if configured
+    if (moonscapeInboundTopic) {
+      console.log(`🌙 MOONSCAPE: Subscribing to inbound channel ${moonscapeInboundTopic}`);
+      await hederaService.subscribeToTopic(moonscapeInboundTopic, handleMoonscapeInbound);
+    }
+
     console.log('Subscribed to HCS topics for WebSocket broadcasting');
   } catch (error) {
     console.error('Error subscribing to topics for WebSocket:', error);
@@ -345,6 +527,21 @@ async function startAgent() {
   try {
     console.log('🤖 AGENT: Subscribing to governance topic');
     await hederaService.subscribeToTopic(governanceTopic, handleProposal);
+    
+    // Moonscape integration
+    if (hasMoonscapeChannels) {
+      console.log('🌙 MOONSCAPE: Integration enabled with channels:', {
+        inbound: moonscapeInboundTopic,
+        outbound: moonscapeOutboundTopic,
+        profile: moonscapeProfileTopic
+      });
+      
+      // Send initial status and update profile
+      await sendAgentStatus();
+      if (moonscapeProfileTopic) {
+        await updateAgentProfile();
+      }
+    }
     
     console.log('🤖 AGENT: Ready to process rebalance proposals');
     console.log('🤖 AGENT: Submit a proposal from the UI to see the agent in action');
@@ -361,7 +558,8 @@ async function startCombinedServer() {
   console.log('Environment variables:', {
     operatorId: process.env.NEXT_PUBLIC_OPERATOR_ID,
     governanceTopic: process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC,
-    agentTopic: process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC
+    agentTopic: process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC,
+    moonscapeEnabled: hasMoonscapeChannels
   });
   
   // Start WebSocket server
@@ -374,6 +572,14 @@ async function startCombinedServer() {
   
   console.log('✅ Combined server started successfully!');
   console.log('📋 READY FOR DEMO: Submit a proposal from the UI to see automated rebalancing in action');
+  
+  if (hasMoonscapeChannels) {
+    console.log('🌙 MOONSCAPE INTEGRATION: Agent is registered on Moonscape.tech');
+    console.log(`🌙 Visit https://hashscan.io/testnet/topic/${moonscapeOutboundTopic} to see outbound messages`);
+    if (moonscapeProfileTopic) {
+      console.log(`🌙 Visit https://hashscan.io/testnet/topic/${moonscapeProfileTopic} to see profile updates`);
+    }
+  }
 }
 
 // Start the server

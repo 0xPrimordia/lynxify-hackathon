@@ -456,7 +456,7 @@ export class HederaService {
       sender: AGENTS.RISK_ASSESSMENT.id,
       details: {
         severity: riskLevel,
-        description: `Price deviation of ${priceChange}% detected for ${tokenId}`,
+        riskDescription: `Price deviation of ${priceChange}% detected for ${tokenId}`,
         affectedTokens: [tokenId],
         metrics: {
           priceChange

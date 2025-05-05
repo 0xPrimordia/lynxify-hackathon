@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mockHCSMessages = exports.mockProposals = void 0;
 // Create a sequence of events for the demo
-const now = Date.now();
-const ONE_HOUR = 3600000;
-const TWO_HOURS = 7200000;
-const THREE_HOURS = 10800000;
+var now = Date.now();
+var ONE_HOUR = 3600000;
+var TWO_HOURS = 7200000;
+var THREE_HOURS = 10800000;
 exports.mockProposals = [
     {
         id: 'P001',

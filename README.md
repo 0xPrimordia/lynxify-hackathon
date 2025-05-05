@@ -142,6 +142,19 @@ Each transaction is logged with:
 
 This project demonstrates extensive use of Hedera's technology stack, particularly focusing on Hedera Consensus Service (HCS) for secure, ordered messaging between components.
 
+### HCS-10 OpenConvAI Implementation
+
+We've **actively implemented** the HCS-10 OpenConvAI standard as our **primary protocol** for agent communication. This integration enables our AI agents to communicate using a standardized protocol with enhanced metadata, improved discoverability, and built-in security mechanisms.
+
+Key aspects of our HCS-10 implementation:
+
+- **Agent Registration**: Our agent is registered in the HCS-10 registry with specific capabilities
+- **Standardized Messaging**: All messages follow the HCS-10 format with rich metadata
+- **Protocol Compliance**: Our implementation ensures compatibility with other HCS-10 agents
+- **Enhanced Discovery**: The agent is discoverable by other HCS-10 compliant services
+
+See the [HCS-10-INTEGRATION.md](HCS-10-INTEGRATION.md) document for detailed information about our implementation.
+
 ### Client Connection
 
 We initialize the Hedera client in `src/app/services/hedera.ts`:

@@ -1,6 +1,6 @@
 export interface HCSMessage {
   id: string;
-  type: 'PriceUpdate' | 'RiskAlert' | 'RebalanceProposal' | 'RebalanceApproved' | 'RebalanceExecuted' | 'PolicyChange';
+  type: 'PriceUpdate' | 'RiskAlert' | 'RebalanceProposal' | 'RebalanceApproved' | 'RebalanceExecuted' | 'PolicyChange' | 'AgentResponse' | 'AgentRequest' | 'AgentInfo';
   timestamp: number;
   sender: string;
   details: {
@@ -43,6 +43,13 @@ export interface HCSMessage {
       rebalanceThreshold?: number;
     };
     effectiveFrom?: number;
+    // Test fields for HCS-10 demo
+    testId?: string;
+    // Moonscape fields
+    originalMessageId?: string;
+    rebalancerStatus?: string;
+    request?: string;
+    agentId?: string;
   };
   votes?: {
     for: number;
@@ -77,4 +84,7 @@ export function isRiskAlert(message: HCSMessage): message is HCSMessage & { type
 
 export function isPolicyChange(message: HCSMessage): message is HCSMessage & { type: 'PolicyChange' } {
   return message.type === 'PolicyChange';
-} 
+}
+
+// Define a callback type for the HCS-10 SDK
+export type SDKCallback = (message: any) => void; 

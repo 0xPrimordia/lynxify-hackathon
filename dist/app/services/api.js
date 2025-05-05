@@ -1,50 +1,95 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useProposeRebalance = exports.useExecuteRebalance = exports.useApproveProposal = exports.useProposals = exports.useHCSMessages = void 0;
-const react_query_1 = require("@tanstack/react-query");
+var react_query_1 = require("@tanstack/react-query");
 // Fetch HCS messages
-const useHCSMessages = () => {
+var useHCSMessages = function () {
     return (0, react_query_1.useQuery)({
         queryKey: ['hcs-messages'],
-        queryFn: async () => {
-            console.log('📥 FETCH: Requesting HCS messages from API...');
-            const response = await fetch('/api/hcs/messages');
-            if (!response.ok) {
-                console.error('❌ FETCH ERROR: Failed to fetch HCS messages:', response.statusText);
-                throw new Error('Failed to fetch HCS messages');
-            }
-            const data = await response.json();
-            // Ensure the response is an array
-            if (!Array.isArray(data)) {
-                console.error('❌ FETCH ERROR: Expected array response, got:', typeof data);
-                return [];
-            }
-            // Validate each message has the expected structure
-            const validMessages = data.filter(msg => {
-                const isValid = msg && typeof msg === 'object' && msg.id && msg.type && msg.timestamp;
-                if (!isValid) {
-                    console.error('❌ FETCH ERROR: Invalid message structure:', msg);
+        queryFn: function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response, data, validMessages, uniqueMessages;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log('📥 FETCH: Requesting HCS messages from API...');
+                        return [4 /*yield*/, fetch('/api/hcs/messages')];
+                    case 1:
+                        response = _a.sent();
+                        if (!response.ok) {
+                            console.error('❌ FETCH ERROR: Failed to fetch HCS messages:', response.statusText);
+                            throw new Error('Failed to fetch HCS messages');
+                        }
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        data = _a.sent();
+                        // Ensure the response is an array
+                        if (!Array.isArray(data)) {
+                            console.error('❌ FETCH ERROR: Expected array response, got:', typeof data);
+                            return [2 /*return*/, []];
+                        }
+                        validMessages = data.filter(function (msg) {
+                            var isValid = msg && typeof msg === 'object' && msg.id && msg.type && msg.timestamp;
+                            if (!isValid) {
+                                console.error('❌ FETCH ERROR: Invalid message structure:', msg);
+                            }
+                            return isValid;
+                        });
+                        uniqueMessages = Array.from(new Map(validMessages.map(function (msg) { return [msg.id, msg]; })).values());
+                        console.log("\u2705 FETCH: Received ".concat(uniqueMessages.length, " valid unique HCS messages"));
+                        return [2 /*return*/, uniqueMessages];
                 }
-                return isValid;
             });
-            // Remove any duplicate messages by ID (just in case)
-            const uniqueMessages = Array.from(new Map(validMessages.map(msg => [msg.id, msg])).values());
-            console.log(`✅ FETCH: Received ${uniqueMessages.length} valid unique HCS messages`);
-            return uniqueMessages;
-        },
+        }); },
         refetchInterval: 10000, // Reduce polling frequency to 10 seconds
         staleTime: 5000, // Consider data fresh for 5 seconds
     });
 };
 exports.useHCSMessages = useHCSMessages;
 // Convert HCS messages to proposals
-const useProposals = () => {
-    const { data: messages, isLoading, error } = (0, exports.useHCSMessages)();
+var useProposals = function () {
+    var _a = (0, exports.useHCSMessages)(), messages = _a.data, isLoading = _a.isLoading, error = _a.error;
     // Track proposals and their statuses
-    const proposalMap = new Map();
+    var proposalMap = new Map();
     if (messages) {
         // First pass: collect all RebalanceProposal messages
-        messages.filter(msg => msg.type === 'RebalanceProposal').forEach(msg => {
+        messages.filter(function (msg) { return msg.type === 'RebalanceProposal'; }).forEach(function (msg) {
+            var _a, _b;
             proposalMap.set(msg.id, {
                 id: msg.id,
                 type: 'RebalanceProposal',
@@ -52,18 +97,19 @@ const useProposals = () => {
                 timestamp: msg.timestamp,
                 sender: msg.sender || 'Unknown',
                 details: {
-                    newWeights: msg.details?.newWeights || {},
-                    trigger: msg.details?.trigger,
+                    newWeights: ((_a = msg.details) === null || _a === void 0 ? void 0 : _a.newWeights) || {},
+                    trigger: (_b = msg.details) === null || _b === void 0 ? void 0 : _b.trigger,
                     executedAt: undefined
                 },
                 votes: { for: 0, against: 0, total: 0 }
             });
         });
         // Second pass: update with RebalanceApproved messages
-        messages.filter(msg => msg.type === 'RebalanceApproved').forEach(msg => {
-            const proposalId = msg.details?.proposalId;
+        messages.filter(function (msg) { return msg.type === 'RebalanceApproved'; }).forEach(function (msg) {
+            var _a;
+            var proposalId = (_a = msg.details) === null || _a === void 0 ? void 0 : _a.proposalId;
             if (proposalId && proposalMap.has(proposalId)) {
-                const proposal = proposalMap.get(proposalId);
+                var proposal = proposalMap.get(proposalId);
                 if (proposal) {
                     proposal.status = 'approved';
                     if (msg.votes) {
@@ -73,45 +119,53 @@ const useProposals = () => {
             }
         });
         // Third pass: update with RebalanceExecuted messages
-        messages.filter(msg => msg.type === 'RebalanceExecuted').forEach(msg => {
-            const proposalId = msg.details?.proposalId;
+        messages.filter(function (msg) { return msg.type === 'RebalanceExecuted'; }).forEach(function (msg) {
+            var _a, _b;
+            var proposalId = (_a = msg.details) === null || _a === void 0 ? void 0 : _a.proposalId;
             if (proposalId && proposalMap.has(proposalId)) {
-                const proposal = proposalMap.get(proposalId);
+                var proposal = proposalMap.get(proposalId);
                 if (proposal) {
                     proposal.status = 'executed';
-                    proposal.details.executedAt = msg.details?.executedAt;
+                    proposal.details.executedAt = (_b = msg.details) === null || _b === void 0 ? void 0 : _b.executedAt;
                 }
             }
         });
     }
     // Convert map to array
-    const proposals = Array.from(proposalMap.values());
-    console.log(`✅ PROPOSALS: Processed ${proposals.length} proposals from ${messages?.length || 0} messages`);
+    var proposals = Array.from(proposalMap.values());
+    console.log("\u2705 PROPOSALS: Processed ".concat(proposals.length, " proposals from ").concat((messages === null || messages === void 0 ? void 0 : messages.length) || 0, " messages"));
     return {
         data: proposals,
-        isLoading,
-        error
+        isLoading: isLoading,
+        error: error
     };
 };
 exports.useProposals = useProposals;
 // Approve a rebalance proposal
-const useApproveProposal = () => {
-    const queryClient = (0, react_query_1.useQueryClient)();
+var useApproveProposal = function () {
+    var queryClient = (0, react_query_1.useQueryClient)();
     return (0, react_query_1.useMutation)({
-        mutationFn: async (proposalId) => {
-            const response = await fetch('/api/hcs/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ proposalId }),
+        mutationFn: function (proposalId) { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch('/api/hcs/messages', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ proposalId: proposalId }),
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        if (!response.ok) {
+                            throw new Error('Failed to approve proposal');
+                        }
+                        return [2 /*return*/, proposalId];
+                }
             });
-            if (!response.ok) {
-                throw new Error('Failed to approve proposal');
-            }
-            return proposalId;
-        },
-        onSuccess: () => {
+        }); },
+        onSuccess: function () {
             // Invalidate and refetch HCS messages
             queryClient.invalidateQueries({ queryKey: ['hcs-messages'] });
         },
@@ -119,23 +173,31 @@ const useApproveProposal = () => {
 };
 exports.useApproveProposal = useApproveProposal;
 // Execute a rebalance
-const useExecuteRebalance = () => {
-    const queryClient = (0, react_query_1.useQueryClient)();
+var useExecuteRebalance = function () {
+    var queryClient = (0, react_query_1.useQueryClient)();
     return (0, react_query_1.useMutation)({
-        mutationFn: async ({ proposalId, newWeights }) => {
-            const response = await fetch('/api/hcs/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ proposalId, newWeights, action: 'execute' }),
+        mutationFn: function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+            var response;
+            var proposalId = _b.proposalId, newWeights = _b.newWeights;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, fetch('/api/hcs/messages', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ proposalId: proposalId, newWeights: newWeights, action: 'execute' }),
+                        })];
+                    case 1:
+                        response = _c.sent();
+                        if (!response.ok) {
+                            throw new Error('Failed to execute rebalance');
+                        }
+                        return [2 /*return*/, { proposalId: proposalId, newWeights: newWeights }];
+                }
             });
-            if (!response.ok) {
-                throw new Error('Failed to execute rebalance');
-            }
-            return { proposalId, newWeights };
-        },
-        onSuccess: () => {
+        }); },
+        onSuccess: function () {
             // Invalidate and refetch HCS messages
             queryClient.invalidateQueries({ queryKey: ['hcs-messages'] });
         },
@@ -143,30 +205,38 @@ const useExecuteRebalance = () => {
 };
 exports.useExecuteRebalance = useExecuteRebalance;
 // Propose a rebalance
-const useProposeRebalance = () => {
-    const queryClient = (0, react_query_1.useQueryClient)();
+var useProposeRebalance = function () {
+    var queryClient = (0, react_query_1.useQueryClient)();
     return (0, react_query_1.useMutation)({
-        mutationFn: async ({ newWeights, executeAfter, quorum, trigger, justification }) => {
-            const response = await fetch('/api/hcs/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'propose',
-                    newWeights,
-                    executeAfter,
-                    quorum,
-                    trigger,
-                    justification
-                }),
+        mutationFn: function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+            var response;
+            var newWeights = _b.newWeights, executeAfter = _b.executeAfter, quorum = _b.quorum, trigger = _b.trigger, justification = _b.justification;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, fetch('/api/hcs/messages', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                action: 'propose',
+                                newWeights: newWeights,
+                                executeAfter: executeAfter,
+                                quorum: quorum,
+                                trigger: trigger,
+                                justification: justification
+                            }),
+                        })];
+                    case 1:
+                        response = _c.sent();
+                        if (!response.ok) {
+                            throw new Error('Failed to propose rebalance');
+                        }
+                        return [2 /*return*/, { newWeights: newWeights, executeAfter: executeAfter, quorum: quorum, trigger: trigger, justification: justification }];
+                }
             });
-            if (!response.ok) {
-                throw new Error('Failed to propose rebalance');
-            }
-            return { newWeights, executeAfter, quorum, trigger, justification };
-        },
-        onSuccess: () => {
+        }); },
+        onSuccess: function () {
             // Invalidate and refetch HCS messages
             queryClient.invalidateQueries({ queryKey: ['hcs-messages'] });
         },
