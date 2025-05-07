@@ -1,4 +1,4 @@
-import { HCSMessage } from '../types/hcs';
+import { HCSMessage } from '../types/hcs.js';
 
 // Global in-memory store for HCS messages (for demo purposes)
 class MessageStore {

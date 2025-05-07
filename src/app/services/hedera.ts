@@ -1,19 +1,19 @@
-import { 
-  AccountId, 
-  TopicId, 
-  TopicMessageSubmitTransaction,
-  TopicMessageQuery,
+import {
   Client,
   PrivateKey,
-  TransactionResponse,
   TopicCreateTransaction,
-  TopicMessage
+  TopicMessageSubmitTransaction,
+  TopicId,
+  AccountId,
+  TransactionResponse,
+  TopicMessage,
+  TopicMessageQuery
 } from "@hashgraph/sdk";
-import { HCSMessage, TokenWeights } from '../types/hcs';
-import { isValidHCSMessage } from '../types/hcs';
-import messageStore from "./message-store";
-import { TokenService } from './token-service';
-import { v4 } from 'uuid';
+import { HCSMessage, TokenWeights } from '../types/hcs.js';
+import { isValidHCSMessage } from '../types/hcs.js';
+import messageStore from "./message-store.js";
+import { TokenService } from './token-service.js';
+import { v4 as uuidv4 } from 'uuid';
 
 // HCS Topic IDs from the spec
 const TOPICS = {
@@ -562,7 +562,7 @@ export class HederaService {
       // Create execution message in HCS-10 format
       const executionMessage: HCSMessage = {
         type: 'RebalanceExecuted',
-        id: v4(),
+        id: uuidv4(),
         timestamp: Date.now(),
         sender: process.env.NEXT_PUBLIC_OPERATOR_ID || 'unknown',
         details: {
