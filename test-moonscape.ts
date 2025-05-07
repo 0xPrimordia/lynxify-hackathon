@@ -4,75 +4,151 @@
  * This script sends a real message to Moonscape outbound channel
  */
 
-// Import Hedera SDK
-import { Client, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
-import * as dotenv from 'dotenv';
-
 // Load environment variables
-dotenv.config({ path: '.env.local' });
+require('dotenv').config({ path: '.env.local' });
 
+// Import SDK using CommonJS syntax
+const { 
+  TopicMessageSubmitTransaction,
+  Client, 
+  PrivateKey,
+  AccountId,
+  TopicId
+} = require('@hashgraph/sdk');
+
+// Simple connection test
 async function main() {
-  console.log("🚀 Starting Moonscape Integration Test");
-  
-  // Check environment variables
-  const operatorId = process.env.NEXT_PUBLIC_OPERATOR_ID?.trim();
-  const operatorKey = process.env.OPERATOR_KEY?.trim();
-  const outboundTopic = process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC?.trim().replace(/"/g, '');
-  
-  if (!operatorId || !operatorKey || !outboundTopic) {
-    console.error("❌ Missing required environment variables");
-    console.log("NEXT_PUBLIC_OPERATOR_ID:", operatorId ? "Present" : "Missing");
-    console.log("OPERATOR_KEY:", operatorKey ? "Present" : "Missing");
-    console.log("NEXT_PUBLIC_HCS_OUTBOUND_TOPIC:", outboundTopic ? outboundTopic : "Missing");
-    process.exit(1);
-  }
-  
-  console.log("✅ Environment variables verified");
-  console.log("📨 Will send message to Moonscape outbound topic:", outboundTopic);
-  
   try {
-    // Create Hedera client
+    console.log('🚀 Starting Moonscape HCS-10 test...');
+    
+    // Log important environment variables
+    console.log('ENV VARIABLES:');
+    console.log('- OPERATOR_ID:', process.env.NEXT_PUBLIC_OPERATOR_ID);
+    console.log('- REGISTRY TOPIC:', process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC);
+    console.log('- INBOUND TOPIC:', process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC);
+    console.log('- OUTBOUND TOPIC:', process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC);
+    console.log('- PROFILE TOPIC:', process.env.NEXT_PUBLIC_HCS_PROFILE_TOPIC);
+    
+    // Initialize Hedera client
+    if (!process.env.OPERATOR_KEY || !process.env.NEXT_PUBLIC_OPERATOR_ID) {
+      throw new Error('Missing required environment variables');
+    }
+    
+    console.log('Creating Hedera client...');
+    const operatorId = AccountId.fromString(process.env.NEXT_PUBLIC_OPERATOR_ID);
+    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+    
     const client = Client.forTestnet();
     client.setOperator(operatorId, operatorKey);
     
-    // Create test message
-    const message = {
-      id: `test-${Date.now()}`,
-      type: "AgentMessage",
-      timestamp: Date.now(),
-      sender: "Lynxify Agent",
-      details: {
-        message: "This is a real test message sent directly to Moonscape",
-        testTime: new Date().toISOString(),
-        agentId: operatorId
-      }
-    };
+    // Test 1: Registry registration
+    if (process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC) {
+      console.log('STEP 1: Registering with registry...');
+      const registryTopicId = TopicId.fromString(process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC);
+      
+      console.info(`Registering agent ${operatorId.toString()} with registry ${registryTopicId.toString()}`);
+      
+      const registrationMessage = {
+        p: "hcs-10",
+        op: "register",
+        account_id: operatorId.toString(),
+        m: "Registering Lynxify Agent with Moonscape"
+      };
+      
+      const messageString = JSON.stringify(registrationMessage);
+      const transaction = new TopicMessageSubmitTransaction()
+        .setTopicId(registryTopicId)
+        .setMessage(messageString);
+        
+      console.log('Sending registry registration...');
+      const txResponse = await transaction.execute(client);
+      console.log('Waiting for receipt...');
+      const receipt = await txResponse.getReceipt(client);
+      console.log('✅ Registration message sent successfully with status:', receipt.status.toString());
+    } else {
+      console.log('❌ Cannot register - Registry topic not configured');
+    }
     
-    console.log("📝 Preparing message:", JSON.stringify(message, null, 2));
+    // Test 2: Profile Update
+    if (process.env.NEXT_PUBLIC_HCS_PROFILE_TOPIC) {
+      console.log('STEP 2: Updating agent profile...');
+      const profileTopicId = TopicId.fromString(process.env.NEXT_PUBLIC_HCS_PROFILE_TOPIC);
+      
+      console.info(`Updating agent profile on ${profileTopicId.toString()}`);
+      
+      // This should follow the HCS-11 profile standard that integrates with HCS-10
+      const profileMessage = {
+        version: "1.0",
+        type: "AgentMessage",
+        timestamp: Date.now(),
+        sender: "Lynxify Agent",
+        details: {
+          message: "Agent profile update",
+          testTime: new Date().toISOString(),
+          accountId: operatorId.toString(),
+          inboundTopicId: process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC,
+          outboundTopicId: process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC,
+          display_name: "Lynxify Agent",
+          alias: "lynxify_agent",
+          bio: "AI-powered rebalancing agent for the Lynxify Tokenized Index",
+          capabilities: ['rebalancing', 'market_analysis', 'token_management', 'portfolio_optimization'],
+          agentDescription: 'AI-powered rebalancing agent for the Lynxify Tokenized Index'
+        }
+      };
+      
+      const messageString = JSON.stringify(profileMessage);
+      const transaction = new TopicMessageSubmitTransaction()
+        .setTopicId(profileTopicId)
+        .setMessage(messageString);
+      
+      console.log('Sending profile update...');
+      const txResponse = await transaction.execute(client);
+      console.log('Waiting for receipt...');
+      const receipt = await txResponse.getReceipt(client);
+      console.log('✅ Profile message sent successfully with status:', receipt.status.toString());
+    } else {
+      console.log('❌ Cannot update profile - Profile topic not configured');
+    }
     
-    // Convert to Buffer
-    const messageBuffer = Buffer.from(JSON.stringify(message));
+    // Test 3: Send Agent Status Message
+    if (process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC) {
+      console.log('STEP 3: Sending agent status...');
+      const outboundTopicId = TopicId.fromString(process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC);
+      
+      console.info(`Sending agent status to outbound topic ${outboundTopicId.toString()}`);
+      
+      const statusMessage = {
+        id: `status-${Date.now()}`,
+        type: "AgentMessage",
+        timestamp: Date.now(),
+        sender: "Lynxify Agent",
+        details: {
+          message: "Agent status update",
+          testTime: new Date().toISOString(),
+          agentId: operatorId.toString()
+        }
+      };
+      
+      const messageString = JSON.stringify(statusMessage);
+      const transaction = new TopicMessageSubmitTransaction()
+        .setTopicId(outboundTopicId)
+        .setMessage(messageString);
+      
+      console.log('Sending status message...');
+      const txResponse = await transaction.execute(client);
+      console.log('Waiting for receipt...');
+      const receipt = await txResponse.getReceipt(client);
+      console.log('✅ Status message sent successfully with status:', receipt.status.toString());
+    } else {
+      console.log('❌ Cannot send status - Outbound topic not configured');
+    }
     
-    // Send to topic using Hedera SDK directly
-    const transaction = new TopicMessageSubmitTransaction()
-      .setTopicId(outboundTopic)
-      .setMessage(messageBuffer as unknown as string);
+    console.log('✅ Test completed successfully!');
     
-    console.log("🔄 Sending message to Hedera network...");
-    const response = await transaction.execute(client) as any;
-    
-    // Get receipt
-    const receipt = await response.getReceipt(client) as any;
-    
-    console.log("✅ Message sent successfully!");
-    console.log("Status:", receipt.status ? receipt.status.toString() : "Unknown");
-    console.log(`📊 View on Hashscan: https://hashscan.io/testnet/topic/${outboundTopic}`);
   } catch (error) {
-    console.error("❌ Error sending message:", error);
+    console.error('❌ ERROR:', error);
   }
 }
 
-main().catch(err => {
-  console.error("❌ Unhandled error:", err);
-  process.exit(1);
-}); 
+// Run the test
+main(); 

@@ -53,12 +53,15 @@ export class PriceFeedAgent extends BaseAgent {
           const newPrice = token.basePrice * (1 + priceChange);
           
           const priceUpdate: PriceUpdate = {
+            id: `price-${Date.now()}-${token.symbol}`,
             type: 'PriceUpdate',
             timestamp: Date.now(),
             sender: this.id,
-            tokenId: token.tokenId,
-            price: newPrice,
-            source: 'simulated'
+            details: {
+              tokenId: token.tokenId,
+              price: newPrice,
+              source: 'simulated'
+            }
           };
 
           await this.publishHCSMessage(priceUpdate);

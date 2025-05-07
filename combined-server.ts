@@ -13,6 +13,16 @@ const { TokenService } = require('./src/app/services/token-service');
 const OpenAI = require('openai');
 const { v4: uuidv4 } = require('uuid');
 const messageStore = require('./src/app/services/message-store').default;
+const fs = require('fs').promises;
+const path = require('path');
+
+// Import HCS-10 SDK
+import {
+  HCS10Client,
+  AgentBuilder,
+  AIAgentCapability,
+  Logger
+} from '@hashgraphonline/standards-sdk';
 
 // Import types
 import { HCSMessage, TokenWeights } from './src/app/types/hcs';
@@ -37,18 +47,26 @@ process.env.BYPASS_TOPIC_CHECK = 'true';
 // Use variables from .env.local - don't override if already set
 // If we're running this for the demo, these topic IDs should be in .env.local
 
+// Define registration status file path
+const REGISTRATION_STATUS_FILE = path.join(__dirname, '.registration_status.json');
+
 // Initialize services
 const hederaService = new HederaService();
 const tokenService = new TokenService();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const logger = new Logger({
+  module: 'LynxifyAgent',
+  level: 'debug',
+  prettyPrint: true,
+});
 
 // Get topic IDs
 const governanceTopic = process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC || '';
 const agentTopic = process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC || '';
 
 // Get Moonscape topic IDs
-const moonscapeInboundTopic = process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC?.trim().replace(/\"/g, '') || '';
-const moonscapeOutboundTopic = process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC?.trim().replace(/\"/g, '') || '';
+let moonscapeInboundTopic = process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC?.trim().replace(/\"/g, '') || '';
+let moonscapeOutboundTopic = process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC?.trim().replace(/\"/g, '') || '';
 const moonscapeProfileTopic = process.env.NEXT_PUBLIC_HCS_PROFILE_TOPIC?.trim().replace(/\"/g, '') || '';
 const hasMoonscapeChannels = Boolean(moonscapeInboundTopic && moonscapeOutboundTopic);
 
@@ -100,7 +118,55 @@ function broadcastMessage(message: any) {
   });
 }
 
-// Send message to Moonscape outbound channel
+// Check if the agent is already registered with the registry
+async function isAlreadyRegistered(): Promise<boolean> {
+  if (!process.env.NEXT_PUBLIC_OPERATOR_ID || !process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC) {
+    return false;
+  }
+  
+  try {
+    // Check if the registration status file exists
+    const data = await fs.readFile(REGISTRATION_STATUS_FILE, 'utf8');
+    const status = JSON.parse(data);
+    
+    // Check if the registered account ID matches the current one
+    if (status.accountId === process.env.NEXT_PUBLIC_OPERATOR_ID && 
+        status.registryTopic === process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC) {
+      console.log('🌙 MOONSCAPE: Found existing registration record');
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    // File doesn't exist or is invalid, assume not registered
+    console.log('🌙 MOONSCAPE: No existing registration record found');
+    return false;
+  }
+}
+
+// Store registration status for future runs
+async function storeRegistrationStatus(metadata: any): Promise<void> {
+  if (!process.env.NEXT_PUBLIC_OPERATOR_ID || !process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC) {
+    return;
+  }
+  
+  try {
+    const status = {
+      accountId: metadata.accountId || process.env.NEXT_PUBLIC_OPERATOR_ID,
+      inboundTopicId: metadata.inboundTopicId || '',
+      outboundTopicId: metadata.outboundTopicId || '',
+      registryTopic: process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC,
+      timestamp: Date.now()
+    };
+    
+    await fs.writeFile(REGISTRATION_STATUS_FILE, JSON.stringify(status, null, 2));
+    console.log('🌙 MOONSCAPE: Registration status stored for future runs');
+  } catch (error) {
+    console.error('❌ MOONSCAPE: Failed to store registration status:', error);
+  }
+}
+
+// Send message to Moonscape outbound channel using HCS-10 standard
 async function sendToMoonscape(message: HCSMessage) {
   if (!hasMoonscapeChannels) {
     console.log('⚠️ MOONSCAPE: Cannot send message - Moonscape channels not configured');
@@ -109,39 +175,70 @@ async function sendToMoonscape(message: HCSMessage) {
   
   try {
     console.log(`🌙 MOONSCAPE: Sending message to outbound channel: ${message.type}`);
-    await hederaService.publishHCSMessage(moonscapeOutboundTopic, message);
-    console.log('🌙 MOONSCAPE: Message sent successfully');
+    
+    // Format outbound message according to HCS-10 standard
+    const moonscapeMessage = {
+      p: "hcs-10",  // Protocol identifier
+      op: "message", // Operation type for standard message
+      operator_id: `${moonscapeInboundTopic}@${process.env.NEXT_PUBLIC_OPERATOR_ID}`,
+      data: JSON.stringify({
+        id: message.id || `msg-${Date.now()}`,
+        type: message.type,
+        timestamp: Date.now(),
+        content: message.details?.message || "Agent activity update",
+        metadata: {
+          testTime: new Date().toISOString(), // Required field for Moonscape
+          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
+          status: message.details?.rebalancerStatus,
+          proposalId: message.details?.proposalId,
+          executedAt: message.details?.executedAt
+        }
+      }),
+      m: "Message from Lynxify Agent" // Optional memo
+    };
+    
+    await hederaService.publishHCSMessage(moonscapeOutboundTopic, moonscapeMessage);
+    console.log('✅ MOONSCAPE: Message sent successfully with HCS-10 format');
   } catch (error) {
     console.error('❌ MOONSCAPE ERROR: Failed to send message:', error);
   }
 }
 
-// Update agent profile on Moonscape
-async function updateAgentProfile() {
-  if (!moonscapeProfileTopic) {
-    console.log('⚠️ MOONSCAPE: Cannot update profile - profile channel not configured');
+// Send agent status to Moonscape using HCS-10 standard
+async function sendAgentStatus() {
+  if (!hasMoonscapeChannels) {
+    console.log('⚠️ MOONSCAPE: Cannot send status - Moonscape channels not configured');
     return;
   }
   
   try {
-    console.log('🌙 MOONSCAPE: Updating agent profile');
-    const profileMessage: HCSMessage = {
-      id: `profile-${Date.now()}`,
-      type: 'AgentInfo',
-      timestamp: Date.now(),
-      sender: 'Rebalancer Agent',
-      details: {
-        message: 'Rebalancer Agent profile update',
-        agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
-        capabilities: ['rebalancing', 'market_analysis', 'token_management', 'portfolio_optimization'],
-        agentDescription: 'AI-powered rebalancing agent for the Lynxify Tokenized Index'
-      }
+    console.log('🌙 MOONSCAPE: Sending agent status message');
+    
+    // Format according to HCS-10 standard for connection topic operations
+    const statusMessage = {
+      p: "hcs-10",
+      op: "message",
+      operator_id: `${moonscapeInboundTopic}@${process.env.NEXT_PUBLIC_OPERATOR_ID}`,
+      data: JSON.stringify({
+        id: `status-${Date.now()}`,
+        timestamp: Date.now(),
+        type: "AgentStatus",
+        content: "Rebalancer Agent is active and monitoring proposals",
+        metadata: {
+          testTime: new Date().toISOString(),
+          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
+          pendingProposals: pendingProposals.size,
+          executedProposals: executedProposals.size,
+          status: "active"
+        }
+      }),
+      m: "Agent status update"
     };
     
-    await hederaService.publishHCSMessage(moonscapeProfileTopic, profileMessage);
-    console.log('🌙 MOONSCAPE: Profile updated successfully');
+    await hederaService.publishHCSMessage(moonscapeOutboundTopic, statusMessage);
+    console.log('✅ MOONSCAPE: Status message sent successfully with HCS-10 format');
   } catch (error) {
-    console.error('❌ MOONSCAPE ERROR: Failed to update profile:', error);
+    console.error('❌ MOONSCAPE ERROR: Failed to send status message:', error);
   }
 }
 
@@ -196,9 +293,9 @@ async function handleProposal(message: HCSMessage) {
     if (hasMoonscapeChannels) {
       await sendToMoonscape({
         id: `moonscape-proposal-${Date.now()}`,
-        type: 'AgentInfo',
+        type: 'AgentInfo', // Will be converted to AgentMessage in sendToMoonscape
         timestamp: Date.now(),
-        sender: 'Rebalancer Agent',
+        sender: 'Rebalancer Agent', // Will be converted to Lynxify Agent in sendToMoonscape
         details: {
           message: `Received new rebalance proposal with ID: ${message.id}`,
           rebalancerStatus: 'processing',
@@ -236,19 +333,7 @@ async function handleMoonscapeInbound(message: HCSMessage) {
     
     if (requestType === 'status') {
       // Send status update
-      await sendToMoonscape({
-        id: `status-${Date.now()}`,
-        type: 'AgentResponse',
-        timestamp: Date.now(),
-        sender: 'Rebalancer Agent',
-        details: {
-          message: 'Rebalancer Agent status response',
-          rebalancerStatus: 'active',
-          pendingProposals: pendingProposals.size,
-          executedProposals: executedProposals.size,
-          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
-        }
-      });
+      await sendAgentStatus();
     }
   }
 }
@@ -285,9 +370,9 @@ async function approveProposal(proposalId: string) {
   if (hasMoonscapeChannels) {
     await sendToMoonscape({
       id: `moonscape-approval-${Date.now()}`,
-      type: 'AgentInfo',
+      type: 'AgentInfo', // Will be converted to AgentMessage in sendToMoonscape
       timestamp: Date.now(),
-      sender: 'Rebalancer Agent',
+      sender: 'Rebalancer Agent', // Will be converted to Lynxify Agent in sendToMoonscape
       details: {
         message: `Approved rebalance proposal with ID: ${proposalId}`,
         rebalancerStatus: 'executing',
@@ -409,181 +494,189 @@ async function executeRebalance(proposal: HCSMessage) {
     // Also publish to Moonscape if configured
     if (hasMoonscapeChannels) {
       await sendToMoonscape({
-        id: `moonscape-execution-${Date.now()}`,
-        type: 'AgentInfo',
+        id: `moonscape-exec-${Date.now()}`,
+        type: 'RebalanceExecuted',
         timestamp: Date.now(),
         sender: 'Rebalancer Agent',
         details: {
-          message: `Successfully executed rebalance proposal ${proposal.id}`,
-          rebalancerStatus: 'completed',
           proposalId: proposal.id,
+          preBalances: currentBalances,
+          postBalances: updatedBalances,
           executedAt: Date.now(),
-          analysis: aiAnalysis,
-          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
+          message: aiAnalysis
         }
       });
     }
-    
-    // Mark as executed
-    executedProposals.add(proposal.id);
-    console.log(`🤖 AGENT: Rebalance for proposal ${proposal.id} completed successfully`);
   } catch (error) {
     console.error('❌ AGENT ERROR: Failed to execute rebalance:', error);
-    
-    // Send error notification to Moonscape
-    if (hasMoonscapeChannels) {
-      await sendToMoonscape({
-        id: `moonscape-error-${Date.now()}`,
-        type: 'AgentInfo',
-        timestamp: Date.now(),
-        sender: 'Rebalancer Agent',
-        details: {
-          message: `Error executing rebalance for proposal ${proposal.id}: ${error}`,
-          rebalancerStatus: 'error',
-          proposalId: proposal.id,
-          agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || ''
-        }
-      });
-    }
   }
 }
 
-// === MAIN FUNCTIONS ===
-
-// Send agent status to Moonscape
-async function sendAgentStatus() {
-  if (!hasMoonscapeChannels) {
-    console.log('⚠️ MOONSCAPE: Cannot send status - Moonscape channels not configured');
-    return;
-  }
-  
+// Main function to initialize everything
+async function main() {
   try {
-    console.log('🌙 MOONSCAPE: Sending agent status message');
-    const statusMessage: HCSMessage = {
-      id: `status-${Date.now()}`,
-      type: 'AgentInfo',
-      timestamp: Date.now(),
-      sender: 'Rebalancer Agent',
-      details: {
-        message: 'Rebalancer Agent status update',
-        rebalancerStatus: 'active',
-        agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
-        pendingProposals: pendingProposals.size,
-        executedProposals: executedProposals.size
-      }
-    };
+    console.log('🚀 Initializing Lynxify combined server...');
     
-    await sendToMoonscape(statusMessage);
-  } catch (error) {
-    console.error('❌ MOONSCAPE ERROR: Failed to send status message:', error);
-  }
-}
-
-// Subscribe to HCS topics for WebSocket
-async function subscribeToTopicsWS() {
-  try {
-    console.log('Subscribing to topics for WebSocket broadcasting:', {
-      governance: governanceTopic,
-      agent: agentTopic
-    });
-
-    // Subscribe to governance topic
-    await hederaService.subscribeToTopic(
-      governanceTopic,
-      (message: HCSMessage) => {
-        broadcastMessage({
-          type: 'governance',
-          data: message
-        });
-      }
-    );
-
-    // Subscribe to agent topic
-    await hederaService.subscribeToTopic(
-      agentTopic,
-      (message: HCSMessage) => {
-        broadcastMessage({
-          type: 'agent',
-          data: message
-        });
-      }
-    );
-
-    // Subscribe to Moonscape inbound channel if configured
-    if (moonscapeInboundTopic) {
-      console.log(`🌙 MOONSCAPE: Subscribing to inbound channel ${moonscapeInboundTopic}`);
-      await hederaService.subscribeToTopic(moonscapeInboundTopic, handleMoonscapeInbound);
-    }
-
-    console.log('Subscribed to HCS topics for WebSocket broadcasting');
-  } catch (error) {
-    console.error('Error subscribing to topics for WebSocket:', error);
-    console.log('Continuing operation despite subscription errors');
-  }
-}
-
-// Start the agent
-async function startAgent() {
-  try {
-    console.log('🤖 AGENT: Subscribing to governance topic');
-    await hederaService.subscribeToTopic(governanceTopic, handleProposal);
-    
-    // Moonscape integration
-    if (hasMoonscapeChannels) {
-      console.log('🌙 MOONSCAPE: Integration enabled with channels:', {
-        inbound: moonscapeInboundTopic,
-        outbound: moonscapeOutboundTopic,
-        profile: moonscapeProfileTopic
-      });
+    // FIRST STEP: Create HCS10Client and register agent if needed
+    if (process.env.NEXT_PUBLIC_HCS_REGISTRY_TOPIC) {
+      const alreadyRegistered = await isAlreadyRegistered();
       
-      // Send initial status and update profile
-      await sendAgentStatus();
-      if (moonscapeProfileTopic) {
-        await updateAgentProfile();
+      if (!alreadyRegistered) {
+        console.log('🌙 MOONSCAPE: Agent not yet registered, performing registration using HCS10Client...');
+        
+        // Create base client for registration
+        const baseClient = new HCS10Client({
+          network: 'testnet',
+          operatorId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
+          operatorPrivateKey: process.env.OPERATOR_KEY || '',
+          guardedRegistryBaseUrl: process.env.NEXT_PUBLIC_HCS_REGISTRY_URL || 'https://moonscape.tech',
+          prettyPrint: true,
+          logLevel: 'debug',
+        });
+        
+        // Build the agent using AgentBuilder - using correct method names from the SDK
+        const agentBuilder = new AgentBuilder()
+          .setName('Lynxify Agent')
+          .setAlias('lynxify_agent')
+          .setBio('AI-powered rebalancing agent for the Lynxify Tokenized Index')
+          .setCapabilities([
+            AIAgentCapability.TEXT_GENERATION, 
+            AIAgentCapability.KNOWLEDGE_RETRIEVAL,
+            AIAgentCapability.DATA_INTEGRATION
+          ])
+          .setCreator('Lynxify')
+          .setModel('gpt-3.5-turbo');
+        
+        try {
+          // This is the exact line from the example at line 175
+          const result = await baseClient.createAndRegisterAgent(
+            agentBuilder,
+            { initialBalance: 5 } // Fund with 5 HBAR
+          );
+          
+          if (result && result.metadata) {
+            console.log('✅ MOONSCAPE: Agent created and registered successfully using SDK');
+            console.log('Account ID:', result.metadata.accountId);
+            console.log('Inbound Topic ID:', result.metadata.inboundTopicId);
+            console.log('Outbound Topic ID:', result.metadata.outboundTopicId);
+            
+            // Store registration data for future runs
+            await storeRegistrationStatus(result.metadata);
+            
+            // Update environment variables for this session
+            process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC = result.metadata.inboundTopicId;
+            process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC = result.metadata.outboundTopicId;
+            
+            // Update our local variables
+            moonscapeInboundTopic = result.metadata.inboundTopicId;
+            moonscapeOutboundTopic = result.metadata.outboundTopicId;
+          } else {
+            console.error('⚠️ MOONSCAPE: Failed to create agent with SDK - missing metadata');
+          }
+        } catch (error) {
+          console.error('❌ MOONSCAPE: Error registering agent with SDK:', error);
+        }
+      } else {
+        console.log('✅ MOONSCAPE: Agent already registered with Moonscape registry');
       }
+    } else {
+      console.warn('⚠️ MOONSCAPE: Registry topic not configured - agent will not be discoverable');
     }
     
-    console.log('🤖 AGENT: Ready to process rebalance proposals');
-    console.log('🤖 AGENT: Submit a proposal from the UI to see the agent in action');
-  } catch (error) {
-    console.error('❌ AGENT ERROR: Failed to start rebalance agent:', error);
-  }
-}
-
-// Start the combined server
-async function startCombinedServer() {
-  console.log('🚀 Starting combined WebSocket server and agent...');
-  
-  // Log the environment variables being used
-  console.log('Environment variables:', {
-    operatorId: process.env.NEXT_PUBLIC_OPERATOR_ID,
-    governanceTopic: process.env.NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC,
-    agentTopic: process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC,
-    moonscapeEnabled: hasMoonscapeChannels
-  });
-  
-  // Start WebSocket server
-  console.log('WebSocket server starting on port 3001...');
-  await subscribeToTopicsWS();
-  
-  // Start agent
-  console.log('Starting rebalance agent...');
-  await startAgent();
-  
-  console.log('✅ Combined server started successfully!');
-  console.log('📋 READY FOR DEMO: Submit a proposal from the UI to see automated rebalancing in action');
-  
-  if (hasMoonscapeChannels) {
-    console.log('🌙 MOONSCAPE INTEGRATION: Agent is registered on Moonscape.tech');
-    console.log(`🌙 Visit https://hashscan.io/testnet/topic/${moonscapeOutboundTopic} to see outbound messages`);
-    if (moonscapeProfileTopic) {
-      console.log(`🌙 Visit https://hashscan.io/testnet/topic/${moonscapeProfileTopic} to see profile updates`);
+    // Initialize topics
+    console.log('🔄 Initializing HCS topic subscriptions');
+    
+    // Subscribe to governance topic
+    console.log('🔄 HEDERA: Subscribing to topic:', governanceTopic);
+    await hederaService.subscribeToTopic(governanceTopic, handleProposal);
+    console.log('✅ HEDERA: Successfully subscribed to topic', governanceTopic);
+    
+    // If Moonscape channels are configured, subscribe to inbound channel
+    if (hasMoonscapeChannels) {
+      console.log('🌙 MOONSCAPE: Starting Moonscape integration...');
+      
+      // Subscribe to inbound channel
+      console.log('🔄 MOONSCAPE: Subscribing to inbound topic:', moonscapeInboundTopic);
+      await hederaService.subscribeToTopic(moonscapeInboundTopic, handleMoonscapeInbound);
+      console.log('✅ MOONSCAPE: Successfully subscribed to inbound topic');
+      
+      // Send status update
+      await sendAgentStatus();
     }
+    
+    console.log('✅ Server initialized successfully!');
+    
+    // Create a demo proposal after 5 seconds
+    setTimeout(async () => {
+      console.log('🤖 AGENT: Creating test proposal...');
+      
+      // Get current token weights
+      const currentBalances = await tokenService.getTokenBalances();
+      
+      // Convert to number array and calculate total
+      const balanceValues = Object.values(currentBalances).map(value => Number(value));
+      const totalSupply = balanceValues.reduce((sum, val) => sum + val, 0);
+      
+      const currentWeights: TokenWeights = {};
+      for (const [token, balance] of Object.entries(currentBalances)) {
+        currentWeights[token] = Number(balance) / totalSupply;
+      }
+      
+      // Create proposal (using the same weights to avoid changes for demo)
+      const proposalMessage: HCSMessage = {
+        id: `prop-${Date.now()}`,
+        type: 'RebalanceProposal',
+        timestamp: Date.now(),
+        sender: 'rebalance-agent',
+        details: {
+          newWeights: currentWeights,
+          executeAfter: Date.now() + 86400000, // 24 hours from now
+          quorum: 5000, // 50% required
+          trigger: 'scheduled',
+          message: "Scheduled weekly rebalance - maintaining current allocation"
+        }
+      };
+      
+      // Publish to governance topic
+      await hederaService.publishHCSMessage(governanceTopic, proposalMessage);
+      console.log('✅ HEDERA: Demo proposal created successfully');
+      
+      // Also send a message to Moonscape to demonstrate communication
+      if (hasMoonscapeChannels) {
+        console.log('🌙 MOONSCAPE: Sending proposal notification to Moonscape');
+        
+        // Format according to HCS-10 standard
+        const moonscapeNotification = {
+          p: "hcs-10",
+          op: "message",
+          operator_id: `${moonscapeInboundTopic}@${process.env.NEXT_PUBLIC_OPERATOR_ID}`,
+          data: JSON.stringify({
+            id: `notification-${Date.now()}`,
+            timestamp: Date.now(),
+            type: "ProposalCreated",
+            content: "Created a new rebalance proposal",
+            metadata: {
+              testTime: new Date().toISOString(),
+              agentId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
+              proposalId: proposalMessage.id,
+              status: "active"
+            }
+          }),
+          m: "Proposal creation notification"
+        };
+        
+        await hederaService.publishHCSMessage(moonscapeOutboundTopic, moonscapeNotification);
+        console.log('✅ MOONSCAPE: Proposal notification sent successfully with HCS-10 format');
+      }
+    }, 5000);
+    
+  } catch (error) {
+    console.error('❌ ERROR: Failed to initialize server:', error);
   }
 }
 
-// Start the server
-startCombinedServer().catch(err => {
-  console.error('❌ ERROR: Unhandled error:', err);
+// Run the main function
+main().catch(err => {
+  console.error('❌ FATAL ERROR:', err);
   process.exit(1);
-}); 
+});

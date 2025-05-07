@@ -21,4 +21,24 @@ services:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
+    plan: free
+
+  - type: worker
+    name: lynxify-agent
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm run start:hcs10-agent
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPERATOR_ID
+        sync: false
+      - key: OPERATOR_KEY
+        sync: false
+      - key: NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC
+        sync: false
+      - key: NEXT_PUBLIC_HCS_AGENT_TOPIC
+        sync: false
+      - key: NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC
+        sync: false
     plan: free 

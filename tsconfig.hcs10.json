@@ -1,0 +1,30 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "dist-hcs10",
+    "rootDir": ".",
+    "target": "ES2020",
+    "isolatedModules": false,
+    "noEmit": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "allowJs": true
+  },
+  "include": [
+    "src/app/services/**/*.ts",
+    "src/app/scripts/**/*.ts",
+    "src/lib/**/*.ts",
+    "src/scripts/**/*.ts",
+    "scripts/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/server",
+    "src/__tests__"
+  ]
+} 

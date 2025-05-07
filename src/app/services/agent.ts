@@ -79,14 +79,16 @@ export abstract class Agent {
 
   protected async publishRebalanceExecuted(proposalId: string, preBalances: Record<string, number>, postBalances: Record<string, number>): Promise<void> {
     const message: RebalanceExecuted = {
+      id: `exec-${Date.now()}`,
       type: 'RebalanceExecuted',
       timestamp: Date.now(),
       sender: 'agent',
-      proposalId,
-      preBalances,
-      postBalances,
-      executedAt: Date.now(),
-      executedBy: 'agent'
+      details: {
+        proposalId,
+        preBalances,
+        postBalances,
+        executedAt: Date.now()
+      }
     };
 
     await this.publishMessage(message);
@@ -111,7 +113,11 @@ export class RebalanceAgent extends Agent {
 
       case 'RebalanceApproved':
         // Execute the approved rebalance
-        await this.executeRebalance(message.proposalId);
+        if (message.details?.proposalId) {
+          await this.executeRebalance(message.details.proposalId);
+        } else {
+          console.error('RebalanceApproved message is missing proposalId in details');
+        }
         break;
 
       default:

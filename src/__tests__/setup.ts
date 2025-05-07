@@ -304,4 +304,23 @@ const mockConsole = {
 // Only mock console in test environment
 if (process.env.NODE_ENV === 'test') {
   Object.assign(console, mockConsole);
-} 
+}
+
+// Add OpenAI shims for Node environment
+import 'openai/shims/node';
+
+// Setup global mocks that are needed for all tests
+beforeAll(() => {
+  // Silence console logs during tests
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'info').mockImplementation(() => {});
+  
+  // Keep warnings and errors for debugging
+  // jest.spyOn(console, 'warn').mockImplementation(() => {});
+  // jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterAll(() => {
+  // Restore console functions
+  jest.restoreAllMocks();
+}); 

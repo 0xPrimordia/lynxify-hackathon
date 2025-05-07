@@ -30,7 +30,8 @@ export class RiskAssessmentAgent extends BaseAgent {
   }
 
   private async handlePriceUpdate(update: PriceUpdate): Promise<void> {
-    const { tokenId, price } = update;
+    const tokenId = update.details.tokenId;
+    const price = update.details.price;
     
     // Initialize price history if not exists
     if (!this.priceHistory.has(tokenId)) {
@@ -61,15 +62,18 @@ export class RiskAssessmentAgent extends BaseAgent {
       // Publish risk alert if significant change detected
       if (severity !== 'low') {
         const riskAlert: RiskAlert = {
+          id: `risk-${Date.now()}-${tokenId}`,
           type: 'RiskAlert',
           timestamp: Date.now(),
           sender: this.id,
-          severity,
-          description: `Significant price change detected for token ${tokenId}`,
-          affectedTokens: [tokenId],
-          metrics: {
-            volatility,
-            priceChange
+          details: {
+            severity,
+            riskDescription: `Significant price change detected for token ${tokenId}`,
+            affectedTokens: [tokenId],
+            metrics: {
+              volatility,
+              priceChange
+            }
           }
         };
 

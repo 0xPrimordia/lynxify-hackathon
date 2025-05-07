@@ -43,7 +43,7 @@ export async function getTokenMetadata(tokenId: string) {
             supplyType: data.supply_type,
             type: data.type,
             customFees: data.custom_fees,
-            icon: null
+            icon: null as null
         };
     } catch (error) {
         console.error(`Error fetching metadata for token ${tokenId}:`, error);
@@ -51,7 +51,7 @@ export async function getTokenMetadata(tokenId: string) {
     }
 }
 
-export function getTokenImageUrl(tokenId: string) {
+export function getTokenImageUrl(tokenId: string): null {
     // Note: Mirror Node doesn't provide token logos directly
     // This is a placeholder that should be removed or replaced with an alternative source
     return null;

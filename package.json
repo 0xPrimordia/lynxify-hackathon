@@ -1,6 +1,7 @@
 {
   "name": "lynxify-hackathon",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -14,13 +15,22 @@
     "build-server": "tsc --project tsconfig.server.json",
     "ws": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' server.ts",
     "demo": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' combined-server.ts",
+    "demo:refactored": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' src/app/start-server.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:hcs10": "./scripts/test-hcs10.sh",
     "server:hcs10": "./scripts/start-server.sh",
     "build-and-test-hcs10": "npm run build-server && npm run test:hcs10",
-    "hcs10-demo": "./run-hcs10-demo.sh"
+    "hcs10-demo": "./run-hcs10-demo.sh",
+    "test:refactored": "./scripts/run-refactored-tests.sh",
+    "test:e2e": "ts-node --compilerOptions '{\"module\":\"commonjs\"}' src/app/scripts/test-e2e.ts",
+    "build:hcs10": "tsc --project tsconfig.server.json",
+    "build:hcs10-agent": "tsc --project tsconfig.hcs10.json",
+    "start:hcs10-agent": "npm run build:hcs10-agent && node scripts/run-hcs10-agent.js",
+    "test:hcs10-agent": "npm run build:hcs10-agent && node scripts/test-hcs10-agent.js",
+    "check:hcs10-agent": "node scripts/simple-hcs10-test.js",
+    "full-hcs10-agent-test": "npm run build:hcs10-agent && npm run start:hcs10-agent & sleep 10 && npm run test:hcs10-agent && npm run check:hcs10-agent"
   },
   "dependencies": {
     "@hashgraph/sdk": "2.63.0",
@@ -28,7 +38,6 @@
     "@nextui-org/react": "^2.6.11",
     "@tanstack/react-query": "^5.74.4",
     "chart.js": "^4.4.9",
-    "dotenv": "^16.5.0",
     "next": "15.3.0",
     "openai": "^4.96.0",
     "react": "^19.0.0",
@@ -38,6 +47,9 @@
     "ws": "^8.18.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/register": "^7.27.1",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^29.5.12",
@@ -46,9 +58,12 @@
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.18.1",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "dotenv": "^16.5.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "tailwindcss": "^4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",

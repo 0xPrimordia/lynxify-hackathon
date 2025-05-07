@@ -1,0 +1,17 @@
+[
+  {
+    "id": "b506d4ac-aa9b-4d75-a286-ba599a8f9331",
+    "proposalId": "b3f0ec45-b846-4772-aa40-b5d7f9baea8e",
+    "executedAt": 1746567737239,
+    "preBalances": {
+      "btc": 1000,
+      "eth": 2000,
+      "sol": 500,
+      "lynx": 500
+    },
+    "postBalances": {
+      "TokenA": 1200,
+      "TokenB": 2800
+    }
+  }
+]
