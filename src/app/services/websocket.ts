@@ -1,4 +1,5 @@
 import { WebSocketServer, WebSocket } from 'ws';
+import { HCSMessage } from '../types/hcs';
 
 // Define types
 type BroadcastMessage = {
@@ -6,12 +7,15 @@ type BroadcastMessage = {
   data: any;
 };
 
+type MessageCallback = (message: HCSMessage) => void;
+
 /**
  * WebSocketService - Manages WebSocket connections and broadcasting
  */
 export class WebSocketService {
   private wss: WebSocketServer;
   private clients: Set<WebSocket> = new Set();
+  private subscribers: Set<MessageCallback> = new Set();
   
   /**
    * Initialize WebSocket server
@@ -58,6 +62,38 @@ export class WebSocketService {
         } catch (err) {
           console.error('❌ WEBSOCKET: Error sending message:', err);
         }
+      }
+    });
+
+    // Notify subscribers
+    if (message.type === 'hcs_message' && message.data) {
+      this.notifySubscribers(message.data as HCSMessage);
+    }
+  }
+
+  /**
+   * Subscribe to HCS messages
+   * @param callback Function to call when new messages arrive
+   * @returns Function to unsubscribe
+   */
+  subscribe(callback: MessageCallback): () => void {
+    this.subscribers.add(callback);
+    
+    return () => {
+      this.subscribers.delete(callback);
+    };
+  }
+
+  /**
+   * Notify all subscribers of a new message
+   * @param message HCS message to notify about
+   */
+  private notifySubscribers(message: HCSMessage): void {
+    this.subscribers.forEach(callback => {
+      try {
+        callback(message);
+      } catch (err) {
+        console.error('❌ WEBSOCKET: Error in subscriber callback:', err);
       }
     });
   }

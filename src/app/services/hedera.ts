@@ -9,10 +9,10 @@ import {
   TopicMessage,
   TopicMessageQuery
 } from "@hashgraph/sdk";
-import { HCSMessage, TokenWeights } from '../types/hcs.js';
-import { isValidHCSMessage } from '../types/hcs.js';
-import messageStore from "./message-store.js";
-import { TokenService } from './token-service.js';
+import { HCSMessage, TokenWeights } from '../types/hcs';
+import { isValidHCSMessage } from '../types/hcs';
+import messageStore from "./message-store";
+import { TokenService } from './token-service';
 import { v4 as uuidv4 } from 'uuid';
 
 // HCS Topic IDs from the spec
@@ -22,14 +22,12 @@ const TOPICS = {
   AGENT_ACTIONS: process.env.NEXT_PUBLIC_HCS_AGENT_TOPIC || ''
 } as const;
 
-// Validate environment variables unless bypassed (for initialization)
-if (process.env.BYPASS_TOPIC_CHECK !== 'true') {
-  Object.entries(TOPICS).forEach(([key, value]) => {
-    if (!value) {
-      throw new Error(`Missing required environment variable for ${key} topic`);
-    }
-  });
-}
+// Validate environment variables
+Object.entries(TOPICS).forEach(([key, value]) => {
+  if (!value) {
+    throw new Error(`Missing required environment variable for ${key} topic`);
+  }
+});
 
 // Type-safe topic IDs after validation
 const TOPIC_IDS = {

@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { HCSMessage } from '../types/hcs';
 import { useHCSMessages } from '../services/api';
 import LoadingSkeleton from './LoadingSkeleton';
-import { websocketService } from '../services/websocket';
+import websocketService from '../services/websocket';
 
 interface HCSMessageFeedProps {
   maxMessages?: number;

@@ -1,44 +1,26 @@
 services:
   - type: web
-    name: lynxify-hackathon
+    name: lynxify-hcs10-agent
     runtime: node
-    buildCommand: npm install
-    startCommand: node combined-server.js
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: WS_PORT
-        value: 3001
-      - key: OPERATOR_ID
-        sync: false
-      - key: OPERATOR_KEY
-        sync: false
-      - key: NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC
-        sync: false
-      - key: NEXT_PUBLIC_HCS_AGENT_TOPIC
-        sync: false
-      - key: NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC
-        sync: false
-      - key: OPENAI_API_KEY
-        sync: false
     plan: free
-
-  - type: worker
-    name: lynxify-agent
-    runtime: node
-    buildCommand: npm install
-    startCommand: npm run start:hcs10-agent
+    buildCommand: npm install && npm run build
+    startCommand: npm run demo
     envVars:
-      - key: NODE_ENV
-        value: production
-      - key: OPERATOR_ID
+      - key: NODE_VERSION
+        value: 18.x
+      - key: PORT
+        value: 3001
+      - key: NEXT_PUBLIC_OPERATOR_ID
         sync: false
       - key: OPERATOR_KEY
         sync: false
-      - key: NEXT_PUBLIC_HCS_GOVERNANCE_TOPIC
-        sync: false
-      - key: NEXT_PUBLIC_HCS_AGENT_TOPIC
-        sync: false
-      - key: NEXT_PUBLIC_HCS_PRICE_FEED_TOPIC
-        sync: false
-    plan: free 
+      - key: NEXT_PUBLIC_HCS_AGENT_ID
+        value: 0.0.5966030
+      - key: NEXT_PUBLIC_HCS_INBOUND_TOPIC
+        value: 0.0.5966032
+      - key: NEXT_PUBLIC_HCS_OUTBOUND_TOPIC
+        value: 0.0.5966031
+      - key: NEXT_PUBLIC_HCS_PROFILE_TOPIC
+        value: 0.0.5966035
+      - key: NEXT_PUBLIC_HCS_REGISTRY_TOPIC
+        value: 0.0.5949504 

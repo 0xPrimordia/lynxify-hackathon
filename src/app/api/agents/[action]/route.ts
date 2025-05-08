@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { AgentManager } from '@/app/services/agents/agent-manager';
 
-// Only run on server, not during build
+// Force dynamic rendering for API routes
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
@@ -12,24 +12,29 @@ export async function POST(
   { params }: { params: { action: string } }
 ) {
   try {
-    const { agentId } = await request.json();
+    const data = await request.json();
+    const { agentId } = data;
     const action = params.action;
 
     if (!agentId || !['start', 'stop'].includes(action)) {
-      return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'Invalid request' },
+        { status: 400 }
+      );
     }
 
     if (action === 'start') {
       await agentManager.startAgent(agentId);
-      return NextResponse.json({ status: 'started', agentId });
-    } else if (action === 'stop') {
-      await agentManager.stopAgent(agentId);
-      return NextResponse.json({ status: 'stopped', agentId });
+      return NextResponse.json({ success: true, status: 'started', agentId });
     } else {
-      return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+      await agentManager.stopAgent(agentId);
+      return NextResponse.json({ success: true, status: 'stopped', agentId });
     }
   } catch (error) {
     console.error('Error handling agent action:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 } 
