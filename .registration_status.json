@@ -1,7 +1,9 @@
 {
-  "accountId": "0.0.4340026",
-  "inboundTopicId": "0.0.5964983",
-  "outboundTopicId": "0.0.5964985",
-  "profileTopicId": "0.0.5964987",
-  "timestamp": 1746646969610
+  "accountId": "0.0.5966030",
+  "privateKey": "302e020100300506032b657004220420654f0d29d3da198969dc869b5adbe64bcc56eec95db06ce202a7ab5b78ecabc4",
+  "operatorId": "0.0.5966032@0.0.5966030",
+  "inboundTopicId": "0.0.5966032",
+  "outboundTopicId": "0.0.5966031",
+  "profileTopicId": "0.0.5966035",
+  "pfpTopicId": ""
 }

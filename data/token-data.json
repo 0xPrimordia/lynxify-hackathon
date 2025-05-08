@@ -11,6 +11,13 @@
           "txId": "0.0.4340026@1714223405.296108002",
           "timestamp": "2023-04-27T14:30:05.296Z",
           "hashscanUrl": "https://hashscan.io/testnet/token/0.0.5924920"
+        },
+        {
+          "type": "MINT",
+          "txId": "0.0.4340026@1746107348.550254935",
+          "timestamp": "2025-05-01T13:49:16.185Z",
+          "hashscanUrl": "https://hashscan.io/testnet/transaction/0-0-4340026-1746107348-550254935",
+          "amount": 50
         }
       ]
     },
@@ -25,6 +32,13 @@
           "txId": "0.0.4340026@1714223417.123456789",
           "timestamp": "2023-04-27T14:30:17.123Z",
           "hashscanUrl": "https://hashscan.io/testnet/token/0.0.5924921"
+        },
+        {
+          "type": "BURN",
+          "txId": "0.0.4340026@1746107351.988672527",
+          "timestamp": "2025-05-01T13:49:18.155Z",
+          "hashscanUrl": "https://hashscan.io/testnet/transaction/0-0-4340026-1746107351-988672527",
+          "amount": 25
         }
       ]
     },
@@ -39,6 +53,13 @@
           "txId": "0.0.4340026@1714223428.987654321",
           "timestamp": "2023-04-27T14:30:28.987Z",
           "hashscanUrl": "https://hashscan.io/testnet/token/0.0.5924922"
+        },
+        {
+          "type": "MINT",
+          "txId": "0.0.4340026@1746107350.629405941",
+          "timestamp": "2025-05-01T13:49:20.627Z",
+          "hashscanUrl": "https://hashscan.io/testnet/transaction/0-0-4340026-1746107350-629405941",
+          "amount": 35
         }
       ]
     },
@@ -59,4 +80,4 @@
   },
   "createdAt": "2023-04-27T14:30:40.246Z",
   "network": "testnet"
-} 
+}

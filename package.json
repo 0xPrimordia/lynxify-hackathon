@@ -30,10 +30,14 @@
     "start:hcs10-agent": "npm run build:hcs10-agent && node scripts/run-hcs10-agent.js",
     "test:hcs10-agent": "npm run build:hcs10-agent && node scripts/test-hcs10-agent.js",
     "check:hcs10-agent": "node scripts/simple-hcs10-test.js",
-    "full-hcs10-agent-test": "npm run build:hcs10-agent && npm run start:hcs10-agent & sleep 10 && npm run test:hcs10-agent && npm run check:hcs10-agent"
+    "full-hcs10-agent-test": "npm run build:hcs10-agent && npm run start:hcs10-agent & sleep 10 && npm run test:hcs10-agent && npm run check:hcs10-agent",
+    "hcs10:register": "node scripts/hcs10/register-agent.mjs",
+    "hcs10:verify": "node scripts/hcs10/verify-agent.mjs",
+    "hcs10:monitor": "node scripts/hcs10/monitor-agent.mjs",
+    "hcs10:full-flow": "npm run hcs10:register && npm run hcs10:verify && npm run hcs10:monitor"
   },
   "dependencies": {
-    "@hashgraph/sdk": "2.63.0",
+    "@hashgraph/sdk": "^2.63.0",
     "@hashgraphonline/standards-sdk": "^0.0.95",
     "@nextui-org/react": "^2.6.11",
     "@tanstack/react-query": "^5.74.4",
