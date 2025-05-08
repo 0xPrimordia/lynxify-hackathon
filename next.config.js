@@ -5,9 +5,13 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Disable TypeScript checking during production builds to allow any types
+    // Disable TypeScript checking during production builds
     ignoreBuildErrors: true,
+  },
+  // Disable Lightning CSS to avoid the native module error on Render
+  experimental: {
+    useLightningcss: false
   }
-}
+};
 
 export default nextConfig; 
