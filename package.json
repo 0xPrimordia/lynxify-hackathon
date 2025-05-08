@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "node combined-server.js",
-    "start:agent": "npm run build-scripts && node dist/app/scripts/run-agent.js",
+    "start:agent": "node render-agent-wrapper.js",
     "lint": "next lint",
     "build-scripts": "tsc --project tsconfig.scripts.json",
     "init-hcs": "npm run build-scripts && node dist/app/scripts/init-hcs.js",
