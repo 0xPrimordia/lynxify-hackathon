@@ -12,6 +12,9 @@ const AUTO_APPROVED_ACCOUNTS = process.env.AUTO_APPROVED_ACCOUNTS
   ? process.env.AUTO_APPROVED_ACCOUNTS.split(',') 
   : [];
 
+// Output the whitelist for debugging
+console.log('🔍 DEBUG: Auto approved accounts:', AUTO_APPROVED_ACCOUNTS);
+
 // Paths for IPC with wrapper process
 const PENDING_CONNECTIONS_FILE = path.join(process.cwd(), '.pending_connections.json');
 const APPROVAL_COMMAND_FILE = path.join(process.cwd(), '.approval_commands.json');
@@ -19,6 +22,7 @@ const AGENT_STATUS_FILE = path.join(process.cwd(), '.agent_status.json');
 
 // Check if API-based connection approval is enabled
 const ENABLE_APPROVAL_API = process.env.ENABLE_CONNECTION_APPROVAL_API === 'true';
+console.log('🔍 DEBUG: Connection approval API enabled:', ENABLE_APPROVAL_API);
 
 /**
  * HCS10 Agent Handler - Manages agent connections and messages
@@ -133,6 +137,7 @@ export class HCS10AgentHandler extends EventEmitter {
       }
       
       console.log('✅ File-based IPC initialized');
+      console.log(`🔍 DEBUG: Pending connections file path: ${PENDING_CONNECTIONS_FILE}`);
     } catch (error) {
       console.error('❌ Error initializing file-based IPC:', error);
     }
@@ -253,6 +258,7 @@ export class HCS10AgentHandler extends EventEmitter {
       console.log('🔄 Loading connections from ConnectionsManager...');
       const connections = await this.connectionsManager.fetchConnectionData(this.agentId);
       console.log(`✅ Loaded ${connections.length} connections from ConnectionsManager`);
+      console.log('🔍 DEBUG: Connections from manager:', JSON.stringify(connections, null, 2));
       
       // For backward compatibility, keep the connections map updated
       this.syncConnectionsFromManager();
@@ -295,6 +301,8 @@ export class HCS10AgentHandler extends EventEmitter {
     
     const managerConnections = this.connectionsManager.getAllConnections();
     this.connections.clear();
+    
+    console.log('🔍 DEBUG: All connections from manager:', JSON.stringify(managerConnections, null, 2));
     
     for (const conn of managerConnections) {
       this.connections.set(conn.connectionTopicId, {
@@ -361,20 +369,50 @@ export class HCS10AgentHandler extends EventEmitter {
    */
   async checkInboundTopic() {
     try {
-      const messages = await this.client.getMessageStream(this.inboundTopicId);
+      console.log(`🔄 Checking inbound topic ${this.inboundTopicId} for new messages...`);
       
-      if (messages && messages.length > 0) {
-        console.log(`📬 Found ${messages.length} messages on inbound topic`);
+      // Log available methods
+      console.log('🔍 DEBUG: Available methods on client:', Object.keys(this.client));
+      
+      try {
+        // Get messages from the topic
+        const messages = await this.client.getMessageStream(this.inboundTopicId);
         
-        // Process messages with ConnectionsManager if available
-        if (this.connectionsManager) {
-          this.connectionsManager.processInboundMessages(messages);
-        }
+        // Log raw message count and details
+        console.log(`🔍 DEBUG: Raw message response type: ${typeof messages}`);
+        console.log(`🔍 DEBUG: Raw message count: ${messages ? messages.length : 'undefined'}`);
         
-        // Also process individually for backward compatibility
-        for (const message of messages) {
-          await this.processInboundMessage(message);
+        if (messages && messages.length > 0) {
+          console.log(`📬 Found ${messages.length} messages on inbound topic`);
+          console.log('🔍 DEBUG: Raw messages:', JSON.stringify(messages.slice(0, 2), null, 2)); // Only first 2 to avoid log overload
+          
+          // Detect connection requests specifically
+          const connectionRequests = messages.filter(msg => msg && msg.op === 'connection_request');
+          console.log(`🔍 DEBUG: Found ${connectionRequests.length} connection_request messages`);
+          
+          // Process messages with ConnectionsManager if available
+          if (this.connectionsManager) {
+            console.log('🔄 Processing messages with ConnectionsManager...');
+            this.connectionsManager.processInboundMessages(messages);
+            
+            // Debug: Check if ConnectionsManager detected any pending requests
+            const pendingAfterProcess = this.connectionsManager.getPendingRequests();
+            console.log(`🔍 DEBUG: Pending requests after processing: ${pendingAfterProcess.length}`);
+            if (pendingAfterProcess.length > 0) {
+              console.log('🔍 DEBUG: Pending requests detail:', JSON.stringify(pendingAfterProcess, null, 2));
+            }
+          }
+          
+          // Also process individually for backward compatibility
+          for (const message of messages) {
+            await this.processInboundMessage(message);
+          }
+        } else {
+          console.log('ℹ️ No new messages found on inbound topic');
         }
+      } catch (inboundError) {
+        console.error(`❌ Error getting messages from inbound topic: ${inboundError.message}`);
+        console.error('Stack trace:', inboundError.stack);
       }
     } catch (error) {
       console.error('❌ Error checking inbound topic:', error);
@@ -389,25 +427,46 @@ export class HCS10AgentHandler extends EventEmitter {
     if (!this.connectionsManager) return;
     
     try {
+      // Fetch connection data first - this is crucial!
+      console.log('🔄 Fetching latest connection data from mirror node...');
+      await this.connectionsManager.fetchConnectionData(this.agentId);
+      
       // Get pending connections that need approval
       const pendingRequests = this.connectionsManager.getPendingRequests();
       
+      console.log(`🔄 Checking for pending connection requests... Found: ${pendingRequests.length}`);
+      
       if (pendingRequests.length > 0) {
         console.log(`📝 Found ${pendingRequests.length} pending connection requests`);
+        console.log('🔍 DEBUG: Pending requests:', JSON.stringify(pendingRequests, null, 2));
         
         // Write pending connections to file for the API to read
         if (ENABLE_APPROVAL_API) {
-          await fs.writeFile(
-            PENDING_CONNECTIONS_FILE, 
-            JSON.stringify(pendingRequests, null, 2)
-          );
+          console.log(`🔄 Writing ${pendingRequests.length} pending requests to file: ${PENDING_CONNECTIONS_FILE}`);
+          try {
+            await fs.writeFile(
+              PENDING_CONNECTIONS_FILE, 
+              JSON.stringify(pendingRequests, null, 2)
+            );
+            console.log('✅ Successfully wrote pending connections to file');
+            
+            // Debug: Verify file was written correctly
+            const written = await fs.readFile(PENDING_CONNECTIONS_FILE, 'utf8');
+            console.log(`🔍 DEBUG: File content verification: ${written.substring(0, 100)}...`);
+          } catch (writeError) {
+            console.error('❌ Error writing pending connections to file:', writeError);
+          }
         }
         
+        // Process each pending request per the standards-sdk example
         for (const request of pendingRequests) {
-          await this.handlePendingConnection(request);
+          // This is the key change - call handleConnectionRequest directly
+          // instead of our custom handlePendingConnection
+          await this.handlePendingConnectionRequest(request);
         }
       } else if (ENABLE_APPROVAL_API) {
         // Clear the pending connections file if there are no pending requests
+        console.log('ℹ️ No pending connection requests, clearing file');
         await fs.writeFile(PENDING_CONNECTIONS_FILE, '[]');
       }
     } catch (error) {
@@ -434,14 +493,17 @@ export class HCS10AgentHandler extends EventEmitter {
    */
   async processInboundMessage(message) {
     try {
-      console.log('📩 Processing inbound message:', message);
+      console.log('📩 Processing inbound message:', JSON.stringify(message));
       this.emit('message_received', message);
       
       // Handle different message types based on op field
       if (message.op === 'connection_request') {
+        console.log('🔍 DEBUG: Detected connection_request message');
         // Use ConnectionsManager for handling (will call handlePendingConnection later)
         if (!this.connectionsManager) {
           await this.handleConnectionRequest(message);
+        } else {
+          console.log('ℹ️ ConnectionsManager will handle this message during checkPendingConnections');
         }
         // Otherwise, already processed by ConnectionsManager and will be handled by checkPendingConnections
       } else {
@@ -453,21 +515,63 @@ export class HCS10AgentHandler extends EventEmitter {
   }
   
   /**
-   * Handle pending connection based on approval rules
+   * Handle a pending connection request - follows standards-sdk example
    */
-  async handlePendingConnection(pendingRequest) {
+  async handlePendingConnectionRequest(pendingRequest) {
     try {
       const requesterId = pendingRequest.targetAccountId;
-      console.log(`🔄 Processing pending connection request from ${requesterId}`);
+      const requestId = pendingRequest.connectionRequestId;
+      
+      console.log(`🔄 Processing pending connection request from ${requesterId}, requestId: ${requestId}`);
+      console.log('🔍 DEBUG: Full pending request:', JSON.stringify(pendingRequest, null, 2));
       
       // If API is enabled, don't auto-approve unless in whitelist
       if (ENABLE_APPROVAL_API) {
         // Only auto-approve if explicitly in whitelist
         const shouldAutoApprove = AUTO_APPROVED_ACCOUNTS.includes(requesterId);
         
+        console.log(`🔍 DEBUG: Should auto-approve (API enabled): ${shouldAutoApprove}`);
+        console.log(`🔍 DEBUG: Requester ID: "${requesterId}"`);
+        console.log(`🔍 DEBUG: Whitelist contains: ${AUTO_APPROVED_ACCOUNTS.join(', ')}`);
+        
         if (shouldAutoApprove) {
           console.log(`✅ Auto-approving connection from ${requesterId} (in whitelist)`);
-          await this.approveConnection(pendingRequest);
+          
+          // KEY CHANGE: Use client.handleConnectionRequest directly following standards-sdk example
+          const result = await this.client.handleConnectionRequest(
+            this.inboundTopicId,
+            requesterId, 
+            requestId
+          );
+          
+          console.log(`✅ Connection approved:`, result);
+          
+          // Update connection status
+          pendingRequest.status = 'established';
+          pendingRequest.isPending = false;
+          this.connectionsManager.updateOrAddConnection(pendingRequest);
+          
+          // Save for legacy code
+          await this.syncConnectionsFromManager();
+          await this.saveConnections();
+          
+          // Send welcome message
+          if (result && result.connectionTopicId) {
+            await this.sendMessage(
+              result.connectionTopicId,
+              {
+                type: 'welcome',
+                message: 'Welcome to Lynxify HCS-10 Agent!',
+                timestamp: new Date().toISOString()
+              }
+            );
+          }
+          
+          // Update status files
+          if (ENABLE_APPROVAL_API) {
+            await this.updateStatusFile();
+            await this.checkPendingConnections();
+          }
         } else {
           console.log(`⏳ Connection from ${requesterId} requires manual approval via API`);
           // Notification happens via the status file and pending connections file
@@ -476,9 +580,40 @@ export class HCS10AgentHandler extends EventEmitter {
         // If API is not enabled, use the original auto-approval logic
         const shouldAutoApprove = this.shouldAutoApproveConnection(requesterId);
         
+        console.log(`🔍 DEBUG: Should auto-approve (API disabled): ${shouldAutoApprove}`);
+        
         if (shouldAutoApprove) {
           console.log(`✅ Auto-approving connection from ${requesterId}`);
-          await this.approveConnection(pendingRequest);
+          
+          // KEY CHANGE: Use client.handleConnectionRequest directly
+          const result = await this.client.handleConnectionRequest(
+            this.inboundTopicId,
+            requesterId, 
+            requestId
+          );
+          
+          console.log(`✅ Connection approved:`, result);
+          
+          // Update connection status
+          pendingRequest.status = 'established';
+          pendingRequest.isPending = false;
+          this.connectionsManager.updateOrAddConnection(pendingRequest);
+          
+          // Save for legacy code
+          await this.syncConnectionsFromManager();
+          await this.saveConnections();
+          
+          // Send welcome message
+          if (result && result.connectionTopicId) {
+            await this.sendMessage(
+              result.connectionTopicId,
+              {
+                type: 'welcome',
+                message: 'Welcome to Lynxify HCS-10 Agent!',
+                timestamp: new Date().toISOString()
+              }
+            );
+          }
         } else {
           console.log(`⏳ Connection from ${requesterId} requires manual approval`);
           // Emit an event to notify about pending approval
@@ -486,7 +621,7 @@ export class HCS10AgentHandler extends EventEmitter {
         }
       }
     } catch (error) {
-      console.error('❌ Error handling pending connection:', error);
+      console.error('❌ Error handling pending connection request:', error);
     }
   }
   
@@ -495,7 +630,10 @@ export class HCS10AgentHandler extends EventEmitter {
    */
   shouldAutoApproveConnection(accountId) {
     // Auto-approve if in whitelist, or approve all if whitelist is empty
-    return AUTO_APPROVED_ACCOUNTS.includes(accountId) || AUTO_APPROVED_ACCOUNTS.length === 0;
+    const isInWhitelist = AUTO_APPROVED_ACCOUNTS.includes(accountId);
+    const emptyWhitelist = AUTO_APPROVED_ACCOUNTS.length === 0;
+    console.log(`🔍 DEBUG: Account ${accountId} in whitelist: ${isInWhitelist}, empty whitelist: ${emptyWhitelist}`);
+    return isInWhitelist || emptyWhitelist;
   }
   
   /**
@@ -690,13 +828,72 @@ export class HCS10AgentHandler extends EventEmitter {
       throw new Error('ConnectionsManager not initialized');
     }
     
+    console.log(`🔄 Attempting to manually approve connection: ${connectionId}`);
+    
+    // Ensure we have the latest data
+    await this.connectionsManager.fetchConnectionData(this.agentId);
+    
+    // Get the connection by topic ID
     const pendingRequest = this.connectionsManager.getConnectionByTopicId(connectionId);
     
-    if (!pendingRequest || !pendingRequest.isPending) {
-      throw new Error(`Connection ${connectionId} not found or doesn't need approval`);
+    if (!pendingRequest) {
+      console.log(`⚠️ Connection ${connectionId} not found`);
+      throw new Error(`Connection ${connectionId} not found`);
     }
     
-    return await this.approveConnection(pendingRequest);
+    if (!pendingRequest.isPending) {
+      console.log(`⚠️ Connection ${connectionId} doesn't need approval (not pending)`);
+      throw new Error(`Connection ${connectionId} doesn't need approval`);
+    }
+    
+    console.log(`🔄 Found pending connection to approve:`, pendingRequest);
+    
+    // Use the direct handleConnectionRequest method as recommended
+    const requesterId = pendingRequest.targetAccountId;
+    const requestId = pendingRequest.connectionRequestId;
+    
+    try {
+      // Call the handleConnectionRequest method directly
+      const result = await this.client.handleConnectionRequest(
+        this.inboundTopicId,
+        requesterId, 
+        requestId
+      );
+      
+      console.log(`✅ Connection manually approved:`, result);
+      
+      // Update connection state
+      pendingRequest.status = 'established';
+      pendingRequest.isPending = false;
+      this.connectionsManager.updateOrAddConnection(pendingRequest);
+      
+      // Update local connections map
+      await this.syncConnectionsFromManager();
+      await this.saveConnections();
+      
+      // Update status file
+      if (ENABLE_APPROVAL_API) {
+        await this.updateStatusFile();
+        await this.checkPendingConnections();
+      }
+      
+      // Send welcome message
+      if (result && result.connectionTopicId) {
+        await this.sendMessage(
+          result.connectionTopicId,
+          {
+            type: 'welcome',
+            message: 'Welcome to Lynxify HCS-10 Agent!',
+            timestamp: new Date().toISOString()
+          }
+        );
+      }
+      
+      return result;
+    } catch (error) {
+      console.error(`❌ Error manually approving connection:`, error);
+      throw error;
+    }
   }
 }
 
