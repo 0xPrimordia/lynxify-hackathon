@@ -437,18 +437,45 @@ export class HCS10AgentHandler extends EventEmitter {
           : 'No connections'
       );
       
+      // Standard pending requests (isPending = true)
       const pendingRequests = this.connectionsManager.getPendingRequests();
+      
+      // IMPORTANT: Also check for connections that need confirmation (status = 'needs_confirmation')
+      // This is the key fix - we need to handle these connections too
+      const needsConfirmationConnections = this.connectionsManager.getConnectionsNeedingConfirmation();
+      console.log(`🔍 DEBUG: Connections needing confirmation: ${needsConfirmationConnections.length}`);
+      
+      // Combine both types for processing
+      const allPendingConnections = [...pendingRequests];
+      
+      // Add needs_confirmation connections if they're not already in the pending list
+      for (const conn of needsConfirmationConnections) {
+        const alreadyInPending = allPendingConnections.some(p => 
+          p.connectionTopicId === conn.connectionTopicId
+        );
+        
+        if (!alreadyInPending) {
+          console.log(`🔍 DEBUG: Adding needs_confirmation connection to pending list: ${conn.connectionTopicId}`);
+          allPendingConnections.push(conn);
+        }
+      }
       
       // More detailed logging about pending connections
       console.log(`🔍 DEBUG: ConnectionsManager.getPendingRequests() returned ${pendingRequests.length} connections`);
+      console.log(`🔍 DEBUG: Total pending connections (including needs_confirmation): ${allPendingConnections.length}`);
+      
       if (pendingRequests.length > 0) {
         console.log('🔍 DEBUG: Pending request sample:', JSON.stringify(pendingRequests[0], null, 2));
+      }
+      
+      if (needsConfirmationConnections.length > 0) {
+        console.log('🔍 DEBUG: Needs confirmation sample:', JSON.stringify(needsConfirmationConnections[0], null, 2));
       }
       
       // Log how the pending status is determined
       console.log(`🔍 DEBUG: Raw connections data with status and isPending flags:`);
       allConnections.forEach(conn => {
-        console.log(`🔍 Connection ${conn.connectionTopicId || 'unknown'}: status=${conn.status}, isPending=${!!conn.isPending}`);
+        console.log(`🔍 Connection ${conn.connectionTopicId || 'unknown'}: status=${conn.status}, isPending=${!!conn.isPending}, needsConfirmation=${!!conn.needsConfirmation}`);
       });
       
       // Log the active connections for comparison
@@ -458,28 +485,37 @@ export class HCS10AgentHandler extends EventEmitter {
         console.log('🔍 DEBUG: Active connection sample:', JSON.stringify(activeConnections[0], null, 2));
       }
       
-      // Continue with existing code...
-      const pendingAfterProcess = this.connectionsManager.getPendingRequests();
+      // Continue with processing all pending connections including those needing confirmation
       console.log(`{ module: 'ConnectionsManager' } Total connections in map: ${allConnections.length}`);
-      console.log(`{ module: 'ConnectionsManager' } Connections with status='pending': ${pendingAfterProcess.length}`);
+      console.log(`{ module: 'ConnectionsManager' } Standard pending connections: ${pendingRequests.length}`);
+      console.log(`{ module: 'ConnectionsManager' } Connections needing confirmation: ${needsConfirmationConnections.length}`);
+      console.log(`{ module: 'ConnectionsManager' } Total pending to process: ${allPendingConnections.length}`);
       
-      if (pendingAfterProcess.length === 0) {
+      // Process all pending connections, including those needing confirmation
+      if (allPendingConnections.length > 0) {
+        console.log(`{ module: 'ConnectionsManager' } Processing ${allPendingConnections.length} pending connections`);
+        
+        // Process each pending connection
+        for (const conn of allPendingConnections) {
+          console.log(`🔍 DEBUG: Processing connection: ${conn.connectionTopicId}, status=${conn.status}`);
+          
+          // Important: Process connections with different handling based on status
+          if (conn.status === 'needs_confirmation') {
+            // This is the key part from the example - handle needs_confirmation connections
+            console.log(`🔄 Processing connection needing confirmation: ${conn.connectionTopicId}`);
+            await this.handleNeedsConfirmationRequest(conn);
+          } else if (conn.isPending) {
+            // Normal pending connection handling
+            console.log(`🔄 Processing standard pending connection: ${conn.connectionTopicId}`);
+            await this.handlePendingConnectionRequest(conn);
+          }
+        }
+        
+        // Write all pending connections to file for API
+        console.log(`ℹ️ Writing ${allPendingConnections.length} pending connection requests to file`);
+        await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify(allPendingConnections, null, 2));
+      } else {
         console.log(`{ module: 'ConnectionsManager' } No pending connections found`);
-      } else {
-        console.log(`{ module: 'ConnectionsManager' } Pending connections found: ${pendingAfterProcess.length}`);
-        pendingAfterProcess.forEach(conn => {
-          console.log(`🔍 DEBUG: Pending connection: ${conn.connectionTopicId}, status=${conn.status}, isPending=${conn.isPending}`);
-        });
-      }
-      
-      // Rest of the function remains the same
-      console.log(`🔄 Checking for pending connection requests... Found: ${pendingAfterProcess.length}`);
-      
-      if (pendingAfterProcess.length > 0) {
-        // Write pending connections to file for API
-        console.log(`ℹ️ Writing ${pendingAfterProcess.length} pending connection requests to file`);
-        await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify(pendingAfterProcess, null, 2));
-      } else {
         console.log(`ℹ️ No pending connection requests, clearing file`);
         await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify([], null, 2));
       }
@@ -489,6 +525,113 @@ export class HCS10AgentHandler extends EventEmitter {
       
     } catch (error) {
       console.error('❌ Error checking pending connections:', error);
+    }
+  }
+  
+  /**
+   * Handle a connection that needs confirmation (status = 'needs_confirmation')
+   * This follows the SDK example from polling-agent.ts
+   */
+  async handleNeedsConfirmationRequest(connection) {
+    try {
+      console.log(`🔄 Handling connection that needs confirmation: ${connection.connectionTopicId}`);
+      console.log(`   Target Account: ${connection.targetAccountId}`);
+      console.log(`   Request ID: ${connection.connectionRequestId}`);
+      
+      // If API is enabled, don't auto-approve unless in whitelist
+      if (ENABLE_APPROVAL_API) {
+        // Only auto-approve if explicitly in whitelist
+        const shouldAutoApprove = AUTO_APPROVED_ACCOUNTS.includes(connection.targetAccountId);
+        
+        console.log(`🔍 DEBUG: Should auto-approve (API enabled): ${shouldAutoApprove}`);
+        
+        if (shouldAutoApprove) {
+          console.log(`✅ Auto-approving connection from ${connection.targetAccountId} (in whitelist)`);
+          
+          // Similar to the polling-agent.ts example, handleConnectionRequest with request ID
+          const result = await this.client.handleConnectionRequest(
+            this.inboundTopicId,
+            connection.targetAccountId, 
+            connection.connectionRequestId
+          );
+          
+          console.log(`✅ Connection approved:`, result);
+          
+          // Update connection status
+          connection.status = 'established';
+          connection.needsConfirmation = false;
+          this.connectionsManager.updateOrAddConnection(connection);
+          
+          // Save for legacy code
+          await this.syncConnectionsFromManager();
+          await this.saveConnections();
+          
+          // Send welcome message
+          if (result && result.connectionTopicId) {
+            await this.sendMessage(
+              result.connectionTopicId,
+              {
+                type: 'welcome',
+                message: 'Welcome to Lynxify HCS-10 Agent!',
+                timestamp: new Date().toISOString()
+              }
+            );
+          }
+          
+          // Update status files
+          if (ENABLE_APPROVAL_API) {
+            await this.updateStatusFile();
+            await this.checkPendingConnections();
+          }
+        } else {
+          console.log(`⏳ Connection from ${connection.targetAccountId} requires manual approval via API`);
+          // Notification happens via the status file and pending connections file
+        }
+      } else {
+        // If API is not enabled, use the original auto-approval logic
+        const shouldAutoApprove = this.shouldAutoApproveConnection(connection.targetAccountId);
+        
+        console.log(`🔍 DEBUG: Should auto-approve (API disabled): ${shouldAutoApprove}`);
+        
+        if (shouldAutoApprove) {
+          console.log(`✅ Auto-approving connection from ${connection.targetAccountId}`);
+          
+          // KEY CHANGE: Use client.handleConnectionRequest directly
+          const result = await this.client.handleConnectionRequest(
+            this.inboundTopicId,
+            connection.targetAccountId, 
+            connection.connectionRequestId
+          );
+          
+          console.log(`✅ Connection approved:`, result);
+          
+          // Update connection status
+          connection.status = 'established';
+          connection.needsConfirmation = false;
+          this.connectionsManager.updateOrAddConnection(connection);
+          
+          // Save for legacy code
+          await this.syncConnectionsFromManager();
+          await this.saveConnections();
+          
+          // Send welcome message
+          if (result && result.connectionTopicId) {
+            await this.sendMessage(
+              result.connectionTopicId,
+              {
+                type: 'welcome',
+                message: 'Welcome to Lynxify HCS-10 Agent!',
+                timestamp: new Date().toISOString()
+              }
+            );
+          }
+        } else {
+          console.log(`⏳ Connection from ${connection.targetAccountId} requires manual approval`);
+          this.emit('connection_needs_approval', connection);
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Error handling needs_confirmation connection:`, error);
     }
   }
   
@@ -859,12 +1002,13 @@ export class HCS10AgentHandler extends EventEmitter {
       throw new Error(`Connection ${connectionId} not found`);
     }
     
-    if (!pendingRequest.isPending) {
-      console.log(`⚠️ Connection ${connectionId} doesn't need approval (not pending)`);
+    // Allow approval of both pending and needs_confirmation connections
+    if (!pendingRequest.isPending && pendingRequest.status !== 'needs_confirmation') {
+      console.log(`⚠️ Connection ${connectionId} doesn't need approval (not pending or needing confirmation)`);
       throw new Error(`Connection ${connectionId} doesn't need approval`);
     }
     
-    console.log(`🔄 Found pending connection to approve:`, pendingRequest);
+    console.log(`🔄 Found connection to approve:`, pendingRequest);
     
     // Use the direct handleConnectionRequest method as recommended
     const requesterId = pendingRequest.targetAccountId;
@@ -883,6 +1027,7 @@ export class HCS10AgentHandler extends EventEmitter {
       // Update connection state
       pendingRequest.status = 'established';
       pendingRequest.isPending = false;
+      pendingRequest.needsConfirmation = false;
       this.connectionsManager.updateOrAddConnection(pendingRequest);
       
       // Update local connections map
