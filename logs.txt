@@ -1,50 +1,50 @@
-2025-05-12T20:25:15.637589473Z 🔍 Checking for messages on connection inb-7:0.0.5949517@0.0.4340026
-2025-05-12T20:25:15.64235417Z { module: 'HCS10-BaseClient' } Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
-2025-05-12T20:25:15.642376142Z { module: 'HCS-SDK' } Error fetching messages: Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
-2025-05-12T20:25:15.642376922Z 🔍 Checking for messages on connection inb-3:0.0.5949517@0.0.4340026
-2025-05-12T20:25:15.642990498Z 🔍 Checking for messages on connection 0.0.5988420
-2025-05-12T20:25:15.643610965Z { module: 'HCS10-BaseClient' } Error querying topic messages: Request failed with status code 400 on inb-6:0.0.5949517@0.0.4340026
-2025-05-12T20:25:15.643626536Z { module: 'HCS-SDK' } Error fetching messages: Error querying topic messages: Request failed with status code 400 on inb-6:0.0.5949517@0.0.4340026
-2025-05-12T20:25:15.643632726Z 🔍 Checking for messages on connection inb-7:0.0.5949517@0.0.4340026
-2025-05-12T20:25:15.935624868Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
-2025-05-12T20:25:15.935703153Z 🔍 Attempting to get messages using standard getMessageStream...
-2025-05-12T20:25:16.039179801Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988888
-2025-05-12T20:25:16.039213474Z { module: 'HCS-SDK' } Confirming connection with ID 1
-2025-05-12T20:25:16.042201718Z 🔍 Checking for messages on connection 0.0.5988417
-2025-05-12T20:25:16.044013294Z { module: 'HCS-SDK' } Message submitted successfully
-2025-05-12T20:25:16.044033845Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.4340026
-2025-05-12T20:25:16.044036585Z { module: 'HCS-SDK' } Cache hit for profile: 0.0.4340026
-2025-05-12T20:25:16.044128622Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.4340026
-2025-05-12T20:25:16.044136383Z { module: 'HCS-SDK' } Cache hit for profile: 0.0.4340026
-2025-05-12T20:25:16.642029568Z 🔍 Checking for messages on connection 0.0.5988419
-2025-05-12T20:25:16.643044574Z 🔍 DEBUG: Raw message response type: object
-2025-05-12T20:25:16.64313426Z 🔍 DEBUG: Raw message count: undefined
-2025-05-12T20:25:16.645120359Z ℹ️ No new messages found with standard approach
-2025-05-12T20:25:16.64513375Z 🔍 Checking active connections for messages...
-2025-05-12T20:25:16.645138341Z 📬 Found 273 active connections to check for messages
-2025-05-12T20:25:16.645142711Z 🔍 Checking for messages on connection inb-2:0.0.5949517@0.0.4340026
-2025-05-12T20:25:16.645146431Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.5966030
-2025-05-12T20:25:16.645150162Z { module: 'HCS-SDK' } Cache hit for profile: 0.0.5966030
-2025-05-12T20:25:16.742874498Z 🔍 Checking for messages on connection 0.0.5988418
-2025-05-12T20:25:16.748133532Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988893
-2025-05-12T20:25:16.748180086Z { module: 'HCS-SDK' } Confirming connection with ID 1
-2025-05-12T20:25:16.74969805Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988891
-2025-05-12T20:25:16.749715571Z { module: 'HCS-SDK' } Confirming connection with ID 1
-2025-05-12T20:25:16.749930267Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988892
-2025-05-12T20:25:16.750045686Z { module: 'HCS-SDK' } Confirming connection with ID 1
-2025-05-12T20:25:16.945814853Z { module: 'HCS-SDK' } Creating topic
-2025-05-12T20:25:16.945840695Z { module: 'HCS-SDK' } Executing topic creation transaction
-2025-05-12T20:25:17.334792055Z 🔍 DEBUG: Raw message response type: object
-2025-05-12T20:25:17.334817277Z 🔍 DEBUG: Raw message count: undefined
-2025-05-12T20:25:17.334820637Z ℹ️ No new messages found with standard approach
-2025-05-12T20:25:17.334823027Z 🔍 Checking active connections for messages...
-2025-05-12T20:25:17.334825197Z 📬 Found 273 active connections to check for messages
-2025-05-12T20:25:17.334828308Z 🔍 Checking for messages on connection inb-2:0.0.5949517@0.0.4340026
-2025-05-12T20:25:17.336577869Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988890
-2025-05-12T20:25:17.336597361Z { module: 'HCS-SDK' } Confirming connection with ID 1
-2025-05-12T20:25:17.338408466Z 🔍 Checking for messages on connection inb-3:0.0.5949517@0.0.4340026
-2025-05-12T20:25:17.33845338Z { module: 'HCS10-BaseClient' } Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
-2025-05-12T20:25:17.33846177Z { module: 'HCS-SDK' } Error fetching messages: Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
-2025-05-12T20:25:17.48024468Z { module: 'ConnectionsManager' } Total connections in map: 280
-2025-05-12T20:25:17.480273472Z { module: 'ConnectionsManager' } Connections with status='pending': 0
-2025-05-12T20:25:17.480276252Z { module: 'ConnectionsManager' } No pending connections found
+2025-05-12T20:54:37.353425107Z HCS10 agent process failed unexpectedly
+2025-05-12T20:54:41.36430434Z 🔄 MESSAGE STORE: Creating global message store
+2025-05-12T20:54:41.449726438Z 🚀 HEDERA: Initializing HederaService with REAL Hedera network...
+2025-05-12T20:54:41.44975345Z 🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
+2025-05-12T20:54:41.451868158Z 🔄 HEDERA: Setting operator credentials...
+2025-05-12T20:54:41.452286679Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-12T20:54:41.904047765Z ==> Your service is live 🎉
+2025-05-12T20:54:41.950493335Z ✅ HEDERA: Successfully initialized client with REAL Hedera testnet
+2025-05-12T20:54:41.951008214Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-12T20:54:41.957615208Z Using fallback token data (no file access or in production)
+2025-05-12T20:54:41.957708935Z ✅ HederaService initialized successfully!
+2025-05-12T20:54:41.971356755Z 🚀 HEDERA: Initializing HederaService with REAL Hedera network...
+2025-05-12T20:54:41.971460203Z 🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
+2025-05-12T20:54:42.047496349Z 🔄 HEDERA: Setting operator credentials...
+2025-05-12T20:54:42.04765039Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-12T20:54:42.053855844Z ✅ HEDERA: Successfully initialized client with REAL Hedera testnet
+2025-05-12T20:54:42.055577893Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-12T20:54:42.150396954Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-12T20:54:42.150439817Z Using fallback token data (no file access or in production)
+2025-05-12T20:54:42.150445327Z ✅ HederaService initialized successfully!
+2025-05-12T20:54:42.154273154Z Using fallback token data (no file access or in production)
+2025-05-12T20:54:42.154382712Z ✅ RebalanceAgent initialized with TokenService
+2025-05-12T20:54:42.154387552Z Starting agent manager...
+2025-05-12T20:54:42.155613904Z 📋 HEDERA: HCS topic configuration for REAL network: {
+2025-05-12T20:54:42.155630775Z   governanceTopic: '0.0.5898548',
+2025-05-12T20:54:42.155634265Z   priceFeedTopic: '0.0.5898550',
+2025-05-12T20:54:42.155636676Z   agentTopic: '0.0.5898549'
+2025-05-12T20:54:42.155734323Z }
+2025-05-12T20:54:42.156009673Z 🔄 HEDERA: Subscribing to topic: 0.0.5898548
+2025-05-12T20:54:42.363289454Z Restarting HCS10 agent process now...
+2025-05-12T20:54:42.747775135Z ✅ HEDERA: Successfully subscribed to topic 0.0.5898548
+2025-05-12T20:54:42.753195051Z 🔄 HEDERA: Subscribing to topic: 0.0.5898550
+2025-05-12T20:54:42.753219063Z ✅ HEDERA: Successfully subscribed to topic 0.0.5898550
+2025-05-12T20:54:42.753221823Z 🔄 HEDERA: Subscribing to topic: 0.0.5898549
+2025-05-12T20:54:42.753224103Z ✅ HEDERA: Successfully subscribed to topic 0.0.5898549
+2025-05-12T20:54:42.753226163Z AgentManager started successfully
+2025-05-12T20:54:42.753228223Z Agent manager started successfully
+2025-05-12T20:54:43.250803302Z file:///opt/render/project/src/scripts/hcs10/agent-handler.mjs:892
+2025-05-12T20:54:43.250834074Z           console.log(`
+2025-05-12T20:54:43.250837034Z                        
+2025-05-12T20:54:43.250838984Z 
+2025-05-12T20:54:43.250841695Z SyntaxError: Unexpected end of input
+2025-05-12T20:54:43.250844145Z     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)
+2025-05-12T20:54:43.250846925Z     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)
+2025-05-12T20:54:43.250850135Z     at #translate (node:internal/modules/esm/loader:468:12)
+2025-05-12T20:54:43.250852455Z     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)
+2025-05-12T20:54:43.250854585Z     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)
+2025-05-12T20:54:43.250856506Z 
+2025-05-12T20:54:43.250858586Z Node.js v22.14.0
+2025-05-12T20:54:43.34946971Z Restarted HCS10 agent process exited with code 1

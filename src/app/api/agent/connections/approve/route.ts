@@ -13,13 +13,13 @@ export async function POST(
   request: Request,
 ) {
   try {
-    // Get the connection ID from the URL
-    const url = new URL(request.url);
-    const connectionId = url.pathname.split('/').pop();
+    // Get the connection ID from the request body
+    const body = await request.json();
+    const { connectionId } = body;
     
     if (!connectionId) {
       return NextResponse.json(
-        { success: false, error: 'Missing connection ID' },
+        { success: false, error: 'Missing connection ID in request body' },
         { status: 400 }
       );
     }
