@@ -897,6 +897,116 @@ export class HCS10AgentHandler extends EventEmitter {
   }
 }
 
-// Export a singleton instance
-const agentHandler = new HCS10AgentHandler();
-export default agentHandler; 
+// Export the handler class for external use if needed
+export { HCS10AgentHandler };
+
+// Add global unhandled exception handlers
+process.on('uncaughtException', (error) => {
+  console.error('❌ CRITICAL: Uncaught exception:', error);
+  console.error('Stack trace:', error.stack);
+  // Don't exit - let the process continue if possible
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ CRITICAL: Unhandled promise rejection:', reason);
+  // Don't exit - let the process continue if possible
+});
+
+/**
+ * Entry point for the agent handler
+ */
+async function main() {
+  console.log('🚀 Starting HCS10 agent handler...');
+  console.log(`🔍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔍 Current working directory: ${process.cwd()}`);
+  console.log(`🔍 Process ID: ${process.pid}`);
+  
+  try {
+    const handler = new HCS10AgentHandler();
+    
+    // Initialize the handler
+    console.log('🔄 Initializing HCS10 agent handler...');
+    await handler.initialize();
+    console.log('✅ HCS10 agent handler initialized successfully');
+    
+    // Set up signal handlers for clean shutdown
+    process.on('SIGINT', async () => {
+      console.log('Received SIGINT, shutting down...');
+      try {
+        if (handler.monitoring) {
+          await handler.stopMonitoring();
+        }
+      } catch (err) {
+        console.error('Error during shutdown:', err);
+      }
+      process.exit(0);
+    });
+    
+    process.on('SIGTERM', async () => {
+      console.log('Received SIGTERM, shutting down...');
+      try {
+        if (handler.monitoring) {
+          await handler.stopMonitoring();
+        }
+      } catch (err) {
+        console.error('Error during shutdown:', err);
+      }
+      process.exit(0);
+    });
+    
+    // Start monitoring for connections and messages
+    console.log('🔄 Starting monitoring process...');
+    await handler.startMonitoring();
+    console.log('✅ Monitoring process started successfully');
+    
+    // Keep the process alive indefinitely
+    console.log('🔄 HCS10 agent handler running indefinitely. Use Ctrl+C to stop.');
+    
+    // This empty interval keeps the Node.js event loop active
+    const keepAliveInterval = setInterval(() => {
+      // Log a heartbeat periodically
+      console.log(`💓 Agent handler heartbeat: ${new Date().toISOString()}`);
+      
+      // Update status file periodically to show the agent is still running
+      try {
+        fs.writeFile(AGENT_STATUS_FILE, JSON.stringify(handler.getStatus()))
+          .catch(err => console.error('Error updating status file:', err));
+      } catch (err) {
+        console.error('Error in keepalive interval:', err);
+      }
+    }, 30000); // Update every 30 seconds
+    
+    // Add another shorter interval for good measure
+    const quickHeartbeat = setInterval(() => {
+      // This is just to ensure the event loop stays active
+    }, 1000);
+    
+    console.log('✅ Keep-alive intervals established');
+  } catch (error) {
+    console.error('❌ CRITICAL: Error in main function:', error);
+    console.error('Stack trace:', error.stack);
+    
+    // Don't exit immediately - wait a bit so logs get flushed
+    console.log('⏳ Waiting before exit to ensure logs are flushed...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
+    // Now we can exit with an error code
+    process.exit(1);
+  }
+}
+
+// Run the main function with additional error handling
+try {
+  console.log('🔄 Starting main function execution...');
+  await main();
+  console.log('✅ Main function completed, process should remain alive due to intervals');
+} catch (error) {
+  console.error('❌ CRITICAL: Error running main function:', error);
+  console.error('Stack trace:', error.stack);
+  
+  // Wait before exit to ensure logs are flushed
+  console.log('⏳ Waiting before exit to ensure logs are flushed...');
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  
+  process.exit(1);
+} 

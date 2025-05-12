@@ -258,7 +258,9 @@ server.listen(PORT, () => {
       stdio: 'inherit', // This will pipe the agent's stdout/stderr to the parent process
       env: {
         ...process.env,
-        ENABLE_CONNECTION_APPROVAL_API: 'true' // Signal to the agent to check for approval commands
+        ENABLE_CONNECTION_APPROVAL_API: 'true', // Signal to the agent to check for approval commands
+        NODE_ENV: process.env.NODE_ENV, // Pass NODE_ENV explicitly
+        DEBUG: 'true' // Enable more verbose debugging
       }
     });
     
@@ -268,6 +270,29 @@ server.listen(PORT, () => {
       if (code !== 0) {
         console.error('HCS10 agent process failed unexpectedly');
       }
+      
+      // Restart the agent if it exits
+      console.log('Restarting HCS10 agent process in 5 seconds...');
+      setTimeout(() => {
+        console.log('Restarting HCS10 agent process now...');
+        const restartedAgentProcess = spawn('node', ['scripts/hcs10/agent-handler.mjs'], {
+          stdio: 'inherit',
+          env: {
+            ...process.env,
+            ENABLE_CONNECTION_APPROVAL_API: 'true',
+            NODE_ENV: process.env.NODE_ENV,
+            DEBUG: 'true'
+          }
+        });
+        
+        restartedAgentProcess.on('exit', (restartCode) => {
+          console.log(`Restarted HCS10 agent process exited with code ${restartCode}`);
+        });
+        
+        restartedAgentProcess.on('error', (err) => {
+          console.error('Failed to restart HCS10 agent process:', err);
+        });
+      }, 5000);
     });
     
     // Handle errors
