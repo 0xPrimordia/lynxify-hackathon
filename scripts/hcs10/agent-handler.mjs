@@ -421,54 +421,72 @@ export class HCS10AgentHandler extends EventEmitter {
   }
   
   /**
-   * Check for pending connection requests that need approval
+   * Check pending connections and update status files
    */
   async checkPendingConnections() {
-    if (!this.connectionsManager) return;
-    
     try {
-      // Fetch connection data first - this is crucial!
-      console.log('🔄 Fetching latest connection data from mirror node...');
+      // Get pending connections from ConnectionsManager
       await this.connectionsManager.fetchConnectionData(this.agentId);
       
-      // Get pending connections that need approval
+      // Log all connections for debugging
+      const allConnections = this.connectionsManager.getAllConnections();
+      console.log(`🔍 DEBUG: Total connections in ConnectionsManager: ${allConnections.length}`);
+      console.log(`🔍 DEBUG: Connection detail sample:`, 
+        allConnections.length > 0 
+          ? JSON.stringify(allConnections[0], null, 2) 
+          : 'No connections'
+      );
+      
       const pendingRequests = this.connectionsManager.getPendingRequests();
       
-      console.log(`🔄 Checking for pending connection requests... Found: ${pendingRequests.length}`);
-      
+      // More detailed logging about pending connections
+      console.log(`🔍 DEBUG: ConnectionsManager.getPendingRequests() returned ${pendingRequests.length} connections`);
       if (pendingRequests.length > 0) {
-        console.log(`📝 Found ${pendingRequests.length} pending connection requests`);
-        console.log('🔍 DEBUG: Pending requests:', JSON.stringify(pendingRequests, null, 2));
-        
-        // Write pending connections to file for the API to read
-        if (ENABLE_APPROVAL_API) {
-          console.log(`🔄 Writing ${pendingRequests.length} pending requests to file: ${PENDING_CONNECTIONS_FILE}`);
-          try {
-            await fs.writeFile(
-              PENDING_CONNECTIONS_FILE, 
-              JSON.stringify(pendingRequests, null, 2)
-            );
-            console.log('✅ Successfully wrote pending connections to file');
-            
-            // Debug: Verify file was written correctly
-            const written = await fs.readFile(PENDING_CONNECTIONS_FILE, 'utf8');
-            console.log(`🔍 DEBUG: File content verification: ${written.substring(0, 100)}...`);
-          } catch (writeError) {
-            console.error('❌ Error writing pending connections to file:', writeError);
-          }
-        }
-        
-        // Process each pending request per the standards-sdk example
-        for (const request of pendingRequests) {
-          // This is the key change - call handleConnectionRequest directly
-          // instead of our custom handlePendingConnection
-          await this.handlePendingConnectionRequest(request);
-        }
-      } else if (ENABLE_APPROVAL_API) {
-        // Clear the pending connections file if there are no pending requests
-        console.log('ℹ️ No pending connection requests, clearing file');
-        await fs.writeFile(PENDING_CONNECTIONS_FILE, '[]');
+        console.log('🔍 DEBUG: Pending request sample:', JSON.stringify(pendingRequests[0], null, 2));
       }
+      
+      // Log how the pending status is determined
+      console.log(`🔍 DEBUG: Raw connections data with status and isPending flags:`);
+      allConnections.forEach(conn => {
+        console.log(`🔍 Connection ${conn.connectionTopicId || 'unknown'}: status=${conn.status}, isPending=${!!conn.isPending}`);
+      });
+      
+      // Log the active connections for comparison
+      const activeConnections = this.connectionsManager.getActiveConnections();
+      console.log(`🔍 DEBUG: ConnectionsManager.getActiveConnections() returned ${activeConnections.length} connections`);
+      if (activeConnections.length > 0) {
+        console.log('🔍 DEBUG: Active connection sample:', JSON.stringify(activeConnections[0], null, 2));
+      }
+      
+      // Continue with existing code...
+      const pendingAfterProcess = this.connectionsManager.getPendingRequests();
+      console.log(`{ module: 'ConnectionsManager' } Total connections in map: ${allConnections.length}`);
+      console.log(`{ module: 'ConnectionsManager' } Connections with status='pending': ${pendingAfterProcess.length}`);
+      
+      if (pendingAfterProcess.length === 0) {
+        console.log(`{ module: 'ConnectionsManager' } No pending connections found`);
+      } else {
+        console.log(`{ module: 'ConnectionsManager' } Pending connections found: ${pendingAfterProcess.length}`);
+        pendingAfterProcess.forEach(conn => {
+          console.log(`🔍 DEBUG: Pending connection: ${conn.connectionTopicId}, status=${conn.status}, isPending=${conn.isPending}`);
+        });
+      }
+      
+      // Rest of the function remains the same
+      console.log(`🔄 Checking for pending connection requests... Found: ${pendingAfterProcess.length}`);
+      
+      if (pendingAfterProcess.length > 0) {
+        // Write pending connections to file for API
+        console.log(`ℹ️ Writing ${pendingAfterProcess.length} pending connection requests to file`);
+        await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify(pendingAfterProcess, null, 2));
+      } else {
+        console.log(`ℹ️ No pending connection requests, clearing file`);
+        await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify([], null, 2));
+      }
+      
+      // Check if there's a command to approve a connection
+      await this.checkApprovalCommands();
+      
     } catch (error) {
       console.error('❌ Error checking pending connections:', error);
     }
