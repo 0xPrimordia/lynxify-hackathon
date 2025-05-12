@@ -548,7 +548,14 @@ export class HCS10AgentHandler extends EventEmitter {
         if (shouldAutoApprove) {
           console.log(`✅ Auto-approving connection from ${connection.targetAccountId} (in whitelist)`);
           
-          // Similar to the polling-agent.ts example, handleConnectionRequest with request ID
+          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
+          if (!this.inboundTopicId) {
+            throw new Error('inboundTopicId is required for connection memo');
+          }
+          if (!connection.connectionRequestId) {
+            throw new Error('connectionRequestId is required for connection memo');
+          }
+          
           const result = await this.client.handleConnectionRequest(
             this.inboundTopicId,
             connection.targetAccountId, 
@@ -595,6 +602,14 @@ export class HCS10AgentHandler extends EventEmitter {
         
         if (shouldAutoApprove) {
           console.log(`✅ Auto-approving connection from ${connection.targetAccountId}`);
+          
+          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
+          if (!this.inboundTopicId) {
+            throw new Error('inboundTopicId is required for connection memo');
+          }
+          if (!connection.connectionRequestId) {
+            throw new Error('connectionId is required for connection memo');
+          }
           
           // KEY CHANGE: Use client.handleConnectionRequest directly
           const result = await this.client.handleConnectionRequest(
@@ -698,6 +713,14 @@ export class HCS10AgentHandler extends EventEmitter {
         if (shouldAutoApprove) {
           console.log(`✅ Auto-approving connection from ${requesterId} (in whitelist)`);
           
+          // Ensure that both inboundTopicId and connectionId (which is the requestId) are passed
+          if (!this.inboundTopicId) {
+            throw new Error('inboundTopicId is required for connection memo');
+          }
+          if (!requestId) {
+            throw new Error('connectionId is required for connection memo');
+          }
+          
           // KEY CHANGE: Use client.handleConnectionRequest directly following standards-sdk example
           const result = await this.client.handleConnectionRequest(
             this.inboundTopicId,
@@ -745,6 +768,14 @@ export class HCS10AgentHandler extends EventEmitter {
         
         if (shouldAutoApprove) {
           console.log(`✅ Auto-approving connection from ${requesterId}`);
+          
+          // Ensure that both inboundTopicId and connectionId (which is the requestId) are passed
+          if (!this.inboundTopicId) {
+            throw new Error('inboundTopicId is required for connection memo');
+          }
+          if (!requestId) {
+            throw new Error('connectionId is required for connection memo');
+          }
           
           // KEY CHANGE: Use client.handleConnectionRequest directly
           const result = await this.client.handleConnectionRequest(
@@ -873,7 +904,15 @@ export class HCS10AgentHandler extends EventEmitter {
       const requesterId = message.account_id || message.sender;
       const connectionRequestId = message.id || message.sequence_number;
       
-      console.log(`👤 Connection request from ${requesterId}, ID: ${connectionRequestId}`);
+      console.log(`🔄 Connection request from ${requesterId}, ID: ${connectionRequestId}`);
+      
+      // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
+      if (!this.inboundTopicId) {
+        throw new Error('inboundTopicId is required for connection memo');
+      }
+      if (!connectionRequestId) {
+        throw new Error('connectionId is required for connection memo');
+      }
       
       // Accept the connection request
       const connection = await this.client.handleConnectionRequest(
@@ -1015,6 +1054,14 @@ export class HCS10AgentHandler extends EventEmitter {
     const requestId = pendingRequest.connectionRequestId;
     
     try {
+      // Ensure that both inboundTopicId and connectionId (which is the requestId) are passed
+      if (!this.inboundTopicId) {
+        throw new Error('inboundTopicId is required for connection memo');
+      }
+      if (!requestId) {
+        throw new Error('connectionId is required for connection memo');
+      }
+      
       // Call the handleConnectionRequest method directly
       const result = await this.client.handleConnectionRequest(
         this.inboundTopicId,
