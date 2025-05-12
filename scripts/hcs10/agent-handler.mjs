@@ -897,9 +897,6 @@ export class HCS10AgentHandler extends EventEmitter {
   }
 }
 
-// Export the handler class for external use if needed
-export { HCS10AgentHandler };
-
 // Add global unhandled exception handlers
 process.on('uncaughtException', (error) => {
   console.error('❌ CRITICAL: Uncaught exception:', error);
@@ -996,17 +993,19 @@ async function main() {
 }
 
 // Run the main function with additional error handling
-try {
-  console.log('🔄 Starting main function execution...');
-  await main();
-  console.log('✅ Main function completed, process should remain alive due to intervals');
-} catch (error) {
-  console.error('❌ CRITICAL: Error running main function:', error);
-  console.error('Stack trace:', error.stack);
-  
-  // Wait before exit to ensure logs are flushed
-  console.log('⏳ Waiting before exit to ensure logs are flushed...');
-  await new Promise(resolve => setTimeout(resolve, 5000));
-  
-  process.exit(1);
-} 
+(async () => {
+  try {
+    console.log('🔄 Starting main function execution...');
+    await main();
+    console.log('✅ Main function completed, process should remain alive due to intervals');
+  } catch (error) {
+    console.error('❌ CRITICAL: Error running main function:', error);
+    console.error('Stack trace:', error.stack);
+    
+    // Wait before exit to ensure logs are flushed
+    console.log('⏳ Waiting before exit to ensure logs are flushed...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
+    process.exit(1);
+  }
+})(); 
