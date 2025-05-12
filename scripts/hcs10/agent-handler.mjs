@@ -897,6 +897,52 @@ export class HCS10AgentHandler extends EventEmitter {
   }
 }
 
-// Export a singleton instance
-const agentHandler = new HCS10AgentHandler();
-export default agentHandler; 
+// Export the handler class for external use if needed
+export { HCS10AgentHandler };
+
+/**
+ * Entry point for the agent handler
+ */
+async function main() {
+  console.log('🚀 Starting HCS10 agent handler...');
+  const handler = new HCS10AgentHandler();
+  
+  // Initialize the handler
+  await handler.initialize();
+  
+  // Set up signal handlers for clean shutdown
+  process.on('SIGINT', async () => {
+    console.log('Received SIGINT, shutting down...');
+    if (handler.monitoring) {
+      await handler.stopMonitoring();
+    }
+    process.exit(0);
+  });
+  
+  process.on('SIGTERM', async () => {
+    console.log('Received SIGTERM, shutting down...');
+    if (handler.monitoring) {
+      await handler.stopMonitoring();
+    }
+    process.exit(0);
+  });
+  
+  // Start monitoring for connections and messages
+  await handler.startMonitoring();
+  
+  // Keep the process alive indefinitely
+  console.log('🔄 HCS10 agent handler running indefinitely. Use Ctrl+C to stop.');
+  
+  // This empty interval keeps the Node.js event loop active
+  const keepAliveInterval = setInterval(() => {
+    // Update status file periodically to show the agent is still running
+    fs.writeFile(AGENT_STATUS_FILE, JSON.stringify(handler.getStatus()))
+      .catch(err => console.error('Error updating status file:', err));
+  }, 30000); // Update every 30 seconds
+}
+
+// Run the main function
+main().catch(error => {
+  console.error('❌ Fatal error in agent handler:', error);
+  process.exit(1);
+}); 
