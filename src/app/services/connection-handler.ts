@@ -235,9 +235,25 @@ export class ConnectionHandlerService {
       
       // Check if we already have a connection with this requester
       if (this.connections.has(requesterId)) {
-        this.logger.info(`Already have connection with ${requesterId}, will reuse existing connection`);
-        // We could handle reconnection logic here in a more advanced implementation
+        const existingConnectionId = this.connections.get(requesterId);
+        this.logger.info(`Already have connection with ${requesterId} on topic ${existingConnectionId}, reusing existing connection`);
+        
+        // Create a connection_created response using the existing connection
+        const response = {
+          p: 'hcs-10',
+          op: 'connection_created',
+          requesterId: this.inboundTopicId,
+          timestamp: Date.now()
+        };
+        
+        // Send the connection_created response back on the requester's inbound topic
+        await this.client.sendMessage(requesterInboundTopic, JSON.stringify(response));
+        this.logger.info(`Sent connection_created response for existing connection to ${requesterInboundTopic}`);
+        return;
       }
+      
+      // Only create a new connection if one doesn't exist
+      this.logger.info(`No existing connection with ${requesterId}, creating new connection`);
       
       // Call the client to handle the connection request
       // This automatically creates a new connection topic and responds with connection_created

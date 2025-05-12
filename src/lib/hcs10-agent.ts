@@ -201,12 +201,13 @@ export class HCS10Agent {
     }
     
     const requesterTopic = parts[0];
-    console.log(`Extracted requester topic: ${requesterTopic}`);
+    const requesterId = parts[1];
+    console.log(`Extracted requester topic: ${requesterTopic}, requesterId: ${requesterId}`);
     
     // Check if we already have a connection with this requester
     const existingConnection = this.connections.find(conn => conn.requesterTopic === requesterTopic);
     if (existingConnection) {
-      console.log(`Connection already exists with ${requesterTopic}, reusing existing connection`);
+      console.log(`Connection already exists with ${requesterTopic}, reusing existing connection ${existingConnection.id}`);
       
       // Respond with connection created message to acknowledge the request
       const response: HCS10ConnectionCreated = {
@@ -224,6 +225,8 @@ export class HCS10Agent {
       return;
     }
     
+    console.log(`No existing connection found with ${requesterTopic}, creating a new one`);
+    
     // Create a new connection record
     const connection: Connection = {
       id: uuidv4(),
@@ -237,25 +240,10 @@ export class HCS10Agent {
     this.connections.push(connection);
     console.log(`Added connection. Total connections: ${this.connections.length}`);
     
-    // Save connections to file
-    try {
-      console.log(`About to save connections to ${CONNECTIONS_FILE}`);
-      fs.writeFileSync(CONNECTIONS_FILE, JSON.stringify(this.connections, null, 2));
-      console.log(`Wrote connections file successfully`);
-      
-      // Check if file was created
-      if (fs.existsSync(CONNECTIONS_FILE)) {
-        console.log(`Connection file exists after writing`);
-        const content = fs.readFileSync(CONNECTIONS_FILE, 'utf8');
-        console.log(`Content: ${content}`);
-      } else {
-        console.log(`Connection file does NOT exist after writing`);
-      }
-    } catch (error) {
-      console.error(`Error saving connections:`, error);
-    }
+    // Save to disk
+    await this.saveConnections();
     
-    // Respond with connection created message
+    // Send a connection created response
     const response: HCS10ConnectionCreated = {
       p: 'hcs-10',
       op: 'connection_created',
@@ -265,8 +253,8 @@ export class HCS10Agent {
     
     await this.client.sendMessage(requesterTopic, JSON.stringify(response));
     console.log(`Sent connection created response to ${requesterTopic}`);
-
-    // Update profile after successful new connection
+    
+    // Update profile after successful connection
     await this.updateProfile();
   }
 
