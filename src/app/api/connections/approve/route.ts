@@ -11,6 +11,7 @@ export const runtime = 'nodejs';
 
 /**
  * POST endpoint to approve a connection - follows standards-expert example
+ * This is a duplicate route for compatibility with client code that might be using this path
  */
 export async function POST(
   request: Request,
