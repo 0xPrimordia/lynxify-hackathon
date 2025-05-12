@@ -1,1 +1,22 @@
-[{"type":"approve_connection","connectionId":"inb-5:0.0.5949563@0.0.5527744","timestamp":"2025-05-12T19:10:01.3NZ"}]
+[
+  {
+    "type": "approve_connection",
+    "connectionId": "inb-5:0.0.5949563@0.0.5527744",
+    "timestamp": "2025-05-12T19:10:01.3NZ"
+  },
+  {
+    "type": "approve_connection",
+    "connectionId": "0.0.5988861",
+    "timestamp": 1747090321078
+  },
+  {
+    "type": "approve_connection",
+    "connectionId": "0.0.5988861",
+    "timestamp": 1747090322006
+  },
+  {
+    "type": "approve_connection",
+    "connectionId": "0.0.5988861",
+    "timestamp": 1747090322060
+  }
+]
