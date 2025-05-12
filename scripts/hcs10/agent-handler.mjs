@@ -521,7 +521,7 @@ export class HCS10AgentHandler extends EventEmitter {
       // Log how the pending status is determined
       console.log(`🔍 DEBUG: Raw connections data with status and isPending flags:`);
       allConnections.forEach(conn => {
-        console.log(`�� Connection ${conn.connectionTopicId || 'unknown'}: status=${conn.status}, isPending=${!!conn.isPending}, needsConfirmation=${!!conn.needsConfirmation}`);
+        console.log(` Connection ${conn.connectionTopicId || 'unknown'}: status=${conn.status}, isPending=${!!conn.isPending}, needsConfirmation=${!!conn.needsConfirmation}`);
       });
       
       // Log the active connections for comparison
@@ -889,4 +889,107 @@ export class HCS10AgentHandler extends EventEmitter {
         console.log(`🔍 DEBUG: Whitelist contains: ${AUTO_APPROVED_ACCOUNTS.join(', ')}`);
         
         if (shouldAutoApprove) {
-          console.log(`
+          console.log(`✅ Auto-approving connection from ${requesterId} (in whitelist)`);
+          
+          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
+          if (!this.inboundTopicId) {
+            throw new Error('inboundTopicId is required for connection memo');
+          }
+          if (!connection.connectionRequestId) {
+            throw new Error('connectionRequestId is required for connection memo');
+          }
+          
+          const result = await this.client.handleConnectionRequest(
+            this.inboundTopicId,
+            connection.targetAccountId, 
+            connection.connectionRequestId
+          );
+          
+          console.log(`✅ Connection approved:`, result);
+          
+          // Update connection status
+          connection.status = 'established';
+          connection.needsConfirmation = false;
+          this.connectionsManager.updateOrAddConnection(connection);
+          
+          // Save for legacy code
+          await this.syncConnectionsFromManager();
+          await this.saveConnections();
+          
+          // Send welcome message
+          if (result && result.connectionTopicId) {
+            await this.sendMessage(
+              result.connectionTopicId,
+              {
+                type: 'welcome',
+                message: 'Welcome to Lynxify HCS-10 Agent!',
+                timestamp: new Date().toISOString()
+              }
+            );
+          }
+          
+          // Update status files
+          if (ENABLE_APPROVAL_API) {
+            await this.updateStatusFile();
+            await this.checkPendingConnections();
+          }
+        } else {
+          console.log(`⏳ Connection from ${requesterId} requires manual approval`);
+          this.emit('connection_needs_approval', connection);
+        }
+      } else {
+        // If API is not enabled, use the original auto-approval logic
+        const shouldAutoApprove = this.shouldAutoApproveConnection(requesterId);
+        
+        console.log(`🔍 DEBUG: Should auto-approve (API disabled): ${shouldAutoApprove}`);
+        
+        if (shouldAutoApprove) {
+          console.log(`✅ Auto-approving connection from ${requesterId}`);
+          
+          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
+          if (!this.inboundTopicId) {
+            throw new Error('inboundTopicId is required for connection memo');
+          }
+          if (!connection.connectionRequestId) {
+            throw new Error('connectionId is required for connection memo');
+          }
+          
+          // KEY CHANGE: Use client.handleConnectionRequest directly
+          const result = await this.client.handleConnectionRequest(
+            this.inboundTopicId,
+            connection.targetAccountId, 
+            connection.connectionRequestId
+          );
+          
+          console.log(`✅ Connection approved:`, result);
+          
+          // Update connection status
+          connection.status = 'established';
+          connection.needsConfirmation = false;
+          this.connectionsManager.updateOrAddConnection(connection);
+          
+          // Save for legacy code
+          await this.syncConnectionsFromManager();
+          await this.saveConnections();
+          
+          // Send welcome message
+          if (result && result.connectionTopicId) {
+            await this.sendMessage(
+              result.connectionTopicId,
+              {
+                type: 'welcome',
+                message: 'Welcome to Lynxify HCS-10 Agent!',
+                timestamp: new Date().toISOString()
+              }
+            );
+          }
+        } else {
+          console.log(`⏳ Connection from ${requesterId} requires manual approval`);
+          this.emit('connection_needs_approval', connection);
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Error handling pending connection request:`, error);
+    }
+  }
+}
