@@ -1,322 +1,50 @@
-2025-05-12T19:31:01.769669454Z   "profileInfo": {
-2025-05-12T19:31:01.769670974Z     "version": "1.0",
-2025-05-12T19:31:01.769676034Z     "type": 0,
-2025-05-12T19:31:01.769677684Z     "display_name": "Rebalancer Agent",
-2025-05-12T19:31:01.769679254Z     "alias": "lynx_rebalancer_agent",
-2025-05-12T19:31:01.769680875Z     "bio": "Testnet rebalancer agent for the Lynx tokenized index",
-2025-05-12T19:31:01.769682415Z     "profileImage": "hcs://1/0.0.5949502",
-2025-05-12T19:31:01.769684024Z     "properties": {
-2025-05-12T19:31:01.769685604Z       "organization": "Lynxify"
-2025-05-12T19:31:01.769687155Z     },
-2025-05-12T19:31:01.769688735Z     "inboundTopicId": "0.0.5949517",
-2025-05-12T19:31:01.769690275Z     "outboundTopicId": "0.0.5949516"
-2025-05-12T19:31:01.769691815Z   },
-2025-05-12T19:31:01.769693385Z   "targetAgentName": "Rebalancer Agent",
-2025-05-12T19:31:01.769694985Z   "targetOutboundTopicId": "0.0.5949516",
-2025-05-12T19:31:01.769696605Z   "connectionRequestId": 1
-2025-05-12T19:31:01.769698135Z }
-2025-05-12T19:31:01.769699885Z { module: 'ConnectionsManager' } Total connections in map: 148
-2025-05-12T19:31:01.769701445Z { module: 'ConnectionsManager' } Standard pending connections: 0
-2025-05-12T19:31:01.769703045Z { module: 'ConnectionsManager' } Connections needing confirmation: 1
-2025-05-12T19:31:01.769704665Z { module: 'ConnectionsManager' } Total pending to process: 1
-2025-05-12T19:31:01.769706265Z { module: 'ConnectionsManager' } Processing 1 pending connections
-2025-05-12T19:31:01.769707825Z 🔍 DEBUG: Processing connection: inb-5:0.0.5949563@0.0.5527744, status=needs_confirmation
-2025-05-12T19:31:01.769709365Z 🔄 Processing connection needing confirmation: inb-5:0.0.5949563@0.0.5527744
-2025-05-12T19:31:01.769711005Z 🔄 Handling connection that needs confirmation: inb-5:0.0.5949563@0.0.5527744
-2025-05-12T19:31:01.769712915Z    Target Account: 0.0.5527744
-2025-05-12T19:31:01.769715295Z    Request ID: 1
-2025-05-12T19:31:01.769717985Z 🔍 DEBUG: Should auto-approve (API enabled): false
-2025-05-12T19:31:01.769720545Z ⏳ Connection from 0.0.5527744 requires manual approval via API
-2025-05-12T19:31:01.769727205Z ℹ️ Writing 1 pending connection requests to file
-2025-05-12T19:31:06.971263475Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
-2025-05-12T19:31:06.971351207Z 🔍 DEBUG: Available methods on client: [
-2025-05-12T19:31:06.971357597Z   'network',
-2025-05-12T19:31:06.971360567Z   'logger',
-2025-05-12T19:31:06.971363407Z   'mirrorNode',
-2025-05-12T19:31:06.971366187Z   'feeAmount',
-2025-05-12T19:31:06.971368837Z   'client',
-2025-05-12T19:31:06.971372077Z   'operatorPrivateKey',
-2025-05-12T19:31:06.971374997Z   'guardedRegistryBaseUrl',
-2025-05-12T19:31:06.971377638Z   'hcs11Client',
-2025-05-12T19:31:06.971380318Z   'operatorId'
-2025-05-12T19:31:06.971382908Z ]
-2025-05-12T19:31:07.469334291Z 🔍 DEBUG: Raw message response type: object
-2025-05-12T19:31:07.469354911Z 🔍 DEBUG: Raw message count: undefined
-2025-05-12T19:31:07.469359361Z ℹ️ No new messages found on inbound topic
-2025-05-12T19:31:07.469369061Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.5966030
-2025-05-12T19:31:07.469401962Z { module: 'HCS-SDK' } Cache hit for profile: 0.0.5966030
-2025-05-12T19:31:07.671442415Z { module: 'ConnectionsManager' } Total connections in map: 148
-2025-05-12T19:31:07.671460725Z { module: 'ConnectionsManager' } Connections with status='pending': 0
-2025-05-12T19:31:07.671471196Z { module: 'ConnectionsManager' } No pending connections found
-2025-05-12T19:31:11.666849287Z 🔍 DEBUG: Total connections in ConnectionsManager: 148
-2025-05-12T19:31:11.666877477Z 🔍 DEBUG: Connection detail sample: {
-2025-05-12T19:31:11.666882317Z   "connectionTopicId": "inb-2:0.0.5949517@0.0.4340026",
-2025-05-12T19:31:11.666902868Z   "targetAccountId": "0.0.4340026",
-2025-05-12T19:31:11.666907098Z   "targetInboundTopicId": "0.0.5949517",
-2025-05-12T19:31:11.666911288Z   "status": "established",
-2025-05-12T19:31:11.666915418Z   "isPending": false,
-2025-05-12T19:31:11.666918138Z   "needsConfirmation": false,
-2025-05-12T19:31:11.666921328Z   "created": "2025-05-08T19:25:50.305Z",
-2025-05-12T19:31:11.666924178Z   "inboundRequestId": 2,
-2025-05-12T19:31:11.666927338Z   "uniqueRequestKey": "inb-2:0.0.5949517@0.0.4340026",
-2025-05-12T19:31:11.666930329Z   "originTopicId": "0.0.5949517",
-2025-05-12T19:31:11.666933199Z   "processed": false,
-2025-05-12T19:31:11.666936559Z   "memo": "Hello! I'd like to connect with you.",
-2025-05-12T19:31:11.666939539Z   "profileInfo": {
-2025-05-12T19:31:11.666942259Z     "version": "1.0",
-2025-05-12T19:31:11.666945059Z     "type": 0,
-2025-05-12T19:31:11.666947989Z     "display_name": "Rebalancer Agent",
-2025-05-12T19:31:11.666951119Z     "alias": "lynx_rebalancer_agent",
-2025-05-12T19:31:11.666954769Z     "bio": "Testnet rebalancer agent for the Lynx tokenized index",
-2025-05-12T19:31:11.666957689Z     "profileImage": "hcs://1/0.0.5949502",
-2025-05-12T19:31:11.666960599Z     "properties": {
-2025-05-12T19:31:11.666963849Z       "organization": "Lynxify"
-2025-05-12T19:31:11.666966899Z     },
-2025-05-12T19:31:11.666969799Z     "inboundTopicId": "0.0.5949517",
-2025-05-12T19:31:11.666972479Z     "outboundTopicId": "0.0.5949516"
-2025-05-12T19:31:11.66697535Z   },
-2025-05-12T19:31:11.66697848Z   "targetAgentName": "Rebalancer Agent",
-2025-05-12T19:31:11.6669815Z   "targetOutboundTopicId": "0.0.5949516",
-2025-05-12T19:31:11.66698436Z   "connectionRequestId": 1
-2025-05-12T19:31:11.66698733Z }
-2025-05-12T19:31:11.66700379Z 🔍 DEBUG: Connections needing confirmation: 1
-2025-05-12T19:31:11.66700776Z 🔍 DEBUG: Adding needs_confirmation connection to pending list: inb-5:0.0.5949563@0.0.5527744
-2025-05-12T19:31:11.66701076Z 🔍 DEBUG: ConnectionsManager.getPendingRequests() returned 0 connections
-2025-05-12T19:31:11.66701378Z 🔍 DEBUG: Total pending connections (including needs_confirmation): 1
-2025-05-12T19:31:11.667020731Z 🔍 DEBUG: Needs confirmation sample: {
-2025-05-12T19:31:11.667043631Z   "connectionTopicId": "inb-5:0.0.5949563@0.0.5527744",
-2025-05-12T19:31:11.667050521Z   "targetAccountId": "0.0.5527744",
-2025-05-12T19:31:11.667053721Z   "targetInboundTopicId": "0.0.5949563",
-2025-05-12T19:31:11.667056692Z   "status": "needs_confirmation",
-2025-05-12T19:31:11.667059702Z   "isPending": false,
-2025-05-12T19:31:11.667062342Z   "needsConfirmation": true,
-2025-05-12T19:31:11.667065232Z   "created": "2025-05-08T19:30:58.463Z",
-2025-05-12T19:31:11.667068032Z   "inboundRequestId": 5,
-2025-05-12T19:31:11.667070962Z   "uniqueRequestKey": "inb-5:0.0.5949563@0.0.5527744",
-2025-05-12T19:31:11.667073922Z   "originTopicId": "0.0.5949563",
-2025-05-12T19:31:11.667076842Z   "processed": false,
-2025-05-12T19:31:11.667079752Z   "memo": "Hello! I'd like to connect with you.",
-2025-05-12T19:31:11.667082932Z   "profileInfo": {
-2025-05-12T19:31:11.667085942Z     "version": "1.0",
-2025-05-12T19:31:11.667089112Z     "type": 0,
-2025-05-12T19:31:11.667092022Z     "display_name": "Humanoid",
-2025-05-12T19:31:11.667094882Z     "alias": "Humanoid",
-2025-05-12T19:31:11.667097823Z     "bio": "A human who does human things",
-2025-05-12T19:31:11.667100703Z     "socials": [
-2025-05-12T19:31:11.667103513Z       {
-2025-05-12T19:31:11.667106433Z         "platform": "twitter",
-2025-05-12T19:31:11.667109473Z         "handle": "HashgraphOnline"
-2025-05-12T19:31:11.667119203Z       },
-2025-05-12T19:31:11.667122133Z       {
-2025-05-12T19:31:11.667124893Z         "platform": "github",
-2025-05-12T19:31:11.667127843Z         "handle": "https://github.com/hashgraph-online"
-2025-05-12T19:31:11.667130663Z       },
-2025-05-12T19:31:11.667133654Z       {
-2025-05-12T19:31:11.667136623Z         "platform": "website",
-2025-05-12T19:31:11.667139524Z         "handle": "https://hashgraphonline.com"
-2025-05-12T19:31:11.667142434Z       }
-2025-05-12T19:31:11.667145394Z     ],
-2025-05-12T19:31:11.667148444Z     "profileImage": "hcs://1/0.0.5949561",
-2025-05-12T19:31:11.667151704Z     "properties": {
-2025-05-12T19:31:11.667155214Z       "organization": "Humanoid Inc"
-2025-05-12T19:31:11.667158504Z     },
-2025-05-12T19:31:11.667161354Z     "inboundTopicId": "0.0.5949563",
-2025-05-12T19:31:11.667164174Z     "outboundTopicId": "0.0.5949562"
-2025-05-12T19:31:11.667167214Z   },
-2025-05-12T19:31:11.667170084Z   "targetAgentName": "Humanoid",
-2025-05-12T19:31:11.667172815Z   "targetOutboundTopicId": "0.0.5949562",
-2025-05-12T19:31:11.667175604Z   "connectionRequestId": 1
-2025-05-12T19:31:11.667178535Z }
-2025-05-12T19:31:11.667181505Z 🔍 DEBUG: Raw connections data with status and isPending flags:
-2025-05-12T19:31:11.667184715Z 🔍 Connection inb-2:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667187795Z 🔍 Connection inb-3:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667190525Z 🔍 Connection inb-4:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667194055Z 🔍 Connection inb-5:0.0.5949563@0.0.5527744: status=needs_confirmation, isPending=false, needsConfirmation=true
-2025-05-12T19:31:11.667196735Z 🔍 Connection inb-6:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667199645Z 🔍 Connection inb-7:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667202545Z 🔍 Connection inb-8:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667205355Z 🔍 Connection inb-9:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667208205Z 🔍 Connection inb-10:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667211175Z 🔍 Connection inb-11:0.0.5949517@0.0.4340026: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667214176Z 🔍 Connection 0.0.5988416: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667217165Z 🔍 Connection 0.0.5988417: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667220025Z 🔍 Connection 0.0.5988418: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667223046Z 🔍 Connection 0.0.5988419: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667225886Z 🔍 Connection 0.0.5988420: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667228606Z 🔍 Connection 0.0.5988421: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667231356Z 🔍 Connection 0.0.5988423: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667234096Z 🔍 Connection 0.0.5988422: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667236806Z 🔍 Connection 0.0.5988424: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667244706Z 🔍 Connection 0.0.5988425: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667260757Z 🔍 Connection 0.0.5988426: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667263957Z 🔍 Connection 0.0.5988427: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667266827Z 🔍 Connection 0.0.5988428: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667269577Z 🔍 Connection 0.0.5988429: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667274167Z 🔍 Connection 0.0.5988430: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667277537Z 🔍 Connection 0.0.5988432: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667282617Z 🔍 Connection 0.0.5988431: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667285377Z 🔍 Connection 0.0.5988433: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667288407Z 🔍 Connection 0.0.5988434: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667291337Z 🔍 Connection 0.0.5988435: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667294417Z 🔍 Connection 0.0.5988436: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667297927Z 🔍 Connection 0.0.5988437: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667301287Z 🔍 Connection 0.0.5988438: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667303848Z 🔍 Connection 0.0.5988439: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667305718Z 🔍 Connection 0.0.5988440: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667308088Z 🔍 Connection 0.0.5988442: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667310898Z 🔍 Connection 0.0.5988441: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667314308Z 🔍 Connection 0.0.5988443: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667317388Z 🔍 Connection 0.0.5988445: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667320548Z 🔍 Connection 0.0.5988446: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667323688Z 🔍 Connection 0.0.5988444: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667326958Z 🔍 Connection 0.0.5988447: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667330128Z 🔍 Connection 0.0.5988448: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667333508Z 🔍 Connection 0.0.5988449: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667336779Z 🔍 Connection 0.0.5988451: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667339688Z 🔍 Connection 0.0.5988450: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667342748Z 🔍 Connection 0.0.5988452: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667345679Z 🔍 Connection 0.0.5988453: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667348809Z 🔍 Connection 0.0.5988455: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667351679Z 🔍 Connection 0.0.5988457: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667361199Z 🔍 Connection 0.0.5988454: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667364149Z 🔍 Connection 0.0.5988458: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667367019Z 🔍 Connection 0.0.5988456: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667369849Z 🔍 Connection 0.0.5988459: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667372719Z 🔍 Connection 0.0.5988460: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667375899Z 🔍 Connection 0.0.5988461: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66737892Z 🔍 Connection 0.0.5988463: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667382029Z 🔍 Connection 0.0.5988464: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66738496Z 🔍 Connection 0.0.5988465: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66738789Z 🔍 Connection 0.0.5988475: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66739058Z 🔍 Connection 0.0.5988476: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66739345Z 🔍 Connection 0.0.5988477: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66739668Z 🔍 Connection 0.0.5988478: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66739961Z 🔍 Connection 0.0.5988479: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66740275Z 🔍 Connection 0.0.5988480: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66740578Z 🔍 Connection 0.0.5988481: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66740863Z 🔍 Connection 0.0.5988482: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66741162Z 🔍 Connection 0.0.5988483: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.66741484Z 🔍 Connection 0.0.5988484: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667429041Z 🔍 Connection 0.0.5988485: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667435631Z 🔍 Connection 0.0.5988486: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667438551Z 🔍 Connection 0.0.5988487: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667441681Z 🔍 Connection 0.0.5988488: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667444741Z 🔍 Connection 0.0.5988489: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667447821Z 🔍 Connection 0.0.5988490: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667451131Z 🔍 Connection 0.0.5988491: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667454101Z 🔍 Connection 0.0.5988492: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667457151Z 🔍 Connection 0.0.5988493: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667460102Z 🔍 Connection 0.0.5988495: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667463022Z 🔍 Connection 0.0.5988494: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667466102Z 🔍 Connection 0.0.5988496: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667469002Z 🔍 Connection 0.0.5988497: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667477972Z 🔍 Connection 0.0.5988498: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667481092Z 🔍 Connection 0.0.5988499: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667484192Z 🔍 Connection 0.0.5988500: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667487272Z 🔍 Connection 0.0.5988501: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667490352Z 🔍 Connection 0.0.5988502: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667493202Z 🔍 Connection 0.0.5988503: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667496022Z 🔍 Connection 0.0.5988504: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667499882Z 🔍 Connection 0.0.5988505: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667503252Z 🔍 Connection 0.0.5988506: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667506043Z 🔍 Connection 0.0.5988507: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667508873Z 🔍 Connection 0.0.5988508: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667511663Z 🔍 Connection 0.0.5988509: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667514663Z 🔍 Connection 0.0.5988510: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667517553Z 🔍 Connection 0.0.5988511: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667520503Z 🔍 Connection 0.0.5988512: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667523343Z 🔍 Connection 0.0.5988513: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667526143Z 🔍 Connection 0.0.5988514: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667529093Z 🔍 Connection 0.0.5988515: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667532003Z 🔍 Connection 0.0.5988516: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667534793Z 🔍 Connection 0.0.5988517: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667537603Z 🔍 Connection 0.0.5988518: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667549684Z 🔍 Connection 0.0.5988519: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667567174Z 🔍 Connection 0.0.5988520: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667576444Z 🔍 Connection 0.0.5988521: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667580314Z 🔍 Connection 0.0.5988522: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667583594Z 🔍 Connection 0.0.5988523: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667586734Z 🔍 Connection 0.0.5988524: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667590475Z 🔍 Connection 0.0.5988525: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667594045Z 🔍 Connection 0.0.5988526: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667597255Z 🔍 Connection 0.0.5988527: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667600135Z 🔍 Connection 0.0.5988576: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667610925Z 🔍 Connection 0.0.5988578: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667613695Z 🔍 Connection 0.0.5988580: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667616315Z 🔍 Connection 0.0.5988582: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667618905Z 🔍 Connection 0.0.5988584: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667621335Z 🔍 Connection 0.0.5988586: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667625286Z 🔍 Connection 0.0.5988587: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667628006Z 🔍 Connection 0.0.5988588: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667630555Z 🔍 Connection 0.0.5988589: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667633106Z 🔍 Connection 0.0.5988590: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667634866Z 🔍 Connection 0.0.5988592: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667637026Z 🔍 Connection 0.0.5988591: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667639546Z 🔍 Connection 0.0.5988594: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667641956Z 🔍 Connection 0.0.5988595: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667655866Z 🔍 Connection 0.0.5988596: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667659216Z 🔍 Connection 0.0.5988597: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667663806Z 🔍 Connection 0.0.5988599: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667665487Z 🔍 Connection 0.0.5988598: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667666987Z 🔍 Connection 0.0.5988600: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667668747Z 🔍 Connection 0.0.5988601: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667670447Z 🔍 Connection 0.0.5988603: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667672067Z 🔍 Connection 0.0.5988602: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667673647Z 🔍 Connection 0.0.5988604: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667675147Z 🔍 Connection 0.0.5988606: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667676777Z 🔍 Connection 0.0.5988605: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667678307Z 🔍 Connection 0.0.5988607: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667679837Z 🔍 Connection 0.0.5988608: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667681497Z 🔍 Connection 0.0.5988609: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667683007Z 🔍 Connection 0.0.5988610: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667684507Z 🔍 Connection 0.0.5988611: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667685997Z 🔍 Connection 0.0.5988612: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667687487Z 🔍 Connection 0.0.5988613: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667689017Z 🔍 Connection 0.0.5988615: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667694827Z 🔍 Connection 0.0.5988614: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667696427Z 🔍 Connection 0.0.5988616: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667700727Z 🔍 Connection 0.0.5988617: status=established, isPending=false, needsConfirmation=false
-2025-05-12T19:31:11.667706108Z 🔍 DEBUG: ConnectionsManager.getActiveConnections() returned 147 connections
-2025-05-12T19:31:11.667736298Z 🔍 DEBUG: Active connection sample: {
-2025-05-12T19:31:11.667741908Z   "connectionTopicId": "inb-2:0.0.5949517@0.0.4340026",
-2025-05-12T19:31:11.667743808Z   "targetAccountId": "0.0.4340026",
-2025-05-12T19:31:11.667745388Z   "targetInboundTopicId": "0.0.5949517",
-2025-05-12T19:31:11.667747129Z   "status": "established",
-2025-05-12T19:31:11.667748789Z   "isPending": false,
-2025-05-12T19:31:11.667750349Z   "needsConfirmation": false,
-2025-05-12T19:31:11.667751969Z   "created": "2025-05-08T19:25:50.305Z",
-2025-05-12T19:31:11.667753718Z   "inboundRequestId": 2,
-2025-05-12T19:31:11.667755269Z   "uniqueRequestKey": "inb-2:0.0.5949517@0.0.4340026",
-2025-05-12T19:31:11.667756849Z   "originTopicId": "0.0.5949517",
-2025-05-12T19:31:11.667758369Z   "processed": false,
-2025-05-12T19:31:11.667759979Z   "memo": "Hello! I'd like to connect with you.",
-2025-05-12T19:31:11.667761599Z   "profileInfo": {
-2025-05-12T19:31:11.667763129Z     "version": "1.0",
-2025-05-12T19:31:11.667764699Z     "type": 0,
-2025-05-12T19:31:11.667766379Z     "display_name": "Rebalancer Agent",
-2025-05-12T19:31:11.667767899Z     "alias": "lynx_rebalancer_agent",
-2025-05-12T19:31:11.667769809Z     "bio": "Testnet rebalancer agent for the Lynx tokenized index",
-2025-05-12T19:31:11.667771949Z     "profileImage": "hcs://1/0.0.5949502",
-2025-05-12T19:31:11.667774859Z     "properties": {
-2025-05-12T19:31:11.667777559Z       "organization": "Lynxify"
-2025-05-12T19:31:11.667780199Z     },
-2025-05-12T19:31:11.667782929Z     "inboundTopicId": "0.0.5949517",
-2025-05-12T19:31:11.667785539Z     "outboundTopicId": "0.0.5949516"
-2025-05-12T19:31:11.66778793Z   },
-2025-05-12T19:31:11.667790579Z   "targetAgentName": "Rebalancer Agent",
-2025-05-12T19:31:11.66779331Z   "targetOutboundTopicId": "0.0.5949516",
-2025-05-12T19:31:11.66779598Z   "connectionRequestId": 1
-2025-05-12T19:31:11.66779864Z }
-2025-05-12T19:31:11.66780137Z { module: 'ConnectionsManager' } Total connections in map: 148
-2025-05-12T19:31:11.6678038Z { module: 'ConnectionsManager' } Standard pending connections: 0
-2025-05-12T19:31:11.66781752Z { module: 'ConnectionsManager' } Connections needing confirmation: 1
-2025-05-12T19:31:11.66781994Z { module: 'ConnectionsManager' } Total pending to process: 1
-2025-05-12T19:31:11.66782169Z { module: 'ConnectionsManager' } Processing 1 pending connections
-2025-05-12T19:31:11.66782534Z 🔍 DEBUG: Processing connection: inb-5:0.0.5949563@0.0.5527744, status=needs_confirmation
-2025-05-12T19:31:11.66782701Z 🔄 Processing connection needing confirmation: inb-5:0.0.5949563@0.0.5527744
-2025-05-12T19:31:11.6678286Z 🔄 Handling connection that needs confirmation: inb-5:0.0.5949563@0.0.5527744
-2025-05-12T19:31:11.66783018Z    Target Account: 0.0.5527744
-2025-05-12T19:31:11.667831791Z    Request ID: 1
-2025-05-12T19:31:11.66783338Z 🔍 DEBUG: Should auto-approve (API enabled): false
-2025-05-12T19:31:11.66783494Z ⏳ Connection from 0.0.5527744 requires manual approval via API
-2025-05-12T19:31:11.667836471Z ℹ️ Writing 1 pending connection requests to file
+2025-05-12T20:25:15.637589473Z 🔍 Checking for messages on connection inb-7:0.0.5949517@0.0.4340026
+2025-05-12T20:25:15.64235417Z { module: 'HCS10-BaseClient' } Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
+2025-05-12T20:25:15.642376142Z { module: 'HCS-SDK' } Error fetching messages: Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
+2025-05-12T20:25:15.642376922Z 🔍 Checking for messages on connection inb-3:0.0.5949517@0.0.4340026
+2025-05-12T20:25:15.642990498Z 🔍 Checking for messages on connection 0.0.5988420
+2025-05-12T20:25:15.643610965Z { module: 'HCS10-BaseClient' } Error querying topic messages: Request failed with status code 400 on inb-6:0.0.5949517@0.0.4340026
+2025-05-12T20:25:15.643626536Z { module: 'HCS-SDK' } Error fetching messages: Error querying topic messages: Request failed with status code 400 on inb-6:0.0.5949517@0.0.4340026
+2025-05-12T20:25:15.643632726Z 🔍 Checking for messages on connection inb-7:0.0.5949517@0.0.4340026
+2025-05-12T20:25:15.935624868Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
+2025-05-12T20:25:15.935703153Z 🔍 Attempting to get messages using standard getMessageStream...
+2025-05-12T20:25:16.039179801Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988888
+2025-05-12T20:25:16.039213474Z { module: 'HCS-SDK' } Confirming connection with ID 1
+2025-05-12T20:25:16.042201718Z 🔍 Checking for messages on connection 0.0.5988417
+2025-05-12T20:25:16.044013294Z { module: 'HCS-SDK' } Message submitted successfully
+2025-05-12T20:25:16.044033845Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.4340026
+2025-05-12T20:25:16.044036585Z { module: 'HCS-SDK' } Cache hit for profile: 0.0.4340026
+2025-05-12T20:25:16.044128622Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.4340026
+2025-05-12T20:25:16.044136383Z { module: 'HCS-SDK' } Cache hit for profile: 0.0.4340026
+2025-05-12T20:25:16.642029568Z 🔍 Checking for messages on connection 0.0.5988419
+2025-05-12T20:25:16.643044574Z 🔍 DEBUG: Raw message response type: object
+2025-05-12T20:25:16.64313426Z 🔍 DEBUG: Raw message count: undefined
+2025-05-12T20:25:16.645120359Z ℹ️ No new messages found with standard approach
+2025-05-12T20:25:16.64513375Z 🔍 Checking active connections for messages...
+2025-05-12T20:25:16.645138341Z 📬 Found 273 active connections to check for messages
+2025-05-12T20:25:16.645142711Z 🔍 Checking for messages on connection inb-2:0.0.5949517@0.0.4340026
+2025-05-12T20:25:16.645146431Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.5966030
+2025-05-12T20:25:16.645150162Z { module: 'HCS-SDK' } Cache hit for profile: 0.0.5966030
+2025-05-12T20:25:16.742874498Z 🔍 Checking for messages on connection 0.0.5988418
+2025-05-12T20:25:16.748133532Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988893
+2025-05-12T20:25:16.748180086Z { module: 'HCS-SDK' } Confirming connection with ID 1
+2025-05-12T20:25:16.74969805Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988891
+2025-05-12T20:25:16.749715571Z { module: 'HCS-SDK' } Confirming connection with ID 1
+2025-05-12T20:25:16.749930267Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988892
+2025-05-12T20:25:16.750045686Z { module: 'HCS-SDK' } Confirming connection with ID 1
+2025-05-12T20:25:16.945814853Z { module: 'HCS-SDK' } Creating topic
+2025-05-12T20:25:16.945840695Z { module: 'HCS-SDK' } Executing topic creation transaction
+2025-05-12T20:25:17.334792055Z 🔍 DEBUG: Raw message response type: object
+2025-05-12T20:25:17.334817277Z 🔍 DEBUG: Raw message count: undefined
+2025-05-12T20:25:17.334820637Z ℹ️ No new messages found with standard approach
+2025-05-12T20:25:17.334823027Z 🔍 Checking active connections for messages...
+2025-05-12T20:25:17.334825197Z 📬 Found 273 active connections to check for messages
+2025-05-12T20:25:17.334828308Z 🔍 Checking for messages on connection inb-2:0.0.5949517@0.0.4340026
+2025-05-12T20:25:17.336577869Z { module: 'HCS-SDK' } Created new connection topic ID: 0.0.5988890
+2025-05-12T20:25:17.336597361Z { module: 'HCS-SDK' } Confirming connection with ID 1
+2025-05-12T20:25:17.338408466Z 🔍 Checking for messages on connection inb-3:0.0.5949517@0.0.4340026
+2025-05-12T20:25:17.33845338Z { module: 'HCS10-BaseClient' } Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
+2025-05-12T20:25:17.33846177Z { module: 'HCS-SDK' } Error fetching messages: Error querying topic messages: Request failed with status code 400 on inb-2:0.0.5949517@0.0.4340026
+2025-05-12T20:25:17.48024468Z { module: 'ConnectionsManager' } Total connections in map: 280
+2025-05-12T20:25:17.480273472Z { module: 'ConnectionsManager' } Connections with status='pending': 0
+2025-05-12T20:25:17.480276252Z { module: 'ConnectionsManager' } No pending connections found
