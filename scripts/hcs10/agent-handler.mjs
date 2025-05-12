@@ -538,6 +538,35 @@ export class HCS10AgentHandler extends EventEmitter {
       console.log(`   Target Account: ${connection.targetAccountId}`);
       console.log(`   Request ID: ${connection.connectionRequestId}`);
       
+      // If the connectionRequestId is not available, try to derive it from other sources
+      if (!connection.connectionRequestId) {
+        console.log(`⚠️ Connection is missing connectionRequestId, attempting to extract from connection data...`);
+        console.log(`🔍 DEBUG: Connection object:`, JSON.stringify(connection, null, 2));
+        
+        // If we have a connection ID in a format like "inb-10:0.0.5949517@0.0.4340026"
+        // try to extract parts to form a request ID
+        if (connection.connectionTopicId && connection.connectionTopicId.includes('@')) {
+          const parts = connection.connectionTopicId.split('@');
+          if (parts.length === 2) {
+            // Use the sequence number or some default if not available
+            connection.connectionRequestId = connection.sequenceNumber || 1;
+            console.log(`✅ Derived connectionRequestId: ${connection.connectionRequestId}`);
+          }
+        }
+        
+        // If we still don't have a connectionRequestId, check if there's a connectionId field
+        if (!connection.connectionRequestId && connection.connectionId) {
+          connection.connectionRequestId = connection.connectionId;
+          console.log(`✅ Using connectionId as connectionRequestId: ${connection.connectionRequestId}`);
+        }
+        
+        // Last resort - generate a simple numeric ID
+        if (!connection.connectionRequestId) {
+          connection.connectionRequestId = Date.now();
+          console.log(`⚠️ Using generated timestamp as connectionRequestId: ${connection.connectionRequestId}`);
+        }
+      }
+      
       // If API is enabled, don't auto-approve unless in whitelist
       if (ENABLE_APPROVAL_API) {
         // Only auto-approve if explicitly in whitelist
@@ -696,10 +725,41 @@ export class HCS10AgentHandler extends EventEmitter {
   async handlePendingConnectionRequest(pendingRequest) {
     try {
       const requesterId = pendingRequest.targetAccountId;
-      const requestId = pendingRequest.connectionRequestId;
+      let requestId = pendingRequest.connectionRequestId;
       
       console.log(`🔄 Processing pending connection request from ${requesterId}, requestId: ${requestId}`);
       console.log('🔍 DEBUG: Full pending request:', JSON.stringify(pendingRequest, null, 2));
+      
+      // If the requestId is not available, try to derive it from other sources
+      if (!requestId) {
+        console.log(`⚠️ PendingRequest is missing connectionRequestId, attempting to extract from request data...`);
+        
+        // If we have a connection ID in a format like "inb-10:0.0.5949517@0.0.4340026"
+        // try to extract parts to form a request ID
+        if (pendingRequest.connectionTopicId && pendingRequest.connectionTopicId.includes('@')) {
+          const parts = pendingRequest.connectionTopicId.split('@');
+          if (parts.length === 2) {
+            // Use the sequence number or some default if not available
+            requestId = pendingRequest.sequenceNumber || 1;
+            console.log(`✅ Derived connectionRequestId: ${requestId}`);
+            pendingRequest.connectionRequestId = requestId;
+          }
+        }
+        
+        // If we still don't have a requestId, check if there's a connectionId field
+        if (!requestId && pendingRequest.connectionId) {
+          requestId = pendingRequest.connectionId;
+          console.log(`✅ Using connectionId as connectionRequestId: ${requestId}`);
+          pendingRequest.connectionRequestId = requestId;
+        }
+        
+        // Last resort - generate a simple numeric ID
+        if (!requestId) {
+          requestId = Date.now();
+          console.log(`⚠️ Using generated timestamp as connectionRequestId: ${requestId}`);
+          pendingRequest.connectionRequestId = requestId;
+        }
+      }
       
       // If API is enabled, don't auto-approve unless in whitelist
       if (ENABLE_APPROVAL_API) {
@@ -902,9 +962,30 @@ export class HCS10AgentHandler extends EventEmitter {
       
       // Extract requester info
       const requesterId = message.account_id || message.sender;
-      const connectionRequestId = message.id || message.sequence_number;
+      let connectionRequestId = message.id || message.sequence_number;
       
       console.log(`🔄 Connection request from ${requesterId}, ID: ${connectionRequestId}`);
+      
+      // If the connectionRequestId is not available, try to derive it from other sources
+      if (!connectionRequestId) {
+        console.log(`⚠️ Message is missing connectionRequestId, attempting to extract from message data...`);
+        
+        // If we have a connection ID in a format like "inb-10:0.0.5949517@0.0.4340026"
+        // try to extract parts to form a request ID
+        if (message.connectionTopicId && message.connectionTopicId.includes('@')) {
+          const parts = message.connectionTopicId.split('@');
+          if (parts.length === 2) {
+            connectionRequestId = message.sequenceNumber || 1;
+            console.log(`✅ Derived connectionRequestId: ${connectionRequestId}`);
+          }
+        }
+        
+        // If we still don't have a connectionRequestId, generate a simple numeric ID
+        if (!connectionRequestId) {
+          connectionRequestId = Date.now();
+          console.log(`⚠️ Using generated timestamp as connectionRequestId: ${connectionRequestId}`);
+        }
+      }
       
       // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
       if (!this.inboundTopicId) {
@@ -1051,7 +1132,38 @@ export class HCS10AgentHandler extends EventEmitter {
     
     // Use the direct handleConnectionRequest method as recommended
     const requesterId = pendingRequest.targetAccountId;
-    const requestId = pendingRequest.connectionRequestId;
+    let requestId = pendingRequest.connectionRequestId;
+    
+    // If the requestId is not available, try to derive it from other sources
+    if (!requestId) {
+      console.log(`⚠️ PendingRequest is missing connectionRequestId, attempting to extract from request data...`);
+      
+      // If we have a connection ID in a format like "inb-10:0.0.5949517@0.0.4340026"
+      // try to extract parts to form a request ID
+      if (pendingRequest.connectionTopicId && pendingRequest.connectionTopicId.includes('@')) {
+        const parts = pendingRequest.connectionTopicId.split('@');
+        if (parts.length === 2) {
+          // Use the sequence number or some default if not available
+          requestId = pendingRequest.sequenceNumber || 1;
+          console.log(`✅ Derived connectionRequestId: ${requestId}`);
+          pendingRequest.connectionRequestId = requestId;
+        }
+      }
+      
+      // If we still don't have a requestId, check if there's a connectionId field
+      if (!requestId && pendingRequest.connectionId) {
+        requestId = pendingRequest.connectionId;
+        console.log(`✅ Using connectionId as connectionRequestId: ${requestId}`);
+        pendingRequest.connectionRequestId = requestId;
+      }
+      
+      // Last resort - generate a simple numeric ID
+      if (!requestId) {
+        requestId = Date.now();
+        console.log(`⚠️ Using generated timestamp as connectionRequestId: ${requestId}`);
+        pendingRequest.connectionRequestId = requestId;
+      }
+    }
     
     try {
       // Ensure that both inboundTopicId and connectionId (which is the requestId) are passed
