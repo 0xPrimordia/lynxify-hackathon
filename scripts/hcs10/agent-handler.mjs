@@ -744,114 +744,91 @@ export class HCS10AgentHandler extends EventEmitter {
       console.log('📩 Processing inbound message:', JSON.stringify(message));
       this.emit('message_received', message);
       
-      // Handle different message types based on op field
+      // Connection requests are handled by ConnectionsManager
       if (message.op === 'connection_request') {
         console.log('🔍 DEBUG: Detected connection_request message');
-        // Use ConnectionsManager for handling (will call handlePendingConnection later)
         if (!this.connectionsManager) {
           await this.handleConnectionRequest(message);
         } else {
           console.log('ℹ️ ConnectionsManager will handle this message during checkPendingConnections');
         }
-        // Otherwise, already processed by ConnectionsManager and will be handled by checkPendingConnections
-      } 
-      // Enhanced message handling - detect messages in different formats
-      else if (message.op === 'message' || message.type === 'message') {
-        console.log('🔍 DEBUG: Detected chat message:', message);
+        return;
+      }
+      
+      // DIRECT FROM STANDARDS DOCS - HANDLE CHAT MESSAGE
+      // Look for standard chat/message operations
+      if (message.op === 'message' || message.op === 'chat') {
+        console.log('🔍 DEBUG: Detected chat message:', JSON.stringify(message, null, 2));
         
         try {
-          // Extract message data with better handling of different formats
-          let messageData;
-          let connectionTopicId;
+          // Extract required data following the HCS-10 protocol
+          const connectionId = message.connectionTopicId || message.topic_id;
           
-          // Extract connection topic ID from various possible locations
-          connectionTopicId = message.connection_id || message.connectionTopicId || message.topic_id;
-          
-          // Extract message data from various possible locations
+          // Parse message content based on HCS-10 protocol
+          let textContent = '';
           if (typeof message.data === 'string') {
             try {
-              messageData = JSON.parse(message.data);
+              // Try parsing as JSON first
+              const parsedData = JSON.parse(message.data);
+              textContent = parsedData.text || parsedData.message || parsedData.content;
             } catch (e) {
-              // If not valid JSON, use as plain text
-              messageData = { text: message.data };
+              // If not valid JSON, use the data as text
+              textContent = message.data;
             }
           } else if (typeof message.data === 'object') {
-            messageData = message.data;
-          } else if (typeof message.content === 'string') {
-            try {
-              messageData = JSON.parse(message.content);
-            } catch (e) {
-              messageData = { text: message.content };
-            }
-          } else if (typeof message.content === 'object') {
-            messageData = message.content;
+            textContent = message.data.text || message.data.message || message.data.content;
           } else if (message.text) {
-            messageData = { text: message.text };
-          } else if (message.message) {
-            messageData = { text: message.message };
+            textContent = message.text;
           }
           
-          console.log('📨 Extracted message data:', messageData);
-          console.log('📨 Using connection topic ID:', connectionTopicId);
-          
-          // If we have extracted valid message data and a connection topic ID
-          if (messageData && connectionTopicId) {
-            const text = messageData.text || messageData.message || messageData.content;
-            
-            if (text) {
-              console.log('🤖 Responding to chat message:', text);
-              
-              // Send a response using either SDK's sendChatMessage or our sendMessage
-              try {
-                if (typeof this.client.sendChatMessage === 'function') {
-                  // Use SDK's preferred method if available
-                  await this.client.sendChatMessage(
-                    connectionTopicId,
-                    {
-                      text: `Thanks for your message: "${text}". I am the Lynxify HCS-10 Agent, designed to help with tokenized index operations.`,
-                      timestamp: new Date().toISOString()
-                    }
-                  );
-                } else {
-                  // Use our standard sendMessage
-                  await this.sendMessage(
-                    connectionTopicId,
-                    {
-                      text: `Thanks for your message: "${text}". I am the Lynxify HCS-10 Agent, designed to help with tokenized index operations.`,
-                      timestamp: new Date().toISOString()
-                    }
-                  );
-                }
-                
-                console.log('✅ Sent response to message');
-              } catch (sendError) {
-                console.error('❌ Error sending response:', sendError);
-                
-                // Try alternative approach if primary fails
-                try {
-                  console.log('🔄 Trying alternative message sending approach...');
-                  await this.client.sendMessage(
-                    connectionTopicId,
-                    JSON.stringify({
-                      text: `Thanks for your message. I am the Lynxify HCS-10 Agent.`,
-                      timestamp: new Date().toISOString()
-                    })
-                  );
-                  console.log('✅ Sent response using alternative approach');
-                } catch (altError) {
-                  console.error('❌ Alternative sending also failed:', altError);
-                }
-              }
-            }
-          } else {
-            console.error('❌ Could not extract message data or connection ID:', message);
+          if (!connectionId || !textContent) {
+            console.error('❌ Missing required data for chat response:');
+            console.error(`Connection ID: ${connectionId || 'missing'}`);
+            console.error(`Text content: ${textContent || 'missing'}`);
+            return;
           }
-        } catch (err) {
-          console.error('❌ Error processing chat message:', err);
+          
+          console.log(`📬 Received message: "${textContent}" on connection: ${connectionId}`);
+          
+          // Generate response
+          let responseText = '';
+          const lowerText = textContent.toLowerCase();
+          
+          if (lowerText.includes('tell me about yourself') || lowerText.includes('who are you')) {
+            responseText = "I am the Lynxify Rebalancer Agent, designed to help manage the Lynx tokenized index. I can assist with rebalancing operations, risk assessments, and tokenized asset management.";
+          } 
+          else if (lowerText.includes('help') || lowerText.includes('what can you do')) {
+            responseText = "I can help with rebalancing token indexes, calculating optimal weights, monitoring price feeds, and executing token operations on the Hedera Token Service.";
+          }
+          else if (lowerText.includes('hello') || lowerText.includes('hi') || lowerText.includes('hey')) {
+            responseText = "Hello! I'm the Lynxify Rebalancer Agent. How can I assist you with your tokenized index today?";
+          }
+          else {
+            responseText = `Thank you for your message: "${textContent}". I am the Lynxify Rebalancer Agent, designed to help with tokenized index operations. How can I assist you further?`;
+          }
+          
+          // Send response according to HCS-10 protocol
+          console.log(`🔄 Sending response to ${connectionId}: "${responseText}"`);
+          
+          // EXACTLY FOLLOWING HCS-10 PROTOCOL
+          const response = {
+            op: 'message',
+            text: responseText,
+            timestamp: new Date().toISOString()
+          };
+          
+          // Send directly to the connection topic
+          await this.client.sendMessage(connectionId, JSON.stringify(response));
+          console.log('✅ Response sent successfully');
+        } catch (error) {
+          console.error('❌ Error handling chat message:', error);
         }
-      } else {
-        console.log('ℹ️ Unknown operation type:', message.op || message.type || 'undefined');
+        return;
       }
+      
+      // Log any other message types
+      console.log(`ℹ️ Received message with unhandled operation type: ${message.op || 'unknown'}`);
+      
     } catch (error) {
       console.error('❌ Error processing inbound message:', error);
     }
