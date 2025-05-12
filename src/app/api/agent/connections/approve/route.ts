@@ -21,18 +21,30 @@ export async function POST(
     
     // Try to get from URL first
     const url = new URL(request.url);
-    const urlConnectionId = url.pathname.split('/').pop();
+    console.log('🔍 DEBUG: Approval URL path:', url.pathname);
     
-    // Next try to get from request body
-    try {
-      const body = await request.json();
-      connectionId = body.connectionId || urlConnectionId;
-    } catch (e) {
-      // If body parsing fails, use URL connectionId
-      connectionId = urlConnectionId;
+    // Get the ID from the path segments
+    const pathSegments = url.pathname.split('/');
+    
+    // Check if we have an ID in the path
+    if (pathSegments.length > 0 && pathSegments[pathSegments.length - 1] !== 'approve') {
+      connectionId = pathSegments[pathSegments.length - 1];
+      console.log(`🔍 DEBUG: Found connection ID in URL: ${connectionId}`);
+    }
+    
+    // Next try to get from request body if not found in URL
+    if (!connectionId) {
+      try {
+        const body = await request.json();
+        connectionId = body.connectionId;
+        console.log(`🔍 DEBUG: Found connection ID in body: ${connectionId}`);
+      } catch (e) {
+        console.log('⚠️ Failed to parse request body:', e);
+      }
     }
     
     if (!connectionId) {
+      console.log('❌ Missing connection ID in request');
       return NextResponse.json(
         { success: false, error: 'Missing connection ID in request' },
         { status: 400 }

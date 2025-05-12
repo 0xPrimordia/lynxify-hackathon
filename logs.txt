@@ -1,50 +1,327 @@
-2025-05-12T20:54:37.353425107Z HCS10 agent process failed unexpectedly
-2025-05-12T20:54:41.36430434Z 🔄 MESSAGE STORE: Creating global message store
-2025-05-12T20:54:41.449726438Z 🚀 HEDERA: Initializing HederaService with REAL Hedera network...
-2025-05-12T20:54:41.44975345Z 🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
-2025-05-12T20:54:41.451868158Z 🔄 HEDERA: Setting operator credentials...
-2025-05-12T20:54:41.452286679Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
-2025-05-12T20:54:41.904047765Z ==> Your service is live 🎉
-2025-05-12T20:54:41.950493335Z ✅ HEDERA: Successfully initialized client with REAL Hedera testnet
-2025-05-12T20:54:41.951008214Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
-2025-05-12T20:54:41.957615208Z Using fallback token data (no file access or in production)
-2025-05-12T20:54:41.957708935Z ✅ HederaService initialized successfully!
-2025-05-12T20:54:41.971356755Z 🚀 HEDERA: Initializing HederaService with REAL Hedera network...
-2025-05-12T20:54:41.971460203Z 🔄 HEDERA: Creating client for testnet with operator: 0.0.4340026
-2025-05-12T20:54:42.047496349Z 🔄 HEDERA: Setting operator credentials...
-2025-05-12T20:54:42.04765039Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
-2025-05-12T20:54:42.053855844Z ✅ HEDERA: Successfully initialized client with REAL Hedera testnet
-2025-05-12T20:54:42.055577893Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
-2025-05-12T20:54:42.150396954Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
-2025-05-12T20:54:42.150439817Z Using fallback token data (no file access or in production)
-2025-05-12T20:54:42.150445327Z ✅ HederaService initialized successfully!
-2025-05-12T20:54:42.154273154Z Using fallback token data (no file access or in production)
-2025-05-12T20:54:42.154382712Z ✅ RebalanceAgent initialized with TokenService
-2025-05-12T20:54:42.154387552Z Starting agent manager...
-2025-05-12T20:54:42.155613904Z 📋 HEDERA: HCS topic configuration for REAL network: {
-2025-05-12T20:54:42.155630775Z   governanceTopic: '0.0.5898548',
-2025-05-12T20:54:42.155634265Z   priceFeedTopic: '0.0.5898550',
-2025-05-12T20:54:42.155636676Z   agentTopic: '0.0.5898549'
-2025-05-12T20:54:42.155734323Z }
-2025-05-12T20:54:42.156009673Z 🔄 HEDERA: Subscribing to topic: 0.0.5898548
-2025-05-12T20:54:42.363289454Z Restarting HCS10 agent process now...
-2025-05-12T20:54:42.747775135Z ✅ HEDERA: Successfully subscribed to topic 0.0.5898548
-2025-05-12T20:54:42.753195051Z 🔄 HEDERA: Subscribing to topic: 0.0.5898550
-2025-05-12T20:54:42.753219063Z ✅ HEDERA: Successfully subscribed to topic 0.0.5898550
-2025-05-12T20:54:42.753221823Z 🔄 HEDERA: Subscribing to topic: 0.0.5898549
-2025-05-12T20:54:42.753224103Z ✅ HEDERA: Successfully subscribed to topic 0.0.5898549
-2025-05-12T20:54:42.753226163Z AgentManager started successfully
-2025-05-12T20:54:42.753228223Z Agent manager started successfully
-2025-05-12T20:54:43.250803302Z file:///opt/render/project/src/scripts/hcs10/agent-handler.mjs:892
-2025-05-12T20:54:43.250834074Z           console.log(`
-2025-05-12T20:54:43.250837034Z                        
-2025-05-12T20:54:43.250838984Z 
-2025-05-12T20:54:43.250841695Z SyntaxError: Unexpected end of input
-2025-05-12T20:54:43.250844145Z     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)
-2025-05-12T20:54:43.250846925Z     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)
-2025-05-12T20:54:43.250850135Z     at #translate (node:internal/modules/esm/loader:468:12)
-2025-05-12T20:54:43.250852455Z     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)
-2025-05-12T20:54:43.250854585Z     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)
-2025-05-12T20:54:43.250856506Z 
-2025-05-12T20:54:43.250858586Z Node.js v22.14.0
-2025-05-12T20:54:43.34946971Z Restarted HCS10 agent process exited with code 1
+2025-05-12T21:38:58.983537249Z   {
+2025-05-12T21:38:58.98353988Z     "connectionTopicId": "0.0.5988861",
+2025-05-12T21:38:58.9835423Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:38:58.98355283Z     "status": "established",
+2025-05-12T21:38:58.98355567Z     "isPending": false,
+2025-05-12T21:38:58.9835582Z     "needsConfirmation": false,
+2025-05-12T21:38:58.9835607Z     "created": "2025-05-12T20:20:28.255Z",
+2025-05-12T21:38:58.98356299Z     "inboundRequestId": 1,
+2025-05-12T21:38:58.983565621Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:38:58.983567941Z     "originTopicId": "0.0.5988861",
+2025-05-12T21:38:58.983570481Z     "processed": false,
+2025-05-12T21:38:58.983572901Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:38:58.983575321Z     "profileInfo": {
+2025-05-12T21:38:58.983577741Z       "version": "1.0",
+2025-05-12T21:38:58.983580001Z       "type": 0,
+2025-05-12T21:38:58.983582411Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:38:58.983585041Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:38:58.983587681Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:38:58.983590151Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:38:58.985136488Z     "status": "established",
+2025-05-12T21:38:59.279154024Z     "created": "2025-05-12T21:35:02.828Z",
+2025-05-12T21:38:59.279177595Z     "inboundRequestId": 1,
+2025-05-12T21:38:59.279181225Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:38:59.279183765Z     "originTopicId": "0.0.5989137",
+2025-05-12T21:38:59.279186815Z     "processed": false,
+2025-05-12T21:38:59.27933559Z     "memo": "Connection accepted. Looking forward to collaborating!"
+2025-05-12T21:38:59.27934216Z   },
+2025-05-12T21:38:59.27934486Z   {
+2025-05-12T21:38:59.27934751Z     "connectionTopicId": "0.0.5989141",
+2025-05-12T21:38:59.27934996Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:38:59.27935211Z     "status": "established",
+2025-05-12T21:38:59.2793552Z     "isPending": false,
+2025-05-12T21:38:59.2793575Z     "needsConfirmation": false,
+2025-05-12T21:38:59.27936022Z     "created": "2025-05-12T21:35:03.270Z",
+2025-05-12T21:38:59.279362841Z     "inboundRequestId": 1,
+2025-05-12T21:38:59.279365201Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:38:59.279367821Z     "originTopicId": "0.0.5989141",
+2025-05-12T21:38:59.279396622Z     "processed": false,
+2025-05-12T21:38:59.279399711Z     "memo": "Connection accepted. Looking forward to collaborating!"
+2025-05-12T21:38:59.279402202Z   },
+2025-05-12T21:38:59.279404422Z   {
+2025-05-12T21:38:59.279406742Z     "connectionTopicId": "0.0.5989149",
+2025-05-12T21:38:59.279408972Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:38:59.279411322Z     "status": "established",
+2025-05-12T21:38:59.279413692Z     "isPending": false,
+2025-05-12T21:38:59.279415712Z     "needsConfirmation": false,
+2025-05-12T21:38:59.279418022Z     "created": "2025-05-12T21:35:06.290Z",
+2025-05-12T21:38:59.279420142Z     "inboundRequestId": 1,
+2025-05-12T21:38:59.279422732Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:38:59.285067792Z     "connectionTopicId": "0.0.5988445",
+2025-05-12T21:39:18.28085759Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.280886291Z     "profileInfo": {
+2025-05-12T21:39:18.280890961Z       "version": "1.0",
+2025-05-12T21:39:18.280927192Z       "type": 0,
+2025-05-12T21:39:18.280931662Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.280935142Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.280938642Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.280942162Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.280945642Z       "properties": {
+2025-05-12T21:39:18.280949033Z         "organization": "Lynxify"
+2025-05-12T21:39:18.280952373Z       },
+2025-05-12T21:39:18.280955863Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.280959253Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.280962643Z     },
+2025-05-12T21:39:18.280966033Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.280969403Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.280972713Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.280976003Z     "lastActivity": "2025-05-12T19:04:21.035Z"
+2025-05-12T21:39:18.280979303Z   },
+2025-05-12T21:39:18.280982694Z   {
+2025-05-12T21:39:18.280986064Z     "connectionTopicId": "0.0.5988475",
+2025-05-12T21:39:18.280989964Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.280993814Z     "status": "established",
+2025-05-12T21:39:18.280997474Z     "isPending": false,
+2025-05-12T21:39:18.281000784Z     "needsConfirmation": false,
+2025-05-12T21:39:18.281004204Z     "created": "2025-05-12T19:10:35.235Z",
+2025-05-12T21:39:18.281007574Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.281011924Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.281015304Z     "originTopicId": "0.0.5988475",
+2025-05-12T21:39:18.281018645Z     "processed": false,
+2025-05-12T21:39:18.281022125Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.281025895Z     "profileInfo": {
+2025-05-12T21:39:18.281029875Z       "version": "1.0",
+2025-05-12T21:39:18.281033475Z       "type": 0,
+2025-05-12T21:39:18.281036935Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.281040275Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.281043625Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.281047016Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.281050386Z       "properties": {
+2025-05-12T21:39:18.281053696Z         "organization": "Lynxify"
+2025-05-12T21:39:18.281057296Z       },
+2025-05-12T21:39:18.281060746Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281075926Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.281078137Z     },
+2025-05-12T21:39:18.281083747Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.281085817Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281087777Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.281089737Z     "lastActivity": "2025-05-12T19:10:39.081Z"
+2025-05-12T21:39:18.281091717Z   },
+2025-05-12T21:39:18.281093697Z   {
+2025-05-12T21:39:18.281095577Z     "connectionTopicId": "0.0.5988476",
+2025-05-12T21:39:18.281097607Z     "targetAccountId": "0.0.5527744",
+2025-05-12T21:39:18.281099637Z     "status": "established",
+2025-05-12T21:39:18.281101587Z     "isPending": false,
+2025-05-12T21:39:18.281103537Z     "needsConfirmation": false,
+2025-05-12T21:39:18.281105487Z     "created": "2025-05-12T19:10:35.433Z",
+2025-05-12T21:39:18.281107437Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.281109497Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.281111387Z     "originTopicId": "0.0.5988476",
+2025-05-12T21:39:18.281113418Z     "processed": false,
+2025-05-12T21:39:18.281115478Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.281117468Z     "profileInfo": {
+2025-05-12T21:39:18.281119418Z       "version": "1.0",
+2025-05-12T21:39:18.281121378Z       "type": 0,
+2025-05-12T21:39:18.281123468Z       "display_name": "Humanoid",
+2025-05-12T21:39:18.281125488Z       "alias": "Humanoid",
+2025-05-12T21:39:18.281127478Z       "bio": "A human who does human things",
+2025-05-12T21:39:18.281129418Z       "socials": [
+2025-05-12T21:39:18.281131428Z         {
+2025-05-12T21:39:18.281133378Z           "platform": "twitter",
+2025-05-12T21:39:18.281135298Z           "handle": "HashgraphOnline"
+2025-05-12T21:39:18.281137278Z         },
+2025-05-12T21:39:18.281139248Z         {
+2025-05-12T21:39:18.281141588Z           "platform": "github",
+2025-05-12T21:39:18.281143608Z           "handle": "https://github.com/hashgraph-online"
+2025-05-12T21:39:18.281145599Z         },
+2025-05-12T21:39:18.281147559Z         {
+2025-05-12T21:39:18.281149549Z           "platform": "website",
+2025-05-12T21:39:18.281151509Z           "handle": "https://hashgraphonline.com"
+2025-05-12T21:39:18.281153429Z         }
+2025-05-12T21:39:18.281155409Z       ],
+2025-05-12T21:39:18.281157379Z       "profileImage": "hcs://1/0.0.5949561",
+2025-05-12T21:39:18.281159399Z       "properties": {
+2025-05-12T21:39:18.281161389Z         "organization": "Humanoid Inc"
+2025-05-12T21:39:18.281163359Z       },
+2025-05-12T21:39:18.281165409Z       "inboundTopicId": "0.0.5949563",
+2025-05-12T21:39:18.281167379Z       "outboundTopicId": "0.0.5949562"
+2025-05-12T21:39:18.281169349Z     },
+2025-05-12T21:39:18.281171359Z     "targetAgentName": "Humanoid",
+2025-05-12T21:39:18.281173309Z     "targetInboundTopicId": "0.0.5949563",
+2025-05-12T21:39:18.281175279Z     "targetOutboundTopicId": "0.0.5949562",
+2025-05-12T21:39:18.281177249Z     "lastActivity": "2025-05-12T19:11:55.896Z"
+2025-05-12T21:39:18.28117922Z   },
+2025-05-12T21:39:18.281181229Z   {
+2025-05-12T21:39:18.28118325Z     "connectionTopicId": "0.0.5988477",
+2025-05-12T21:39:18.28118523Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.28118717Z     "status": "established",
+2025-05-12T21:39:18.28118916Z     "isPending": false,
+2025-05-12T21:39:18.28119116Z     "needsConfirmation": false,
+2025-05-12T21:39:18.28119315Z     "created": "2025-05-12T19:11:32.244Z",
+2025-05-12T21:39:18.28119507Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.28120128Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.28120336Z     "originTopicId": "0.0.5988477",
+2025-05-12T21:39:18.28120531Z     "processed": false,
+2025-05-12T21:39:18.28120731Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.28120927Z     "profileInfo": {
+2025-05-12T21:39:18.281211201Z       "version": "1.0",
+2025-05-12T21:39:18.28121317Z       "type": 0,
+2025-05-12T21:39:18.28121515Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.281217121Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.281219131Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.281221071Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.281223021Z       "properties": {
+2025-05-12T21:39:18.281224981Z         "organization": "Lynxify"
+2025-05-12T21:39:18.281226921Z       },
+2025-05-12T21:39:18.281228921Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281230831Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.281232791Z     },
+2025-05-12T21:39:18.281234721Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.281236661Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281238661Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.281240621Z     "lastActivity": "2025-05-12T19:11:36.318Z"
+2025-05-12T21:39:18.281242541Z   },
+2025-05-12T21:39:18.281244551Z   {
+2025-05-12T21:39:18.281246462Z     "connectionTopicId": "0.0.5988478",
+2025-05-12T21:39:18.281248442Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.281834719Z     "status": "established",
+2025-05-12T21:39:18.28184564Z     "isPending": false,
+2025-05-12T21:39:18.28184962Z     "needsConfirmation": false,
+2025-05-12T21:39:18.28185232Z     "created": "2025-05-12T19:11:32.260Z",
+2025-05-12T21:39:18.28185444Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.28185683Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.28185884Z     "originTopicId": "0.0.5988478",
+2025-05-12T21:39:18.28187254Z     "processed": false,
+2025-05-12T21:39:18.28187517Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.28187721Z     "profileInfo": {
+2025-05-12T21:39:18.28187919Z       "version": "1.0",
+2025-05-12T21:39:18.28188123Z       "type": 0,
+2025-05-12T21:39:18.281883221Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.281885231Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.281887251Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.281889241Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.281891191Z       "properties": {
+2025-05-12T21:39:18.281893201Z         "organization": "Lynxify"
+2025-05-12T21:39:18.281895171Z       },
+2025-05-12T21:39:18.281897161Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281899111Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.281901121Z     },
+2025-05-12T21:39:18.281903091Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.281905311Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281907291Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.281909231Z     "lastActivity": "2025-05-12T19:11:36.505Z"
+2025-05-12T21:39:18.281911191Z   },
+2025-05-12T21:39:18.281915122Z   {
+2025-05-12T21:39:18.281917142Z     "connectionTopicId": "0.0.5988479",
+2025-05-12T21:39:18.281919172Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.281921102Z     "status": "established",
+2025-05-12T21:39:18.281930012Z     "isPending": false,
+2025-05-12T21:39:18.281932122Z     "needsConfirmation": false,
+2025-05-12T21:39:18.281934112Z     "created": "2025-05-12T19:11:40.483Z",
+2025-05-12T21:39:18.281936032Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.281938062Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.281939972Z     "originTopicId": "0.0.5988479",
+2025-05-12T21:39:18.281942002Z     "processed": false,
+2025-05-12T21:39:18.281944012Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.281945972Z     "profileInfo": {
+2025-05-12T21:39:18.281947883Z       "version": "1.0",
+2025-05-12T21:39:18.281949833Z       "type": 0,
+2025-05-12T21:39:18.281951783Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.281953773Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.281955823Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.281957813Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.281959753Z       "properties": {
+2025-05-12T21:39:18.281962063Z         "organization": "Lynxify"
+2025-05-12T21:39:18.281963983Z       },
+2025-05-12T21:39:18.281965973Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281968003Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.281970003Z     },
+2025-05-12T21:39:18.281971983Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.281973933Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.281975893Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.281977813Z     "lastActivity": "2025-05-12T19:11:44.145Z"
+2025-05-12T21:39:18.281979753Z   },
+2025-05-12T21:39:18.281981733Z   {
+2025-05-12T21:39:18.281983704Z     "connectionTopicId": "0.0.5988480",
+2025-05-12T21:39:18.281985634Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.281987574Z     "status": "established",
+2025-05-12T21:39:18.281989464Z     "isPending": false,
+2025-05-12T21:39:18.281991354Z     "needsConfirmation": false,
+2025-05-12T21:39:18.281993304Z     "created": "2025-05-12T19:11:42.014Z",
+2025-05-12T21:39:18.281995234Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.281997164Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.281999124Z     "originTopicId": "0.0.5988480",
+2025-05-12T21:39:18.282001074Z     "processed": false,
+2025-05-12T21:39:18.282003004Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.282004944Z     "profileInfo": {
+2025-05-12T21:39:18.282006884Z       "version": "1.0",
+2025-05-12T21:39:18.282008814Z       "type": 0,
+2025-05-12T21:39:18.282010794Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.282012765Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.282014725Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.282016705Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.282018635Z       "properties": {
+2025-05-12T21:39:18.282020615Z         "organization": "Lynxify"
+2025-05-12T21:39:18.282022565Z       },
+2025-05-12T21:39:18.282024565Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.282026505Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.282028485Z     },
+2025-05-12T21:39:18.282030395Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.282032355Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.282034295Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.282036245Z     "lastActivity": "2025-05-12T19:11:45.785Z"
+2025-05-12T21:39:18.282041855Z   },
+2025-05-12T21:39:18.282043875Z   {
+2025-05-12T21:39:18.282045826Z     "connectionTopicId": "0.0.5988481",
+2025-05-12T21:39:18.282048015Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.282049906Z     "status": "established",
+2025-05-12T21:39:18.282051876Z     "isPending": false,
+2025-05-12T21:39:18.282053836Z     "needsConfirmation": false,
+2025-05-12T21:39:18.282055796Z     "created": "2025-05-12T19:11:42.014Z",
+2025-05-12T21:39:18.282057756Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.282059706Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.282061636Z     "originTopicId": "0.0.5988481",
+2025-05-12T21:39:18.282063576Z     "processed": false,
+2025-05-12T21:39:18.282065576Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.282067536Z     "profileInfo": {
+2025-05-12T21:39:18.282069516Z       "version": "1.0",
+2025-05-12T21:39:18.282071426Z       "type": 0,
+2025-05-12T21:39:18.282073426Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.282075356Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.282077347Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.282079316Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.282081227Z       "properties": {
+2025-05-12T21:39:18.282083197Z         "organization": "Lynxify"
+2025-05-12T21:39:18.282085087Z       },
+2025-05-12T21:39:18.282089497Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.282091537Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.282093477Z     },
+2025-05-12T21:39:18.282095397Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.282097337Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.282099297Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.282101297Z     "lastActivity": "2025-05-12T19:11:45.580Z"
+2025-05-12T21:39:18.282103207Z   },
+2025-05-12T21:39:18.282105127Z   {
+2025-05-12T21:39:18.282107087Z     "connectionTopicId": "0.0.5988482",
+2025-05-12T21:39:18.282109048Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.282111077Z     "status": "established",
+2025-05-12T21:39:18.282113028Z     "isPending": false,
+2025-05-12T21:39:18.282114977Z     "needsConfirmation": false,
+2025-05-12T21:39:18.282118818Z     "created": "2025-05-12T19:11:48.150Z",
+2025-05-12T21:39:18.282120908Z     "inboundRequestId": 1,
+2025-05-12T21:39:18.282122868Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+2025-05-12T21:39:18.282124818Z     "originTopicId": "0.0.5988482",
+2025-05-12T21:39:18.282126758Z     "processed": false,
+2025-05-12T21:39:18.282128738Z     "memo": "Connection accepted. Looking forward to collaborating!",
+2025-05-12T21:39:18.282130698Z     "profileInfo": {
+2025-05-12T21:39:18.282132948Z       "version": "1.0",
+2025-05-12T21:39:18.282134848Z       "type": 0,
+2025-05-12T21:39:18.282136888Z       "display_name": "Rebalancer Agent",
+2025-05-12T21:39:18.282138808Z       "alias": "lynx_rebalancer_agent",
+2025-05-12T21:39:18.282140848Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+2025-05-12T21:39:18.282142829Z       "profileImage": "hcs://1/0.0.5949502",
+2025-05-12T21:39:18.282144818Z       "properties": {
+2025-05-12T21:39:18.282146849Z         "organization": "Lynxify"
+2025-05-12T21:39:18.282148799Z       },
+2025-05-12T21:39:18.282150749Z       "inboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.282152709Z       "outboundTopicId": "0.0.5949516"
+2025-05-12T21:39:18.282158039Z     },
+2025-05-12T21:39:18.282160009Z     "targetAgentName": "Rebalancer Agent",
+2025-05-12T21:39:18.282161959Z     "targetInboundTopicId": "0.0.5949517",
+2025-05-12T21:39:18.282163889Z     "targetOutboundTopicId": "0.0.5949516",
+2025-05-12T21:39:18.282165829Z     "lastActivity": "2025-05-12T19:11:52.044Z"
+2025-05-12T21:39:18.282167839Z   },
+2025-05-12T21:39:18.282169779Z   {
+2025-05-12T21:39:18.282171769Z     "connectionTopicId": "0.0.5988483",
+2025-05-12T21:39:18.282173789Z     "targetAccountId": "0.0.4340026",
+2025-05-12T21:39:18.282175739Z     "status": "established",

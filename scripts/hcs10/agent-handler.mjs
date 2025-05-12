@@ -252,7 +252,34 @@ export class HCS10AgentHandler extends EventEmitter {
   }
   
   /**
-   * Load existing connections using ConnectionsManager
+   * Save connections to file (for test tools)
+   */
+  async saveConnections() {
+    try {
+      // Get connections from ConnectionsManager
+      const connections = this.connectionsManager.getAllConnections();
+      
+      // Convert to the format expected by test tools
+      const formattedConnections = connections.map(conn => ({
+        id: conn.connectionTopicId,
+        connectionTopicId: conn.connectionTopicId,
+        requesterId: conn.targetAccountId,
+        status: conn.status,
+        establishedAt: conn.created?.getTime() || Date.now()
+      }));
+      
+      // Save to file
+      const connectionsFile = path.join(process.cwd(), '.connections.json');
+      await fs.writeFile(connectionsFile, JSON.stringify(formattedConnections, null, 2));
+      
+      console.log(`✅ Saved ${formattedConnections.length} connections to file for test tools`);
+    } catch (error) {
+      console.error('❌ Error saving connections to file:', error);
+    }
+  }
+
+  /**
+   * Load connections from ConnectionsManager
    */
   async loadConnections() {
     try {
@@ -269,6 +296,9 @@ export class HCS10AgentHandler extends EventEmitter {
       
       // For backward compatibility, keep the connections map updated
       this.syncConnectionsFromManager();
+      
+      // Save connections to file for test tools
+      await this.saveConnections();
       
       // Update status file with latest connection info
       await this.updateStatusFile();
@@ -759,8 +789,34 @@ export class HCS10AgentHandler extends EventEmitter {
       console.log('📩 Processing inbound message:', JSON.stringify(message));
       this.emit('message_received', message);
       
+      // Enhanced message format detection
+      // Many different formats are used in practice, so we need to be flexible
+      let messageOp = message.op;
+      
+      // Extract op from different possible formats
+      if (!messageOp) {
+        if (message.operation) messageOp = message.operation;
+        if (message.type) messageOp = message.type;
+        if (message.action) messageOp = message.action;
+        
+        // Try to parse data field if it exists and might contain an op
+        if (message.data && typeof message.data === 'string') {
+          try {
+            const parsedData = JSON.parse(message.data);
+            if (parsedData.op) messageOp = parsedData.op;
+            if (parsedData.operation) messageOp = parsedData.operation;
+            if (parsedData.type) messageOp = parsedData.type;
+            if (parsedData.action) messageOp = parsedData.action;
+          } catch (e) {
+            // Not valid JSON, ignore
+          }
+        }
+      }
+      
+      console.log(`🔍 DEBUG: Detected message op: ${messageOp || 'unknown'}`);
+      
       // Connection requests are handled by ConnectionsManager
-      if (message.op === 'connection_request') {
+      if (messageOp === 'connection_request') {
         console.log('🔍 DEBUG: Detected connection_request message');
         if (!this.connectionsManager) {
           await this.handleConnectionRequest(message);
@@ -770,18 +826,51 @@ export class HCS10AgentHandler extends EventEmitter {
         return;
       }
       
-      // DIRECT FROM STANDARDS DOCS - HANDLE CHAT MESSAGE
-      // Look for standard chat/message operations
-      if (message.op === 'message' || message.op === 'chat') {
+      // HANDLE ALL POSSIBLE MESSAGE TYPES
+      const isChatMessage = 
+        messageOp === 'message' || 
+        messageOp === 'chat' || 
+        messageOp === 'text' || 
+        messageOp === 'direct_message' ||
+        (message.text && typeof message.text === 'string');
+      
+      if (isChatMessage) {
         console.log('🔍 DEBUG: Detected chat message:', JSON.stringify(message, null, 2));
         
         try {
-          // Extract required data following the HCS-10 protocol
-          const connectionId = message.connectionTopicId || message.topic_id;
+          // Extract connection ID - many formats in the wild
+          let connectionId = 
+            message.connectionTopicId || 
+            message.topic_id || 
+            message.conversationTopicId || 
+            message.topicId;
+            
+          // Fallback: try using originTopicId as connectionId if exists
+          if (!connectionId && message.originTopicId) {
+            connectionId = message.originTopicId;
+          }
           
-          // Parse message content based on HCS-10 protocol
+          // Parse message content based on HCS-10 protocol - handle ALL variants
           let textContent = '';
-          if (typeof message.data === 'string') {
+          
+          // Direct text field
+          if (message.text) {
+            textContent = message.text;
+          }
+          // Message field
+          else if (message.message) {
+            textContent = message.message;
+          }
+          // Content field
+          else if (message.content) {
+            textContent = message.content;
+          }
+          // Contents field
+          else if (message.contents) {
+            textContent = message.contents;
+          }
+          // Data field as string
+          else if (typeof message.data === 'string') {
             try {
               // Try parsing as JSON first
               const parsedData = JSON.parse(message.data);
@@ -790,23 +879,37 @@ export class HCS10AgentHandler extends EventEmitter {
               // If not valid JSON, use the data as text
               textContent = message.data;
             }
-          } else if (typeof message.data === 'object') {
+          }
+          // Data field as object
+          else if (typeof message.data === 'object') {
             textContent = message.data.text || message.data.message || message.data.content || message.data.data;
-          } else if (message.text) {
-            textContent = message.text;
           }
           
-          // Extra handlers for direct message content - this is missing in some cases
-          if (!textContent && message.contents) {
-            textContent = message.contents;
-          }
-          
+          // If we still don't have a connection ID or text, dump everything to see what we're getting
           if (!connectionId || !textContent) {
             console.error('❌ Missing required data for chat response:');
             console.error(`Connection ID: ${connectionId || 'missing'}`);
             console.error(`Text content: ${textContent || 'missing'}`);
             console.error('Full message:', JSON.stringify(message, null, 2));
-            return;
+            
+            // Try one more fallback for connection ID - if we have any active connections
+            if (!connectionId) {
+              const activeConnections = this.connectionsManager?.getActiveConnections() || [];
+              if (activeConnections.length > 0) {
+                connectionId = activeConnections[0].connectionTopicId;
+                console.log(`ℹ️ Using fallback connection ID: ${connectionId}`);
+              }
+            }
+            
+            // Last resort fallback for text content
+            if (!textContent) {
+              textContent = "I received your message but couldn't parse the content. Could you try again?";
+            }
+            
+            if (!connectionId) {
+              console.error('❌ Could not determine connection ID for response, giving up.');
+              return;
+            }
           }
           
           console.log(`📬 Received message: "${textContent}" on connection: ${connectionId}`);
@@ -849,7 +952,7 @@ export class HCS10AgentHandler extends EventEmitter {
       }
       
       // Log any other message types
-      console.log(`ℹ️ Received message with unhandled operation type: ${message.op || 'unknown'}`);
+      console.log(`ℹ️ Received message with unhandled operation type: ${messageOp || 'unknown'}`);
       console.log('Full message:', JSON.stringify(message, null, 2));
       
     } catch (error) {
