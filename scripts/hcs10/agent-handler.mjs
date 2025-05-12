@@ -329,12 +329,12 @@ export class HCS10AgentHandler extends EventEmitter {
     
     console.log('👂 Starting to monitor inbound topic for messages...');
     
-    // Set up a periodic polling mechanism
+    // Set up a more frequent polling mechanism - check every 3 seconds instead of 10
     this.monitorInterval = setInterval(async () => {
       await this.checkInboundTopic();
       await this.checkPendingConnections();
       await this.updateStatusFile();
-    }, 10000); // Check every 10 seconds
+    }, 3000); // Check every 3 seconds for better responsiveness
     
     // Do an immediate check
     await this.checkInboundTopic();
@@ -343,6 +343,8 @@ export class HCS10AgentHandler extends EventEmitter {
     
     this.monitoring = true;
     this.emit('monitoring_started');
+    
+    console.log('✅ Monitoring started with 3-second intervals for better responsiveness');
   }
   
   /**
@@ -371,36 +373,23 @@ export class HCS10AgentHandler extends EventEmitter {
     try {
       console.log(`🔄 Checking inbound topic ${this.inboundTopicId} for new messages...`);
       
-      // Log available methods
-      console.log('🔍 DEBUG: Available methods on client:', Object.keys(this.client));
+      // More aggressive message checking - try multiple approaches
       
+      // 1. First try the standard GetMessageStream approach
       try {
-        // Get messages from the topic
+        console.log('🔍 Attempting to get messages using standard getMessageStream...');
         const messages = await this.client.getMessageStream(this.inboundTopicId);
         
-        // Log raw message count and details
         console.log(`🔍 DEBUG: Raw message response type: ${typeof messages}`);
-        console.log(`🔍 DEBUG: Raw message count: ${messages ? messages.length : 'undefined'}`);
+        console.log(`🔍 DEBUG: Raw message count: ${messages?.length || 'undefined'}`);
         
         if (messages && messages.length > 0) {
           console.log(`📬 Found ${messages.length} messages on inbound topic`);
-          console.log('🔍 DEBUG: Raw messages:', JSON.stringify(messages.slice(0, 2), null, 2)); // Only first 2 to avoid log overload
-          
-          // Detect connection requests specifically
-          const connectionRequests = messages.filter(msg => msg && msg.op === 'connection_request');
-          console.log(`🔍 DEBUG: Found ${connectionRequests.length} connection_request messages`);
           
           // Process messages with ConnectionsManager if available
           if (this.connectionsManager) {
             console.log('🔄 Processing messages with ConnectionsManager...');
             this.connectionsManager.processInboundMessages(messages);
-            
-            // Debug: Check if ConnectionsManager detected any pending requests
-            const pendingAfterProcess = this.connectionsManager.getPendingRequests();
-            console.log(`🔍 DEBUG: Pending requests after processing: ${pendingAfterProcess.length}`);
-            if (pendingAfterProcess.length > 0) {
-              console.log('🔍 DEBUG: Pending requests detail:', JSON.stringify(pendingAfterProcess, null, 2));
-            }
           }
           
           // Also process individually for backward compatibility
@@ -408,11 +397,65 @@ export class HCS10AgentHandler extends EventEmitter {
             await this.processInboundMessage(message);
           }
         } else {
-          console.log('ℹ️ No new messages found on inbound topic');
+          console.log('ℹ️ No new messages found with standard approach');
         }
-      } catch (inboundError) {
-        console.error(`❌ Error getting messages from inbound topic: ${inboundError.message}`);
-        console.error('Stack trace:', inboundError.stack);
+      } catch (standardError) {
+        console.error(`⚠️ Error with standard message retrieval:`, standardError);
+      }
+      
+      // 2. Now check active connections for any new messages (more aggressive approach)
+      console.log('🔍 Checking active connections for messages...');
+      const activeConnections = this.connectionsManager?.getActiveConnections() || [];
+      
+      if (activeConnections.length > 0) {
+        console.log(`📬 Found ${activeConnections.length} active connections to check for messages`);
+        
+        // Check a sample of active connections (to avoid overloading)
+        const samplesToCheck = Math.min(10, activeConnections.length);
+        
+        for (let i = 0; i < samplesToCheck; i++) {
+          const connection = activeConnections[i];
+          
+          try {
+            console.log(`🔍 Checking for messages on connection ${connection.connectionTopicId}`);
+            
+            // Try to get messages on this connection topic
+            const connectionMessages = await this.client.getMessageStream(connection.connectionTopicId);
+            
+            if (connectionMessages && connectionMessages.length > 0) {
+              console.log(`📬 Found ${connectionMessages.length} messages on connection ${connection.connectionTopicId}`);
+              
+              // Process each message
+              for (const message of connectionMessages) {
+                await this.processInboundMessage({
+                  ...message,
+                  connectionTopicId: connection.connectionTopicId // Ensure we have connection ID
+                });
+              }
+            }
+          } catch (connError) {
+            console.error(`⚠️ Error checking messages for connection ${connection.connectionTopicId}:`, connError);
+          }
+        }
+      }
+      
+      // 3. Now check the outbound topic as well (some clients send here by mistake)
+      if (this.outboundTopicId) {
+        try {
+          console.log(`🔍 Checking outbound topic ${this.outboundTopicId} for misrouted messages...`);
+          const outboundMessages = await this.client.getMessageStream(this.outboundTopicId);
+          
+          if (outboundMessages && outboundMessages.length > 0) {
+            console.log(`📬 Found ${outboundMessages.length} messages on outbound topic`);
+            
+            // Process these messages too
+            for (const message of outboundMessages) {
+              await this.processInboundMessage(message);
+            }
+          }
+        } catch (outboundError) {
+          console.error(`⚠️ Error checking outbound topic:`, outboundError);
+        }
       }
     } catch (error) {
       console.error('❌ Error checking inbound topic:', error);
@@ -712,47 +755,102 @@ export class HCS10AgentHandler extends EventEmitter {
         }
         // Otherwise, already processed by ConnectionsManager and will be handled by checkPendingConnections
       } 
-      // Handle regular chat messages (messages sent on established connection topics)
-      else if (message.op === 'message') {
-        console.log('🔍 DEBUG: Detected regular message on connection topic');
+      // Enhanced message handling - detect messages in different formats
+      else if (message.op === 'message' || message.type === 'message') {
+        console.log('🔍 DEBUG: Detected chat message:', message);
         
         try {
-          // Parse the message data if it's a string
-          let messageData = message.data;
-          if (typeof messageData === 'string') {
-            messageData = JSON.parse(messageData);
+          // Extract message data with better handling of different formats
+          let messageData;
+          let connectionTopicId;
+          
+          // Extract connection topic ID from various possible locations
+          connectionTopicId = message.connection_id || message.connectionTopicId || message.topic_id;
+          
+          // Extract message data from various possible locations
+          if (typeof message.data === 'string') {
+            try {
+              messageData = JSON.parse(message.data);
+            } catch (e) {
+              // If not valid JSON, use as plain text
+              messageData = { text: message.data };
+            }
+          } else if (typeof message.data === 'object') {
+            messageData = message.data;
+          } else if (typeof message.content === 'string') {
+            try {
+              messageData = JSON.parse(message.content);
+            } catch (e) {
+              messageData = { text: message.content };
+            }
+          } else if (typeof message.content === 'object') {
+            messageData = message.content;
+          } else if (message.text) {
+            messageData = { text: message.text };
+          } else if (message.message) {
+            messageData = { text: message.message };
           }
           
-          console.log('📨 Received message:', messageData);
+          console.log('📨 Extracted message data:', messageData);
+          console.log('📨 Using connection topic ID:', connectionTopicId);
           
-          // If it's a simple text message (not a system message), respond to it
-          if (messageData.text && !messageData.type) {
-            console.log('🤖 Responding to chat message:', messageData.text);
+          // If we have extracted valid message data and a connection topic ID
+          if (messageData && connectionTopicId) {
+            const text = messageData.text || messageData.message || messageData.content;
             
-            // Get the connection topic ID from the message
-            const connectionTopicId = message.connection_id || message.connectionTopicId;
-            
-            if (!connectionTopicId) {
-              console.error('❌ Cannot respond to message: No connection topic ID available');
-              return;
-            }
-            
-            // Send a response
-            await this.sendMessage(
-              connectionTopicId,
-              {
-                text: `Thanks for your message: "${messageData.text}". This is an automated response from the Lynxify HCS-10 Agent.`,
-                timestamp: new Date().toISOString()
+            if (text) {
+              console.log('🤖 Responding to chat message:', text);
+              
+              // Send a response using either SDK's sendChatMessage or our sendMessage
+              try {
+                if (typeof this.client.sendChatMessage === 'function') {
+                  // Use SDK's preferred method if available
+                  await this.client.sendChatMessage(
+                    connectionTopicId,
+                    {
+                      text: `Thanks for your message: "${text}". I am the Lynxify HCS-10 Agent, designed to help with tokenized index operations.`,
+                      timestamp: new Date().toISOString()
+                    }
+                  );
+                } else {
+                  // Use our standard sendMessage
+                  await this.sendMessage(
+                    connectionTopicId,
+                    {
+                      text: `Thanks for your message: "${text}". I am the Lynxify HCS-10 Agent, designed to help with tokenized index operations.`,
+                      timestamp: new Date().toISOString()
+                    }
+                  );
+                }
+                
+                console.log('✅ Sent response to message');
+              } catch (sendError) {
+                console.error('❌ Error sending response:', sendError);
+                
+                // Try alternative approach if primary fails
+                try {
+                  console.log('🔄 Trying alternative message sending approach...');
+                  await this.client.sendMessage(
+                    connectionTopicId,
+                    JSON.stringify({
+                      text: `Thanks for your message. I am the Lynxify HCS-10 Agent.`,
+                      timestamp: new Date().toISOString()
+                    })
+                  );
+                  console.log('✅ Sent response using alternative approach');
+                } catch (altError) {
+                  console.error('❌ Alternative sending also failed:', altError);
+                }
               }
-            );
-            
-            console.log('✅ Sent response to message');
+            }
+          } else {
+            console.error('❌ Could not extract message data or connection ID:', message);
           }
         } catch (err) {
           console.error('❌ Error processing chat message:', err);
         }
       } else {
-        console.log('ℹ️ Unknown operation type:', message.op);
+        console.log('ℹ️ Unknown operation type:', message.op || message.type || 'undefined');
       }
     } catch (error) {
       console.error('❌ Error processing inbound message:', error);
