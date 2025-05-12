@@ -711,6 +711,46 @@ export class HCS10AgentHandler extends EventEmitter {
           console.log('ℹ️ ConnectionsManager will handle this message during checkPendingConnections');
         }
         // Otherwise, already processed by ConnectionsManager and will be handled by checkPendingConnections
+      } 
+      // Handle regular chat messages (messages sent on established connection topics)
+      else if (message.op === 'message') {
+        console.log('🔍 DEBUG: Detected regular message on connection topic');
+        
+        try {
+          // Parse the message data if it's a string
+          let messageData = message.data;
+          if (typeof messageData === 'string') {
+            messageData = JSON.parse(messageData);
+          }
+          
+          console.log('📨 Received message:', messageData);
+          
+          // If it's a simple text message (not a system message), respond to it
+          if (messageData.text && !messageData.type) {
+            console.log('🤖 Responding to chat message:', messageData.text);
+            
+            // Get the connection topic ID from the message
+            const connectionTopicId = message.connection_id || message.connectionTopicId;
+            
+            if (!connectionTopicId) {
+              console.error('❌ Cannot respond to message: No connection topic ID available');
+              return;
+            }
+            
+            // Send a response
+            await this.sendMessage(
+              connectionTopicId,
+              {
+                text: `Thanks for your message: "${messageData.text}". This is an automated response from the Lynxify HCS-10 Agent.`,
+                timestamp: new Date().toISOString()
+              }
+            );
+            
+            console.log('✅ Sent response to message');
+          }
+        } catch (err) {
+          console.error('❌ Error processing chat message:', err);
+        }
       } else {
         console.log('ℹ️ Unknown operation type:', message.op);
       }
