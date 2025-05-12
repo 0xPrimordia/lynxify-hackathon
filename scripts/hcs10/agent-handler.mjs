@@ -82,6 +82,10 @@ export class HCS10AgentHandler extends EventEmitter {
       });
       console.log('✅ ConnectionsManager initialized');
       
+      // Load connections from ConnectionsManager - Force a fresh fetch
+      console.log('🔄 Fetching connections from Hedera...');
+      await this.connectionsManager.fetchConnectionData(this.agentId, true); // force fresh fetch
+      
       // Load connections from ConnectionsManager
       await this.loadConnections();
       
@@ -332,12 +336,13 @@ export class HCS10AgentHandler extends EventEmitter {
     
     console.log('👂 Starting to monitor inbound topic for messages...');
     
-    // Set up a more frequent polling mechanism - check every 3 seconds instead of 10
+    // Set up a more frequent polling mechanism - check every 2 seconds instead of 3 or 10
     this.monitorInterval = setInterval(async () => {
+      console.log('🔄 Polling for new messages...');
       await this.checkInboundTopic();
       await this.checkPendingConnections();
       await this.updateStatusFile();
-    }, 3000); // Check every 3 seconds for better responsiveness
+    }, 2000); // Check every 2 seconds for better responsiveness
     
     // Do an immediate check
     await this.checkInboundTopic();
@@ -347,7 +352,7 @@ export class HCS10AgentHandler extends EventEmitter {
     this.monitoring = true;
     this.emit('monitoring_started');
     
-    console.log('✅ Monitoring started with 3-second intervals for better responsiveness');
+    console.log('✅ Monitoring started with 2-second intervals for better responsiveness');
   }
   
   /**
@@ -375,6 +380,13 @@ export class HCS10AgentHandler extends EventEmitter {
   async checkInboundTopic() {
     try {
       console.log(`🔄 Checking inbound topic ${this.inboundTopicId} for new messages...`);
+      
+      // Debug - active connections list
+      const connectionsList = this.connectionsManager?.getActiveConnections() || [];
+      console.log(`🔍 Active connections: ${connectionsList.length}`);
+      if (connectionsList.length > 0) {
+        console.log('🔍 Connection topics to check:', connectionsList.map(c => c.connectionTopicId).join(', '));
+      }
       
       // More aggressive message checking - try multiple approaches
       
@@ -773,21 +785,27 @@ export class HCS10AgentHandler extends EventEmitter {
             try {
               // Try parsing as JSON first
               const parsedData = JSON.parse(message.data);
-              textContent = parsedData.text || parsedData.message || parsedData.content;
+              textContent = parsedData.text || parsedData.message || parsedData.content || parsedData.data;
             } catch (e) {
               // If not valid JSON, use the data as text
               textContent = message.data;
             }
           } else if (typeof message.data === 'object') {
-            textContent = message.data.text || message.data.message || message.data.content;
+            textContent = message.data.text || message.data.message || message.data.content || message.data.data;
           } else if (message.text) {
             textContent = message.text;
+          }
+          
+          // Extra handlers for direct message content - this is missing in some cases
+          if (!textContent && message.contents) {
+            textContent = message.contents;
           }
           
           if (!connectionId || !textContent) {
             console.error('❌ Missing required data for chat response:');
             console.error(`Connection ID: ${connectionId || 'missing'}`);
             console.error(`Text content: ${textContent || 'missing'}`);
+            console.error('Full message:', JSON.stringify(message, null, 2));
             return;
           }
           
@@ -795,7 +813,7 @@ export class HCS10AgentHandler extends EventEmitter {
           
           // Generate response
           let responseText = '';
-          const lowerText = textContent.toLowerCase();
+          const lowerText = typeof textContent === 'string' ? textContent.toLowerCase() : 'hello';
           
           if (lowerText.includes('tell me about yourself') || lowerText.includes('who are you')) {
             responseText = "I am the Lynxify Rebalancer Agent, designed to help manage the Lynx tokenized index. I can assist with rebalancing operations, risk assessments, and tokenized asset management.";
@@ -815,6 +833,7 @@ export class HCS10AgentHandler extends EventEmitter {
           
           // EXACTLY FOLLOWING HCS-10 PROTOCOL
           const response = {
+            p: 'hcs-10',
             op: 'message',
             text: responseText,
             timestamp: new Date().toISOString()
@@ -831,6 +850,7 @@ export class HCS10AgentHandler extends EventEmitter {
       
       // Log any other message types
       console.log(`ℹ️ Received message with unhandled operation type: ${message.op || 'unknown'}`);
+      console.log('Full message:', JSON.stringify(message, null, 2));
       
     } catch (error) {
       console.error('❌ Error processing inbound message:', error);
@@ -992,4 +1012,68 @@ export class HCS10AgentHandler extends EventEmitter {
       console.error(`❌ Error handling pending connection request:`, error);
     }
   }
+
+  /**
+   * Send a message to a connection topic
+   * @param {string} connectionId The connection topic ID
+   * @param {object} messageContent The message content
+   */
+  async sendMessage(connectionId, messageContent) {
+    try {
+      console.log(`🔄 Sending message to ${connectionId}:`, JSON.stringify(messageContent, null, 2));
+      
+      // Format as proper HCS-10 message
+      const message = {
+        p: 'hcs-10',
+        op: 'message',
+        text: typeof messageContent === 'string' ? messageContent : JSON.stringify(messageContent),
+        timestamp: new Date().toISOString()
+      };
+      
+      // Send directly through client to avoid any issues
+      const result = await this.client.sendMessage(connectionId, JSON.stringify(message));
+      
+      console.log('✅ Message sent successfully:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Error sending message:', error);
+      throw error;
+    }
+  }
 }
+
+/**
+ * Main function for running the agent
+ */
+async function main() {
+  try {
+    console.log('🚀 Starting HCS10 agent...');
+    
+    // Create handler
+    const handler = new HCS10AgentHandler();
+    
+    // Initialize the handler
+    await handler.initialize();
+    
+    // Start monitoring for messages
+    await handler.startMonitoring();
+    
+    console.log('✅ HCS10 agent started and monitoring for messages');
+    
+    // Keep the process running indefinitely by creating a never-resolved promise
+    // This is the key part that was missing - the process was exiting after initialization
+    await new Promise(() => {
+      console.log('🔄 Agent is now running continuously...');
+      // This promise never resolves, keeping the process alive
+    });
+  } catch (error) {
+    console.error('❌ Error in agent main function:', error);
+    process.exit(1);
+  }
+}
+
+// Run the main function
+main().catch(error => {
+  console.error('❌ Fatal error in agent:', error);
+  process.exit(1);
+});
