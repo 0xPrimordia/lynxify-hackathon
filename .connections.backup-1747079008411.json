@@ -1,0 +1,4891 @@
+[
+  {
+    "connectionTopicId": "inb-2:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-08T19:25:50.305Z",
+    "inboundRequestId": 2,
+    "uniqueRequestKey": "inb-2:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-3:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-08T19:26:13.134Z",
+    "inboundRequestId": 3,
+    "uniqueRequestKey": "inb-3:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-4:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-08T19:27:09.725Z",
+    "inboundRequestId": 4,
+    "uniqueRequestKey": "inb-4:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-5:0.0.5949563@0.0.5527744",
+    "targetAccountId": "0.0.5527744",
+    "targetInboundTopicId": "0.0.5949563",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-08T19:30:58.463Z",
+    "inboundRequestId": 5,
+    "uniqueRequestKey": "inb-5:0.0.5949563@0.0.5527744",
+    "originTopicId": "0.0.5949563",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Humanoid",
+      "alias": "Humanoid",
+      "bio": "A human who does human things",
+      "socials": [
+        {
+          "platform": "twitter",
+          "handle": "HashgraphOnline"
+        },
+        {
+          "platform": "github",
+          "handle": "https://github.com/hashgraph-online"
+        },
+        {
+          "platform": "website",
+          "handle": "https://hashgraphonline.com"
+        }
+      ],
+      "profileImage": "hcs://1/0.0.5949561",
+      "properties": {
+        "organization": "Humanoid Inc"
+      },
+      "inboundTopicId": "0.0.5949563",
+      "outboundTopicId": "0.0.5949562"
+    },
+    "targetAgentName": "Humanoid",
+    "targetOutboundTopicId": "0.0.5949562"
+  },
+  {
+    "connectionTopicId": "inb-6:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-08T19:37:52.364Z",
+    "inboundRequestId": 6,
+    "uniqueRequestKey": "inb-6:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-7:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-08T21:37:24.441Z",
+    "inboundRequestId": 7,
+    "uniqueRequestKey": "inb-7:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-8:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-09T15:39:42.824Z",
+    "inboundRequestId": 8,
+    "uniqueRequestKey": "inb-8:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-9:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-09T16:16:57.059Z",
+    "inboundRequestId": 9,
+    "uniqueRequestKey": "inb-9:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-10:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-12T16:47:52.880Z",
+    "inboundRequestId": 10,
+    "uniqueRequestKey": "inb-10:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "inb-11:0.0.5949517@0.0.4340026",
+    "targetAccountId": "0.0.4340026",
+    "targetInboundTopicId": "0.0.5949517",
+    "status": "needs_confirmation",
+    "isPending": false,
+    "needsConfirmation": true,
+    "created": "2025-05-12T17:47:39.110Z",
+    "inboundRequestId": 11,
+    "uniqueRequestKey": "inb-11:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5949517",
+    "processed": false,
+    "memo": "Hello! I'd like to connect with you.",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetOutboundTopicId": "0.0.5949516"
+  },
+  {
+    "connectionTopicId": "0.0.5988416",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:29.705Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988416",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:02:34.194Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988417",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:38.470Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988417",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:02:42.734Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988418",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:38.974Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988418",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:41.405Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988419",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:47.535Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988419",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:02:51.659Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988420",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:47.750Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988420",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:02:51.898Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988421",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:49.100Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988421",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:02:52.750Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988423",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:56.580Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988423",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:00.804Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988422",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:56.781Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988422",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:00.804Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988424",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:56.975Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988424",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:01.215Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988425",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:02:59.345Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988425",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:05.949Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988426",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:06.424Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988426",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:10.814Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988427",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:06.754Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988427",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:11.315Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988428",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:06.873Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988428",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:10.974Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988429",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:10.140Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988429",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:14.020Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988430",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:10.480Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988430",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:14.813Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988432",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:15.785Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988432",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:20.958Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988431",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:15.920Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988431",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:20.444Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988433",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:16.164Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988433",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:20.958Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988434",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:19.024Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988434",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:24.274Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988435",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:19.085Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988435",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:25.148Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988436",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:19.746Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988436",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:25.705Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988437",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:26.820Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988437",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:32.604Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988438",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:28.086Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988438",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:31.914Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988439",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:28.205Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988439",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:33.383Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988440",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:29.905Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988440",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:37.545Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988442",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:31.514Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988442",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:36.370Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988441",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:32.176Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988441",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:37.665Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988443",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:33.070Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988443",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:38.170Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988445",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:40.421Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988445",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:44.214Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988446",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:40.824Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988446",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:46.291Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988444",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:41.373Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988444",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:47.000Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988447",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:43.045Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988447",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:49.860Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988448",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:44.865Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988448",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:49.924Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988449",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:45.560Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988449",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:52.034Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988451",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:45.824Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988451",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:50.844Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988450",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:46.118Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988450",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:03:53.970Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988452",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:53.075Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988452",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:01.203Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988453",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:57.934Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988453",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:03.780Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988455",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:58.533Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988455",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:04.231Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988457",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:59.700Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988457",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:05.420Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988454",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:59.700Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988454",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:04.494Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988458",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:03:59.744Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988458",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:05.450Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988456",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:04:00.023Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988456",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:06.999Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988459",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:04:00.835Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988459",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:07.470Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988460",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:04:03.498Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988460",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:08.846Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988461",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:04:06.044Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988461",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:14.955Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988463",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:04:11.430Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988463",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:16.453Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988464",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:04:15.864Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988464",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:20.394Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988465",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:04:16.233Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988465",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:04:21.035Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988475",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:10:35.235Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988475",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:10:39.081Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988476",
+    "targetAccountId": "0.0.5527744",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:10:35.433Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988476",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Humanoid",
+      "alias": "Humanoid",
+      "bio": "A human who does human things",
+      "socials": [
+        {
+          "platform": "twitter",
+          "handle": "HashgraphOnline"
+        },
+        {
+          "platform": "github",
+          "handle": "https://github.com/hashgraph-online"
+        },
+        {
+          "platform": "website",
+          "handle": "https://hashgraphonline.com"
+        }
+      ],
+      "profileImage": "hcs://1/0.0.5949561",
+      "properties": {
+        "organization": "Humanoid Inc"
+      },
+      "inboundTopicId": "0.0.5949563",
+      "outboundTopicId": "0.0.5949562"
+    },
+    "targetAgentName": "Humanoid",
+    "targetInboundTopicId": "0.0.5949563",
+    "targetOutboundTopicId": "0.0.5949562",
+    "lastActivity": "2025-05-12T19:11:55.896Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988477",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:32.244Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988477",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:36.318Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988478",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:32.260Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988478",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:36.505Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988479",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:40.483Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988479",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:44.145Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988480",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:42.014Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988480",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:45.785Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988481",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:42.014Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988481",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:45.580Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988482",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:48.150Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988482",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:52.044Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988483",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:49.454Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988483",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:53.705Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988484",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:51.201Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988484",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:54.939Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988485",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:52.223Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988485",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:11:55.920Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988486",
+    "targetAccountId": "0.0.5527744",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:56.051Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988486",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Humanoid",
+      "alias": "Humanoid",
+      "bio": "A human who does human things",
+      "socials": [
+        {
+          "platform": "twitter",
+          "handle": "HashgraphOnline"
+        },
+        {
+          "platform": "github",
+          "handle": "https://github.com/hashgraph-online"
+        },
+        {
+          "platform": "website",
+          "handle": "https://hashgraphonline.com"
+        }
+      ],
+      "profileImage": "hcs://1/0.0.5949561",
+      "properties": {
+        "organization": "Humanoid Inc"
+      },
+      "inboundTopicId": "0.0.5949563",
+      "outboundTopicId": "0.0.5949562"
+    },
+    "targetAgentName": "Humanoid",
+    "targetInboundTopicId": "0.0.5949563",
+    "targetOutboundTopicId": "0.0.5949562",
+    "lastActivity": "2025-05-12T19:11:59.584Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988487",
+    "targetAccountId": "0.0.5527744",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:57.510Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988487",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Humanoid",
+      "alias": "Humanoid",
+      "bio": "A human who does human things",
+      "socials": [
+        {
+          "platform": "twitter",
+          "handle": "HashgraphOnline"
+        },
+        {
+          "platform": "github",
+          "handle": "https://github.com/hashgraph-online"
+        },
+        {
+          "platform": "website",
+          "handle": "https://hashgraphonline.com"
+        }
+      ],
+      "profileImage": "hcs://1/0.0.5949561",
+      "properties": {
+        "organization": "Humanoid Inc"
+      },
+      "inboundTopicId": "0.0.5949563",
+      "outboundTopicId": "0.0.5949562"
+    },
+    "targetAgentName": "Humanoid",
+    "targetInboundTopicId": "0.0.5949563",
+    "targetOutboundTopicId": "0.0.5949562",
+    "lastActivity": "2025-05-12T19:12:01.474Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988488",
+    "targetAccountId": "0.0.5527744",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:11:59.828Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988488",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Humanoid",
+      "alias": "Humanoid",
+      "bio": "A human who does human things",
+      "socials": [
+        {
+          "platform": "twitter",
+          "handle": "HashgraphOnline"
+        },
+        {
+          "platform": "github",
+          "handle": "https://github.com/hashgraph-online"
+        },
+        {
+          "platform": "website",
+          "handle": "https://hashgraphonline.com"
+        }
+      ],
+      "profileImage": "hcs://1/0.0.5949561",
+      "properties": {
+        "organization": "Humanoid Inc"
+      },
+      "inboundTopicId": "0.0.5949563",
+      "outboundTopicId": "0.0.5949562"
+    },
+    "targetAgentName": "Humanoid",
+    "targetInboundTopicId": "0.0.5949563",
+    "targetOutboundTopicId": "0.0.5949562",
+    "lastActivity": "2025-05-12T19:12:03.545Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988489",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:00.145Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988489",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:03.984Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988490",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:02.154Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988490",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:05.960Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988491",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:03.426Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988491",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:07.050Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988492",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:05.294Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988492",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:09.024Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988493",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:07.404Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988493",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:11.175Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988495",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:09.645Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988495",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:13.188Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988494",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:09.800Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988494",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:13.588Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988496",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:11.104Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988496",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:14.935Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988497",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:12.280Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988497",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:15.904Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988498",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:12.910Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988498",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:16.875Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988499",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:15.056Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988499",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:18.961Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988500",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:17.504Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988500",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:21.298Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988501",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:19.114Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988501",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:23.060Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988502",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:19.144Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988502",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:23.145Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988503",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:19.720Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988503",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:23.595Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988504",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:20.718Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988504",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:24.734Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988505",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:22.080Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988505",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:25.785Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988506",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:22.871Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988506",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:26.828Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988507",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:25.188Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988507",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:29.158Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988508",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:26.604Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988508",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:30.455Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988509",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:27.304Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988509",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:31.163Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988510",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:28.503Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988510",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:32.894Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988511",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:28.840Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988511",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:33.004Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988512",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:29.583Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988512",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:35.564Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988513",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:30.565Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988513",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:34.778Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988514",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:31.981Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988514",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:36.050Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988515",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:33.086Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988515",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:37.198Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988516",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:34.750Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988516",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:39.170Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988517",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:35.009Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988517",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:39.118Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988518",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:37.153Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988518",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:41.113Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988519",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:38.885Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988519",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:42.854Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988520",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:39.168Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988520",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:43.213Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988521",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:39.761Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988521",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:43.530Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988522",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:40.165Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988522",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:44.165Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988523",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:41.235Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988523",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:45.076Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988524",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:42.160Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988524",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:45.976Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988525",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:43.105Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988525",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:47.154Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988526",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:43.384Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988526",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:12:47.358Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988527",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:12:48.960Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988527",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:13:36.594Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988576",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:28:31.353Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988576",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:28:35.820Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988578",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:28:44.694Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988578",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:28:49.174Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988580",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:28:46.725Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988580",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:28:50.378Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988582",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:28:50.075Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988582",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:28:57.925Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988584",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:28:59.934Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988584",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:05.115Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988586",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:02.088Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988586",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:05.481Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988587",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:04.554Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988587",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:10.229Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988588",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:05.948Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988588",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:11.925Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988589",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:10.534Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988589",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:16.824Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988590",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:13.804Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988590",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:18.781Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988592",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:16.055Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988592",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:45.061Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988591",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:16.190Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988591",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:19.620Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988594",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:18.550Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988594",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:23.723Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988595",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:20.554Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988595",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:25.758Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988596",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:24.520Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988596",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:29.774Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988597",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:26.098Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988597",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:32.465Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988599",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:29.113Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988599",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:34.035Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988598",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:29.125Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988598",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:34.035Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988600",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:32.584Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988600",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:38.890Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988601",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:34.904Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988601",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:41.641Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988603",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:39.385Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988603",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:45.223Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988602",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:39.431Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988602",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:46.218Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988604",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:42.203Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988604",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:51.739Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988606",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:45.214Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988606",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:52.765Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988605",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:45.274Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988605",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:53.225Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988607",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:47.969Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988607",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:55.225Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988608",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:48.239Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988608",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:29:54.645Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988609",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:52.350Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988609",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:01.511Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988610",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:54.996Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988610",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:02.438Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988611",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:55.865Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988611",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:02.304Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988612",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:29:59.854Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988612",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:12.674Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988613",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:30:04.888Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988613",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:16.310Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988615",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:30:05.371Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988615",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:16.720Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988614",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:30:05.576Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988614",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:17.795Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988616",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:30:17.796Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988616",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:26.994Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988617",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:30:17.814Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988617",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:30:26.878Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988633",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:24.654Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988633",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:41:29.545Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988634",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:29.210Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988634",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:41:35.664Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988635",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:31.918Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988635",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:41:38.458Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988636",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:35.070Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988636",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:41:41.298Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988637",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:38.093Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988637",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:41:42.890Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988639",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:42.430Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988639",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:41:53.354Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988640",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:45.995Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988640",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:42:03.110Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988642",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:55.915Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988642",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:42:06.855Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988643",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:41:55.970Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988643",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:42:07.805Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988644",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:42:05.835Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988644",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:42:17.363Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988645",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:42:07.150Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988645",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:42:24.074Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988646",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:42:07.304Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988646",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516",
+    "lastActivity": "2025-05-12T19:42:25.660Z"
+  },
+  {
+    "connectionTopicId": "0.0.5988647",
+    "targetAccountId": "0.0.4340026",
+    "status": "established",
+    "isPending": false,
+    "needsConfirmation": false,
+    "created": "2025-05-12T19:42:12.158Z",
+    "inboundRequestId": 1,
+    "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
+    "originTopicId": "0.0.5988647",
+    "processed": false,
+    "memo": "Connection accepted. Looking forward to collaborating!",
+    "profileInfo": {
+      "version": "1.0",
+      "type": 0,
+      "display_name": "Rebalancer Agent",
+      "alias": "lynx_rebalancer_agent",
+      "bio": "Testnet rebalancer agent for the Lynx tokenized index",
+      "profileImage": "hcs://1/0.0.5949502",
+      "properties": {
+        "organization": "Lynxify"
+      },
+      "inboundTopicId": "0.0.5949517",
+      "outboundTopicId": "0.0.5949516"
+    },
+    "targetAgentName": "Rebalancer Agent",
+    "targetInboundTopicId": "0.0.5949517",
+    "targetOutboundTopicId": "0.0.5949516"
+  }
+]
