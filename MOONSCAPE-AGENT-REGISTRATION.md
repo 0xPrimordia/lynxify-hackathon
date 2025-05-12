@@ -14,6 +14,10 @@ https://github.com/hashgraph-online/standards-agent-kit/blob/main/examples/stand
 
 https://github.com/hashgraph-online/standards-sdk/blob/main/demo/hcs-10/polling-agent.ts
 
+## Important Docs
+
+https://hashgraphonline.com/docs/libraries/standards-sdk/hcs-10/connections-manager/
+
 ## Prerequisites
 
 Before beginning the agent registration process, you need:

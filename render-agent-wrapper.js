@@ -51,11 +51,13 @@ const server = http.createServer(async (req, res) => {
         status = { ...status, ...agentStatus };
       } catch (err) {
         // Status file doesn't exist yet, that's ok
+        console.log('Status file not found, returning basic status');
       }
       
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(status));
     } catch (error) {
+      console.error('Failed to get agent status:', error);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Failed to get agent status' }));
     }
@@ -65,24 +67,59 @@ const server = http.createServer(async (req, res) => {
   // List pending connections
   if (req.url === '/api/connections/pending') {
     try {
+      console.log('Handling request to /api/connections/pending');
+      console.log(`Pending connections file path: ${PENDING_CONNECTIONS_FILE}`);
+      
+      // Check if the file exists and is accessible
+      const fileExists = fs.existsSync(PENDING_CONNECTIONS_FILE);
+      console.log(`Pending connections file exists: ${fileExists}`);
+      
       let pendingConnections = [];
       
       // Try to read the pending connections file
       try {
-        const pendingData = fs.readFileSync(PENDING_CONNECTIONS_FILE, 'utf8');
-        pendingConnections = JSON.parse(pendingData);
+        if (fileExists) {
+          const stats = fs.statSync(PENDING_CONNECTIONS_FILE);
+          console.log(`File size: ${stats.size} bytes, last modified: ${stats.mtime}`);
+          
+          const pendingData = fs.readFileSync(PENDING_CONNECTIONS_FILE, 'utf8');
+          console.log(`Raw file content (first 100 chars): ${pendingData.substring(0, 100)}`);
+          
+          pendingConnections = JSON.parse(pendingData);
+          console.log(`Successfully parsed JSON, found ${pendingConnections.length} pending connections`);
+        } else {
+          console.log('Pending connections file does not exist');
+        }
       } catch (err) {
+        console.error(`Failed to read or parse pending connections file: ${err.message}`);
         // File doesn't exist yet or is invalid, assume no pending connections
       }
       
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ 
+      // Add debug information to the response
+      const response = { 
         pendingConnections,
-        count: pendingConnections.length
-      }));
+        count: pendingConnections.length,
+        debug: {
+          fileExists,
+          filePath: PENDING_CONNECTIONS_FILE,
+          timestamp: new Date().toISOString(),
+          cwd: process.cwd()
+        }
+      };
+      
+      console.log(`Sending response with ${pendingConnections.length} pending connections`);
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(response));
     } catch (error) {
+      console.error(`Exception in pending connections handler: ${error.message}`);
+      console.error(error.stack);
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Failed to list pending connections' }));
+      res.end(JSON.stringify({ 
+        error: 'Failed to list pending connections',
+        message: error.message,
+        stack: error.stack
+      }));
     }
     return;
   }
@@ -99,6 +136,8 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       
+      console.log(`Processing approval request for connection: ${connectionId}`);
+      
       // Write approval command to file for agent to process
       const approvalCommand = {
         type: 'approve_connection',
@@ -113,6 +152,7 @@ const server = http.createServer(async (req, res) => {
         commands = JSON.parse(existingData);
       } catch (err) {
         // File doesn't exist yet, start with empty array
+        console.log('No existing commands file, creating new one');
       }
       
       // Add new command to list
@@ -120,6 +160,7 @@ const server = http.createServer(async (req, res) => {
       
       // Write back to file
       fs.writeFileSync(APPROVAL_COMMAND_FILE, JSON.stringify(commands, null, 2));
+      console.log(`Wrote approval command to ${APPROVAL_COMMAND_FILE}`);
       
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ 
@@ -128,6 +169,7 @@ const server = http.createServer(async (req, res) => {
         connectionId
       }));
     } catch (error) {
+      console.error(`Failed to approve connection: ${error.message}`);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Failed to approve connection' }));
     }
@@ -145,6 +187,7 @@ const server = http.createServer(async (req, res) => {
         connections = JSON.parse(data);
       } catch (err) {
         // File doesn't exist yet or is invalid, assume no connections
+        console.log('No connections file found or invalid JSON');
       }
       
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -153,6 +196,7 @@ const server = http.createServer(async (req, res) => {
         count: connections.length
       }));
     } catch (error) {
+      console.error(`Failed to list connections: ${error.message}`);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Failed to list connections' }));
     }
@@ -173,6 +217,7 @@ server.listen(PORT, () => {
   console.log(`- GET  /api/connections - List all connections`);
   console.log(`- GET  /api/connections/pending - List pending connections`);
   console.log(`- POST /api/connections/approve/:id - Approve a connection`);
+  console.log(`Server working directory: ${process.cwd()}`);
   
   try {
     // This step is only necessary if build hasn't been done already
@@ -182,10 +227,34 @@ server.listen(PORT, () => {
       execSync('npm run build-scripts', { stdio: 'inherit' });
     }
     
-    console.log('Starting agent process...');
+    console.log('Starting main agent process...');
     
-    // Start the actual agent in a child process
-    const agentProcess = spawn('node', ['dist/app/scripts/run-agent.js'], {
+    // Start the main agent in a child process
+    const mainAgentProcess = spawn('node', ['dist/app/scripts/run-agent.js'], {
+      stdio: 'inherit', // This will pipe the agent's stdout/stderr to the parent process
+      env: {
+        ...process.env
+      }
+    });
+    
+    // Handle main agent process exit
+    mainAgentProcess.on('exit', (code) => {
+      console.log(`Main agent process exited with code ${code}`);
+      if (code !== 0) {
+        console.error('Main agent process failed unexpectedly');
+      }
+    });
+    
+    // Handle errors
+    mainAgentProcess.on('error', (err) => {
+      console.error('Failed to start main agent process:', err);
+    });
+    
+    // Now start our HCS10 agent handler as well
+    console.log('Starting HCS10 agent handler...');
+    
+    // Start the HCS10 agent handler in a child process
+    const hcs10AgentProcess = spawn('node', ['scripts/hcs10/agent-handler.mjs'], {
       stdio: 'inherit', // This will pipe the agent's stdout/stderr to the parent process
       env: {
         ...process.env,
@@ -193,23 +262,24 @@ server.listen(PORT, () => {
       }
     });
     
-    // Handle agent process exit
-    agentProcess.on('exit', (code) => {
-      console.log(`Agent process exited with code ${code}`);
+    // Handle HCS10 agent process exit
+    hcs10AgentProcess.on('exit', (code) => {
+      console.log(`HCS10 agent process exited with code ${code}`);
       if (code !== 0) {
-        console.error('Agent process failed unexpectedly');
+        console.error('HCS10 agent process failed unexpectedly');
       }
     });
     
     // Handle errors
-    agentProcess.on('error', (err) => {
-      console.error('Failed to start agent process:', err);
+    hcs10AgentProcess.on('error', (err) => {
+      console.error('Failed to start HCS10 agent process:', err);
     });
     
     // Handle parent process termination
     process.on('SIGINT', () => {
       console.log('Received SIGINT, shutting down...');
-      agentProcess.kill('SIGINT');
+      mainAgentProcess.kill('SIGINT');
+      hcs10AgentProcess.kill('SIGINT');
       server.close(() => {
         console.log('HTTP server closed');
         process.exit(0);
@@ -218,7 +288,8 @@ server.listen(PORT, () => {
     
     process.on('SIGTERM', () => {
       console.log('Received SIGTERM, shutting down...');
-      agentProcess.kill('SIGTERM');
+      mainAgentProcess.kill('SIGTERM');
+      hcs10AgentProcess.kill('SIGTERM');
       server.close(() => {
         console.log('HTTP server closed');
         process.exit(0);

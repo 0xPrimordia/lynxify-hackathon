@@ -151,32 +151,32 @@ export function isValidHCSMessage(message: any): message is HCSMessage {
 }
 
 // Type guard functions
-export function isRebalanceProposal(message: HCSMessage): message is RebalanceProposal {
-  return message.type === 'RebalanceProposal';
+export function isRebalanceProposal(message: HCSMessage | null | undefined): message is RebalanceProposal {
+  return !!message && message.type === 'RebalanceProposal';
 }
 
-export function isRebalanceApproved(message: HCSMessage): message is RebalanceApproved {
-  return message.type === 'RebalanceApproved';
+export function isRebalanceApproved(message: HCSMessage | null | undefined): message is RebalanceApproved {
+  return !!message && message.type === 'RebalanceApproved';
 }
 
-export function isRebalanceExecuted(message: HCSMessage): message is RebalanceExecuted {
-  return message.type === 'RebalanceExecuted';
+export function isRebalanceExecuted(message: HCSMessage | null | undefined): message is RebalanceExecuted {
+  return !!message && message.type === 'RebalanceExecuted';
 }
 
-export function isPriceUpdate(message: HCSMessage): message is PriceUpdate {
-  return message.type === 'PriceUpdate';
+export function isPriceUpdate(message: HCSMessage | null | undefined): message is PriceUpdate {
+  return !!message && message.type === 'PriceUpdate';
 }
 
-export function isRiskAlert(message: HCSMessage): message is RiskAlert {
-  return message.type === 'RiskAlert';
+export function isRiskAlert(message: HCSMessage | null | undefined): message is RiskAlert {
+  return !!message && message.type === 'RiskAlert';
 }
 
-export function isPolicyChange(message: HCSMessage): message is PolicyChange {
-  return message.type === 'PolicyChange';
+export function isPolicyChange(message: HCSMessage | null | undefined): message is PolicyChange {
+  return !!message && message.type === 'PolicyChange';
 }
 
-export function isMoonscapeMessage(message: HCSMessage): message is HCSMessage & { type: 'AgentInfo' | 'AgentResponse' | 'AgentRequest' } {
-  return message.type === 'AgentInfo' || message.type === 'AgentResponse' || message.type === 'AgentRequest';
+export function isMoonscapeMessage(message: HCSMessage | null | undefined): message is HCSMessage & { type: 'AgentInfo' | 'AgentResponse' | 'AgentRequest' } {
+  return !!message && (message.type === 'AgentInfo' || message.type === 'AgentResponse' || message.type === 'AgentRequest');
 }
 
 // SDK Types

@@ -5,9 +5,57 @@ import { HCSMessage } from '../types/hcs';
 import { useHCSMessages } from '../services/api';
 import LoadingSkeleton from './LoadingSkeleton';
 import websocketService from '../services/websocket';
+import { useAgentWebSocket, AgentWebSocketMessage } from '../hooks/useAgentWebSocket';
 
 interface HCSMessageFeedProps {
   maxMessages?: number;
+}
+
+// Helper function to convert agent websocket messages to HCS message format
+function convertAgentMessageToHCS(message: AgentWebSocketMessage): HCSMessage {
+  const { type, data } = message;
+  
+  // Generate a unique ID for the message
+  const id = `agent-${type}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  
+  // Basic HCS message structure
+  const hcsMessage: HCSMessage = {
+    id,
+    type: mapAgentTypeToHCS(type),
+    timestamp: data.timestamp || Date.now(),
+    consensusTimestamp: data.timestamp ? new Date(data.timestamp).toISOString() : new Date().toISOString(),
+    sender: 'agent',
+    details: data,
+    sequence: 0
+  };
+  
+  return hcsMessage;
+}
+
+// Map agent message types to HCS message types
+function mapAgentTypeToHCS(type: string): string {
+  const typeMap: Record<string, string> = {
+    'rebalance_proposed': 'RebalanceProposal',
+    'rebalance_approved': 'RebalanceApproved',
+    'rebalance_executed': 'RebalanceExecuted',
+    'price_updated': 'PriceUpdate',
+    'risk_alert': 'RiskAlert',
+    'proposal_created': 'ProposalCreated',
+    'proposal_voted': 'ProposalVoted',
+    'proposal_executed': 'ProposalExecuted',
+    'token_added': 'TokenAdded',
+    'token_removed': 'TokenRemoved',
+    'token_transaction': 'TokenTransaction',
+    'agent_registered': 'AgentRegistered',
+    'agent_connected': 'AgentConnected',
+    'agent_disconnected': 'AgentDisconnected',
+    'transaction_confirmed': 'TransactionConfirmed',
+    'transaction_failed': 'TransactionFailed',
+    'system_status': 'SystemStatus',
+    'system_error': 'SystemError'
+  };
+  
+  return typeMap[type] || type;
 }
 
 function MessageList({ messages }: { messages: HCSMessage[] }) {
@@ -23,6 +71,20 @@ function MessageList({ messages }: { messages: HCSMessage[] }) {
         return 'bg-yellow-800 text-yellow-200';
       case 'RiskAlert':
         return 'bg-red-800 text-red-200';
+      case 'AgentRegistered':
+      case 'AgentConnected':
+      case 'AgentDisconnected':
+        return 'bg-indigo-800 text-indigo-200';
+      case 'TokenTransaction':
+      case 'TokenAdded':
+      case 'TokenRemoved':
+        return 'bg-pink-800 text-pink-200';
+      case 'TransactionConfirmed':
+      case 'TransactionFailed':
+        return 'bg-blue-900 text-blue-200';
+      case 'SystemStatus':
+      case 'SystemError':
+        return 'bg-gray-800 text-gray-200';
       default:
         return 'bg-gray-700 text-gray-200';
     }
@@ -40,6 +102,26 @@ function MessageList({ messages }: { messages: HCSMessage[] }) {
         return '💰';
       case 'RiskAlert':
         return '⚠️';
+      case 'AgentRegistered':
+        return '📝';
+      case 'AgentConnected':
+        return '🔌';
+      case 'AgentDisconnected':
+        return '🔴';
+      case 'TokenTransaction':
+        return '💸';
+      case 'TokenAdded':
+        return '➕';
+      case 'TokenRemoved':
+        return '➖';
+      case 'TransactionConfirmed':
+        return '✓';
+      case 'TransactionFailed':
+        return '❌';
+      case 'SystemStatus':
+        return '🔄';
+      case 'SystemError':
+        return '🚨';
       default:
         return '📝';
     }
@@ -54,9 +136,29 @@ function MessageList({ messages }: { messages: HCSMessage[] }) {
       case 'RebalanceExecuted':
         return 'The rebalance has been executed by the agent';
       case 'PriceUpdate':
-        return 'Price update received from the market';
+        return `Price update for ${message.details?.tokenId || 'a token'}`;
       case 'RiskAlert':
         return 'Risk threshold exceeded, triggering a proposal';
+      case 'AgentRegistered':
+        return `Agent ${message.details?.agentId || ''} registered with the system`;
+      case 'AgentConnected':
+        return `Agent ${message.details?.agentId || ''} connected`;
+      case 'AgentDisconnected':
+        return `Agent ${message.details?.agentId || ''} disconnected`;
+      case 'TokenTransaction':
+        return `Token ${message.details?.operation || 'operation'} transaction`;
+      case 'TokenAdded':
+        return `Token ${message.details?.tokenSymbol || ''} added to the index`;
+      case 'TokenRemoved':
+        return `Token ${message.details?.tokenId || ''} removed from the index`;
+      case 'TransactionConfirmed':
+        return `Transaction ${message.details?.type || ''} confirmed`;
+      case 'TransactionFailed':
+        return `Transaction ${message.details?.type || ''} failed`;
+      case 'SystemStatus':
+        return `System status: ${message.details?.status || ''}`;
+      case 'SystemError':
+        return `System error occurred`;
       default:
         return 'New message received';
     }
@@ -65,9 +167,6 @@ function MessageList({ messages }: { messages: HCSMessage[] }) {
   return (
     <div className="space-y-4">
       {messages.map((message, index) => {
-        // Debug each message as it's being processed
-        console.log(`Processing message ${index}:`, message);
-        
         return (
           <div
             key={message.id || index}
@@ -161,25 +260,122 @@ function MessageList({ messages }: { messages: HCSMessage[] }) {
                     </div>
                   )}
 
-                  {message.type === 'PriceUpdate' && (
+                  {message.type === 'PriceUpdate' && message.details && (
                     <div>
                       <p className="font-medium text-gray-200">Price Update:</p>
                       <div className="mt-1 text-xs text-gray-300">
-                        {message.details?.tokenId}: ${message.details?.price?.toFixed(2)}
-                        <span className={`ml-2 ${(message.details?.metrics?.priceChange || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {(message.details?.metrics?.priceChange || 0) >= 0 ? '+' : ''}
-                          {message.details?.metrics?.priceChange?.toFixed(2) || '0.00'}%
-                        </span>
+                        {message.details.tokenId}: ${typeof message.details.price === 'number' ? message.details.price.toFixed(2) : message.details.price}
+                        {message.details.metrics && typeof message.details.metrics.priceChange === 'number' && (
+                          <span className={`ml-2 ${message.details.metrics.priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {message.details.metrics.priceChange >= 0 ? '+' : ''}
+                            {message.details.metrics.priceChange.toFixed(2)}%
+                          </span>
+                        )}
                       </div>
                     </div>
                   )}
                   
-                  {message.type === 'RiskAlert' && (
+                  {message.type === 'RiskAlert' && message.details && (
                     <div>
                       <p className="font-medium text-gray-200">Risk Alert:</p>
                       <div className="mt-1 text-xs">
-                        <p className="text-gray-300">{message.details?.message}</p>
-                        <p className="text-red-400">{message.details?.impact}</p>
+                        <p className="text-gray-300">{message.details.riskDescription || message.details.message}</p>
+                        <p className="text-red-400">{message.details.impact}</p>
+                        {message.details.affectedTokens && (
+                          <div className="mt-1">
+                            <p className="font-medium text-gray-200">Affected Tokens:</p>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {message.details.affectedTokens.map((token: string) => (
+                                <span key={token} className="px-2 py-1 bg-red-900 text-red-200 rounded-full text-xs">
+                                  {token}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Token operation events */}
+                  {['TokenAdded', 'TokenRemoved', 'TokenTransaction'].includes(message.type) && message.details && (
+                    <div>
+                      <p className="font-medium text-gray-200">Token Operation:</p>
+                      <div className="mt-1 text-xs text-gray-300">
+                        {message.type === 'TokenAdded' && (
+                          <>
+                            <p>Symbol: {message.details.tokenSymbol}</p>
+                            <p>ID: {message.details.tokenId}</p>
+                            {message.details.initialWeight && (
+                              <p>Initial Weight: {(message.details.initialWeight * 100).toFixed(2)}%</p>
+                            )}
+                          </>
+                        )}
+                        {message.type === 'TokenRemoved' && (
+                          <p>Token ID: {message.details.tokenId}</p>
+                        )}
+                        {message.type === 'TokenTransaction' && (
+                          <>
+                            <p>Operation: {message.details.operation}</p>
+                            <p>Transaction ID: {message.details.transactionId.substring(0, 10)}...</p>
+                            <p>Status: {message.details.status}</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Agent events */}
+                  {['AgentRegistered', 'AgentConnected', 'AgentDisconnected'].includes(message.type) && message.details && (
+                    <div>
+                      <p className="font-medium text-gray-200">Agent Event:</p>
+                      <div className="mt-1 text-xs text-gray-300">
+                        <p>Agent ID: {message.details.agentId}</p>
+                        {message.type === 'AgentRegistered' && message.details.registryTopicId && (
+                          <p>Registry Topic: {message.details.registryTopicId}</p>
+                        )}
+                        {message.type === 'AgentConnected' && message.details.capabilities && (
+                          <div>
+                            <p>Capabilities:</p>
+                            <ul className="list-disc list-inside">
+                              {message.details.capabilities.map((cap: string) => (
+                                <li key={cap}>{cap}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {message.type === 'AgentDisconnected' && message.details.reason && (
+                          <p>Reason: {message.details.reason}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Transaction events */}
+                  {['TransactionConfirmed', 'TransactionFailed'].includes(message.type) && message.details && (
+                    <div>
+                      <p className="font-medium text-gray-200">Transaction Event:</p>
+                      <div className="mt-1 text-xs text-gray-300">
+                        <p>Type: {message.details.type}</p>
+                        <p>ID: {message.details.transactionId.substring(0, 10)}...</p>
+                        {message.type === 'TransactionFailed' && message.details.error && (
+                          <p className="text-red-400">Error: {message.details.error}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* System events */}
+                  {['SystemStatus', 'SystemError'].includes(message.type) && message.details && (
+                    <div>
+                      <p className="font-medium text-gray-200">System Event:</p>
+                      <div className="mt-1 text-xs text-gray-300">
+                        {message.type === 'SystemStatus' && (
+                          <p>Status: {message.details.status}</p>
+                        )}
+                        {message.type === 'SystemError' && (
+                          <p className="text-red-400">Error: {message.details.message}</p>
+                        )}
                       </div>
                     </div>
                   )}
@@ -195,22 +391,21 @@ function MessageList({ messages }: { messages: HCSMessage[] }) {
 
 export default function HCSMessageFeed({ maxMessages = 10 }: HCSMessageFeedProps) {
   const { data: apiMessages, isLoading, error } = useHCSMessages();
+  const { connected, messages: agentMessages } = useAgentWebSocket();
   const [messages, setMessages] = useState<HCSMessage[]>([]);
   const [wsConnected, setWsConnected] = useState(false);
 
-  // Use the WebSocket service to get real-time updates
+  // Process both legacy and agent WebSocket messages
   useEffect(() => {
-    console.log('🔌 CLIENT: Initializing WebSocket connection for HCS messages...');
-    
-    // First, set the messages from the API when they're loaded
+    // First load legacy messages
     if (apiMessages?.length) {
       console.log(`🔌 CLIENT: Setting initial messages from API: ${apiMessages.length} messages`);
       setMessages(apiMessages);
     }
     
-    // Then, subscribe to the WebSocket for real-time updates
+    // Subscribe to the legacy WebSocket for backward compatibility
     const unsubscribe = websocketService.subscribe((message: HCSMessage) => {
-      console.log('🔌 CLIENT: Received WebSocket message:', message);
+      console.log('🔌 CLIENT: Received legacy WebSocket message:', message);
       setWsConnected(true);
       
       // Add the message to our local state if it's not a duplicate
@@ -232,10 +427,35 @@ export default function HCSMessageFeed({ maxMessages = 10 }: HCSMessageFeedProps
     
     // Clean up WebSocket subscription when component unmounts
     return () => {
-      console.log('🔌 CLIENT: Cleaning up WebSocket subscription');
+      console.log('🔌 CLIENT: Cleaning up legacy WebSocket subscription');
       unsubscribe();
     };
   }, [apiMessages, maxMessages]);
+  
+  // Process agent WebSocket messages
+  useEffect(() => {
+    if (!agentMessages.length) return;
+    
+    // Convert agent messages to HCS format for display
+    const convertedMessages = agentMessages.map(convertAgentMessageToHCS);
+    
+    // Update messages with agent websocket messages
+    setMessages(prevMessages => {
+      const newMessages = [...prevMessages];
+      
+      // Add each new agent message if it doesn't already exist
+      convertedMessages.forEach(msg => {
+        if (!newMessages.some(existing => existing.id === msg.id)) {
+          newMessages.push(msg);
+        }
+      });
+      
+      // Sort by timestamp (newest first) and limit to maxMessages
+      return newMessages
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, maxMessages);
+    });
+  }, [agentMessages, maxMessages]);
 
   if (isLoading && messages.length === 0) {
     return <LoadingSkeleton type="list" count={3} />;
@@ -249,27 +469,23 @@ export default function HCSMessageFeed({ maxMessages = 10 }: HCSMessageFeedProps
     );
   }
 
-  if (!messages?.length) {
-    return (
-      <div className="text-gray-400 text-center py-4">
-        {wsConnected ? 'Connected to WebSocket, waiting for messages...' : 'No messages'}
-      </div>
-    );
-  }
-
-  console.log(`HCSMessageFeed: Displaying ${messages.length} messages`);
+  // Connection status indicator
+  const connectionStatus = (wsConnected || connected) ? (
+    <div className="mb-4 text-xs p-2 bg-green-900 text-green-200 rounded flex items-center">
+      <span className="inline-block h-2 w-2 mr-2 bg-green-400 rounded-full"></span>
+      {connected ? 'Connected to Agent WebSocket' : 'Connected to Legacy WebSocket'}
+    </div>
+  ) : (
+    <div className="mb-4 text-xs p-2 bg-red-900 text-red-200 rounded flex items-center">
+      <span className="inline-block h-2 w-2 mr-2 bg-red-400 rounded-full"></span>
+      Not connected to WebSocket
+    </div>
+  );
 
   return (
-    <Suspense fallback={<LoadingSkeleton type="list" count={3} />}>
-      <div className="relative">
-        {wsConnected && (
-          <div className="absolute top-0 right-0 flex items-center text-xs text-green-400">
-            <span className="h-2 w-2 rounded-full bg-green-400 mr-1 animate-pulse"></span>
-            WebSocket Connected
-          </div>
-        )}
-        <MessageList messages={messages} />
-      </div>
-    </Suspense>
+    <div>
+      {connectionStatus}
+      <MessageList messages={messages} />
+    </div>
   );
 } 
