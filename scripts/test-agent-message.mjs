@@ -39,19 +39,38 @@ async function main() {
     
     console.log('✅ HCS10 client created');
     
+    // After loading connections, filter for only valid Hedera topic IDs
     // Check if connections file exists
     let connections = [];
     try {
       const data = await fs.readFile(CONNECTIONS_FILE, 'utf8');
       connections = JSON.parse(data);
       console.log(`📋 Found ${connections.length} connections in file`);
+      
+      // Filter for valid Hedera topic IDs (0.0.xxxxxxx format)
+      connections = connections.filter(conn => {
+        return conn.connectionTopicId && /^0\.0\.\d+$/.test(conn.connectionTopicId);
+      });
+      
+      console.log(`📋 Found ${connections.length} valid Hedera topic ID connections`);
     } catch (err) {
       console.log('⚠️ No connections file found or invalid JSON');
     }
     
     if (connections.length === 0) {
-      console.error('❌ No connections found. Please establish a connection first.');
-      process.exit(1);
+      console.error('❌ No valid connections found. Trying hardcoded test topics...');
+      
+      // Fallback to some hardcoded topics from logs
+      connections = [
+        {
+          connectionTopicId: "0.0.5988861",  // From logs
+          requesterId: "0.0.4340026"
+        },
+        {
+          connectionTopicId: "0.0.5988849",  // From logs
+          requesterId: "0.0.4340026"
+        }
+      ];
     }
     
     // Use the first connection
@@ -75,28 +94,39 @@ async function main() {
     // Wait and check for responses
     for (let i = 0; i < 15; i++) {
       console.log(`🔄 Checking for messages (attempt ${i+1}/15)...`);
-      const messages = await client.getMessages(connection.connectionTopicId);
-      
-      // Look for messages in the last minute
-      const recentMessages = messages.filter(msg => {
-        try {
-          const timestamp = new Date(msg.timestamp);
-          const now = new Date();
-          const diffMs = now.getTime() - timestamp.getTime();
-          const diffSec = diffMs / 1000;
-          return diffSec < 60; // Messages from the last minute
-        } catch (e) {
-          return false;
+      try {
+        const messages = await client.getMessages(connection.connectionTopicId);
+        
+        // Ensure messages is an array
+        if (!Array.isArray(messages)) {
+          console.log('⚠️ Received non-array response:', messages);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          continue;
         }
-      });
-      
-      if (recentMessages.length > 0) {
-        console.log(`✅ Found ${recentMessages.length} recent messages:`);
-        recentMessages.forEach((msg, idx) => {
-          console.log(`📩 Message ${idx+1}:`, JSON.stringify(msg, null, 2));
+        
+        // Look for messages in the last minute
+        const recentMessages = messages.filter(msg => {
+          try {
+            const timestamp = new Date(msg.timestamp);
+            const now = new Date();
+            const diffMs = now.getTime() - timestamp.getTime();
+            const diffSec = diffMs / 1000;
+            return diffSec < 60; // Messages from the last minute
+          } catch (e) {
+            return false;
+          }
         });
-      } else {
-        console.log('⚠️ No recent messages found');
+        
+        if (recentMessages.length > 0) {
+          console.log(`✅ Found ${recentMessages.length} recent messages:`);
+          recentMessages.forEach((msg, idx) => {
+            console.log(`📩 Message ${idx+1}:`, JSON.stringify(msg, null, 2));
+          });
+        } else {
+          console.log('⚠️ No recent messages found');
+        }
+      } catch (error) {
+        console.log(`⚠️ Error checking for messages: ${error.message}`);
       }
       
       // Wait 2 seconds before checking again
