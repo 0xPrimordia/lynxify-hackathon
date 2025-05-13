@@ -3,7 +3,7 @@ import { EventBus, EventType } from '../utils/event-emitter';
 import { LynxifyAgent } from './lynxify-agent';
 import { TokenService } from './token-service';
 import { TokenizedIndexService } from './tokenized-index';
-import { createServer } from 'http';
+import { createServer, Server } from 'http';
 
 /**
  * Message type for WebSocket communication
@@ -21,7 +21,8 @@ export interface WebSocketMessage {
  */
 export class UnifiedWebSocketService {
   private wss: WebSocketServer;
-  private httpServer: any; // Store the HTTP server reference
+  private httpServer: Server | null = null; // Store the HTTP server reference
+  private externalServer: boolean = false; // Track if using an external server
   private clients: Set<WebSocket> = new Set();
   private eventBus: EventBus;
   private lynxifyAgent: LynxifyAgent;
@@ -35,45 +36,58 @@ export class UnifiedWebSocketService {
    * @param tokenService The TokenService instance
    * @param indexService The TokenizedIndexService instance
    * @param port Server port (default: 3001)
+   * @param existingServer Optional existing HTTP server to attach to
    */
   constructor(
     agent: LynxifyAgent, 
     tokenService: TokenService,
     indexService: TokenizedIndexService,
-    port: number = 3001
+    port: number = 3001,
+    existingServer?: Server
   ) {
     this.lynxifyAgent = agent;
     this.tokenService = tokenService;
     this.indexService = indexService;
     this.eventBus = EventBus.getInstance();
     
-    // Create an HTTP server for Render to detect
-    this.httpServer = createServer((req, res) => {
-      // Basic health check endpoint
-      if (req.url === '/health' || req.url === '/' || req.url === '/api/health') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ 
-          status: 'ok', 
-          service: 'lynxify-unified-agent',
-          uptime: Math.floor(process.uptime()),
-          timestamp: new Date().toISOString()
-        }));
-        return;
-      }
+    if (existingServer) {
+      // Use the provided HTTP server
+      console.log('🔌 WEBSOCKET: Using existing HTTP server');
+      this.httpServer = existingServer;
+      this.externalServer = true;
       
-      // Default response for other routes
-      res.writeHead(404);
-      res.end('Not found');
-    });
-    
-    // Start the HTTP server
-    this.httpServer.listen(port, () => {
-      console.log(`🌐 HTTP server listening on port ${port}`);
-      console.log(`🌐 Health check available at http://localhost:${port}/health`);
-    });
-    
-    // Create WebSocket server attached to the HTTP server
-    this.wss = new WebSocketServer({ server: this.httpServer });
+      // Create WebSocket server attached to the existing HTTP server
+      this.wss = new WebSocketServer({ server: existingServer });
+    } else {
+      // Create a new HTTP server
+      console.log('🔌 WEBSOCKET: Creating new HTTP server');
+      this.httpServer = createServer((req, res) => {
+        // Basic health check endpoint
+        if (req.url === '/health' || req.url === '/' || req.url === '/api/health') {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ 
+            status: 'ok', 
+            service: 'lynxify-unified-agent',
+            uptime: Math.floor(process.uptime()),
+            timestamp: new Date().toISOString()
+          }));
+          return;
+        }
+        
+        // Default response for other routes
+        res.writeHead(404);
+        res.end('Not found');
+      });
+      
+      // Start the HTTP server
+      this.httpServer.listen(port, () => {
+        console.log(`🌐 HTTP server listening on port ${port}`);
+        console.log(`🌐 Health check available at http://localhost:${port}/health`);
+      });
+      
+      // Create WebSocket server attached to the HTTP server
+      this.wss = new WebSocketServer({ server: this.httpServer });
+    }
     
     // Handle connections
     this.wss.on('connection', this.handleConnection.bind(this));
@@ -752,10 +766,11 @@ export class UnifiedWebSocketService {
       this.statusUpdateInterval = null;
     }
     
-    // Close both WebSocket and HTTP servers
+    // Close WebSocket server
     this.wss.close();
     
-    if (this.httpServer) {
+    // Only close the HTTP server if we created it 
+    if (this.httpServer && !this.externalServer) {
       this.httpServer.close();
     }
     
