@@ -19,22 +19,21 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ 
       status: 'ok', 
-      service: 'lynxify-hcs10-agent',
-      uptime: Math.floor(process.uptime()),
-      timestamp: new Date().toISOString()
+      agent: 'hcs10-agent', 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development'
     }));
     return;
   }
-  
-  // Default response for other routes
+
+  // Not found for all other routes
   res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ error: 'Not found' }));
 });
 
-// CRITICAL: Explicitly bind to 0.0.0.0 as required by Render
+// Explicitly bind to 0.0.0.0 to make the port visible to Render's port scanner
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`🌐 HTTP server running at http://0.0.0.0:${PORT}`);
-  console.log(`🌐 Health check available at http://0.0.0.0:${PORT}/health`);
+  console.log(`✅ HTTP server running at http://0.0.0.0:${PORT}`);
 });
 
 // Define whitelist for auto-approved connections (optional)
@@ -71,68 +70,119 @@ export class HCS10AgentHandler extends EventEmitter {
     this.monitorInterval = null;
     this.commandCheckInterval = null;
     this.lastCheckedConnectionIndex = null;
+    this.messageCount = 0; // Track number of messages processed
   }
 
   /**
-   * Initialize the agent handler
+   * Initialize with proper ConnectionsManager setup to prevent duplicate connections
    */
-  async initialize() {
+  async initialize(agentKey, agentId, inboundTopicId, outboundTopicId) {
     try {
-      if (this.initialized) return true;
-
-      // Get credentials from environment
-      const operatorId = process.env.NEXT_PUBLIC_OPERATOR_ID;
-      const operatorKey = process.env.OPERATOR_KEY;
+      console.log(`🔄 Initializing agent handler with: ${agentId}, ${inboundTopicId}, ${outboundTopicId}`);
       
-      if (!operatorId || !operatorKey) {
-        throw new Error('Missing required environment variables: NEXT_PUBLIC_OPERATOR_ID and OPERATOR_KEY');
+      this.agentId = agentId;
+      this.inboundTopicId = inboundTopicId;
+      this.outboundTopicId = outboundTopicId;
+      this.agentKey = agentKey;
+      
+      // Validate private key before creating client
+      if (!this.agentKey) {
+        throw new Error('Missing operator key. Check your OPERATOR_KEY environment variable.');
       }
       
-      // Get topic IDs from environment or registration file
-      await this.loadRegistrationInfo();
+      // Log the first few characters to verify it's present (never log entire private key)
+      console.log(`🔑 Using private key starting with: ${this.agentKey.substring(0, 4)}...`);
       
-      if (!this.agentId || !this.inboundTopicId || !this.outboundTopicId) {
-        throw new Error('Missing required agent configuration. Make sure agent is registered.');
+      try {
+        // Create HCS10 client with proper configuration
+        console.log('🔄 Creating HCS10 client...');
+        
+        // Convert plain hex key to DER format if needed
+        let formattedKey = this.agentKey.trim();
+        
+        // If it's a plain hex key (64 characters), convert to DER format
+        if (formattedKey.length === 64 && /^[0-9a-fA-F]{64}$/.test(formattedKey)) {
+          console.log('🔑 Converting plain hex key to DER format...');
+          formattedKey = `302e020100300506032b657004220420${formattedKey}`;
+        }
+        
+        const clientConfig = {
+          network: 'testnet',
+          operatorId: this.agentId,
+          operatorKey: formattedKey,
+          mirrorNode: process.env.MIRROR_NODE_URL || 'https://testnet.mirrornode.hedera.com',
+          useEncryption: false
+        };
+        
+        console.log('🔍 Client configuration:', JSON.stringify({
+          ...clientConfig,
+          operatorKey: '***REDACTED***' // Don't log the actual key
+        }, null, 2));
+        
+        this.client = new HCS10Client(clientConfig);
+        console.log('✅ HCS10 client created successfully');
+      } catch (clientError) {
+        console.error('❌ Error creating HCS10 client:', clientError);
+        
+        // Try an alternative approach if there was an issue with the key
+        console.log('🔄 Attempting alternative client initialization...');
+        
+        // Try with DER prefix if not already in that format
+        let altKey = this.agentKey.trim();
+        if (!altKey.startsWith('302e020100300506032b6570')) {
+          console.log('🔑 Adding DER prefix to key...');
+          altKey = `302e020100300506032b657004220420${altKey}`;
+        }
+        
+        // Some SDKs expect different key formats, try with explicit configuration
+        this.client = new HCS10Client({
+          network: 'testnet',
+          operatorId: this.agentId,
+          operatorKey: altKey,
+          mirrorNode: process.env.MIRROR_NODE_URL || 'https://testnet.mirrornode.hedera.com',
+          useEncryption: false
+        });
+        
+        console.log('✅ HCS10 client created successfully using alternative method');
       }
       
-      // Create HCS10 client
-      console.log('🔄 Creating HCS10 client...');
-      this.client = new HCS10Client({
-        network: 'testnet',
-        operatorId,
-        operatorPrivateKey: operatorKey,
-        logLevel: 'debug'
-      });
-      
-      console.log('✅ HCS10 client created');
-      
-      // Initialize ConnectionsManager
+      // Initialize ConnectionsManager properly
       console.log('🔄 Initializing ConnectionsManager...');
-      this.connectionsManager = new ConnectionsManager({ 
-        baseClient: this.client 
+      this.connectionsManager = new ConnectionsManager({
+        client: this.client,
+        logLevel: 'info',
+        prettyPrint: true
       });
+      
       console.log('✅ ConnectionsManager initialized');
       
-      // Load connections from ConnectionsManager - Force a fresh fetch
+      // Set agent info required for proper connection management
+      console.log('🔄 Setting agent info in ConnectionsManager...');
+      await this.connectionsManager.setAgentInfo({
+        accountId: this.agentId,
+        inboundTopicId: this.inboundTopicId,
+        outboundTopicId: this.outboundTopicId
+      });
+      console.log('✅ Agent info set in ConnectionsManager');
+      
+      // Fetch connection data to load existing connections
       console.log('🔄 Fetching connections from Hedera...');
-      await this.connectionsManager.fetchConnectionData(this.agentId, true); // force fresh fetch
+      await this.connectionsManager.fetchConnectionData(this.agentId);
       
-      // Load connections from ConnectionsManager
-      await this.loadConnections();
+      // Initialize connections map for backward compatibility
+      this.connections = new Map();
+      this.syncConnectionsFromManager();
       
-      // Initialize file-based IPC (if API enabled)
-      if (ENABLE_APPROVAL_API) {
-        console.log('🔄 Initializing file-based IPC for connection approvals...');
-        await this.initializeIPC();
-        
-        // Set up interval to check for approval commands
-        this.commandCheckInterval = setInterval(() => {
-          this.checkApprovalCommands();
-        }, 5000); // Check every 5 seconds
-      }
+      // CRITICAL: Auto approve whitelisted accounts
+      console.log('🔍 DEBUG: Auto approved accounts:', AUTO_APPROVED_ACCOUNTS);
+      console.log('🔍 DEBUG: Connection approval API enabled:', ENABLE_APPROVAL_API);
       
+      // Print info about loaded connection data
+      this.logConnectionStats();
+      
+      // Save status for API
       this.initialized = true;
-      this.emit('initialized');
+      await this.updateStatusFile();
       
       return true;
     } catch (error) {
@@ -399,14 +449,15 @@ export class HCS10AgentHandler extends EventEmitter {
         throw new Error('Agent handler not initialized');
       }
       
-      // Set up polling interval with much longer time between polls
-      // This reduces server load dramatically while still being responsive enough
-      const pollingIntervalMs = 60000; // 60 seconds (1 minute)
+      // CHANGED: Reduced polling interval to be more responsive to chat
+      const pollingIntervalMs = 10000; // 10 seconds for much faster response
       console.log(`🔄 Starting message polling with ${pollingIntervalMs/1000}s interval...`);
       
-      // Do NOT check immediately on startup - let the server stabilize
+      // CHANGED: Check immediately on startup to be responsive
+      console.log('🔍 Checking for messages immediately on startup...');
+      await this.checkInboundTopic();
       
-      // Set up regular polling with a much longer interval
+      // Set up regular polling with a shorter interval
       this.monitorInterval = setInterval(async () => {
         await this.checkInboundTopic();
       }, pollingIntervalMs);
@@ -420,15 +471,13 @@ export class HCS10AgentHandler extends EventEmitter {
         // Update pending connections file with current state
         await this.updatePendingConnectionsFile();
         
-        // Check pending connections with a delay
-        setTimeout(async () => {
-          await this.checkPendingConnections();
-        }, 10000); // 10 second initial delay
+        // Check pending connections immediately
+        await this.checkPendingConnections();
         
-        // Set up interval for checking pending connections - much less frequent
+        // Set up interval for checking pending connections - more frequent
         setInterval(async () => {
           await this.checkPendingConnections();
-        }, 120000); // Check every 2 minutes
+        }, 30000); // Check every 30 seconds
       }
       
       return true;
@@ -465,61 +514,58 @@ export class HCS10AgentHandler extends EventEmitter {
     try {
       console.log(`🔄 Checking inbound topic ${this.inboundTopicId} for new messages...`);
       
-      // Debug - active connections list
-      const connectionsList = this.connectionsManager?.getActiveConnections() || [];
-      console.log(`🔍 Active connections: ${connectionsList.length}`);
+      // Get current connection counts for debugging
+      const activeConnections = this.connectionsManager?.getActiveConnections() || [];
+      const pendingRequests = this.connectionsManager?.getPendingRequests() || [];
+      const needsConfirmation = this.connectionsManager?.getConnectionsNeedingConfirmation() || [];
       
-      // IMPORTANT: Don't log all connection IDs - just count them
-      if (connectionsList.length > 0) {
-        console.log(`🔍 Found ${connectionsList.length} active connections`);
+      console.log(`🔍 Connection stats: ${activeConnections.length} active, ${pendingRequests.length} pending, ${needsConfirmation.length} need confirmation`);
+      
+      // Send debug info message every 5 checks
+      if (this.messageCount % 5 === 0) {
+        await this.sendDebugMessage();
       }
       
-      // ONLY use the standard approach for messages - no connection-by-connection checking
+      // Get messages from inbound topic
       try {
-        console.log('🔍 Checking for new messages using standard getMessageStream...');
+        console.log('🔄 Fetching messages from inbound topic...');
         const messages = await this.client.getMessageStream(this.inboundTopicId);
         
         if (messages && messages.length > 0) {
           console.log(`📬 Found ${messages.length} messages on inbound topic`);
           
-          // Process messages with ConnectionsManager if available
+          // *** CRITICAL STEP *** 
+          // Process ALL messages through ConnectionsManager first
+          // This ensures proper protocol-compliant handling of connection messages
           if (this.connectionsManager) {
             console.log('🔄 Processing messages with ConnectionsManager...');
-            this.connectionsManager.processInboundMessages(messages);
+            await this.connectionsManager.processInboundMessages(messages);
+            
+            // After ConnectionsManager processes messages, handle any pending connections
+            await this.processPendingConnections();
           }
           
-          // Also process individually for backward compatibility
+          // For other message types, process individually
           for (const message of messages) {
+            // We still want this for any application-level logic
             await this.processInboundMessage(message);
           }
         } else {
-          console.log('ℹ️ No new messages found');
+          console.log('ℹ️ No new messages found on inbound topic');
         }
-      } catch (standardError) {
-        console.error(`⚠️ Error with message retrieval:`, standardError);
+      } catch (error) {
+        console.error(`⚠️ Error retrieving messages from inbound topic:`, error);
       }
       
-      // Check the outbound topic once per poll
-      if (this.outboundTopicId) {
-        try {
-          console.log(`🔍 Checking outbound topic ${this.outboundTopicId} for misrouted messages...`);
-          const outboundMessages = await this.client.getMessageStream(this.outboundTopicId);
-          
-          if (outboundMessages && outboundMessages.length > 0) {
-            console.log(`📬 Found ${outboundMessages.length} messages on outbound topic`);
-            
-            // Process these messages too
-            for (const message of outboundMessages) {
-              await this.processInboundMessage(message);
-            }
-          }
-        } catch (outboundError) {
-          console.error(`⚠️ Error checking outbound topic:`, outboundError);
-        }
-      }
+      // Update status and sync connections from manager
+      await this.updateStatusFile();
+      this.syncConnectionsFromManager();
+      await this.saveConnections();
+      
+      // Update lastActivityTime
+      this.lastActivityTime = Date.now();
     } catch (error) {
       console.error('❌ Error checking inbound topic:', error);
-      this.emit('error', error);
     }
   }
   
@@ -562,9 +608,9 @@ export class HCS10AgentHandler extends EventEmitter {
           
           // Process based on status
           if (conn.status === 'needs_confirmation') {
-            await this.handleNeedsConfirmationRequest(conn);
+            await this.handleNeedsConfirmation(conn);
           } else if (conn.isPending) {
-            await this.handlePendingConnectionRequest(conn);
+            await this.handlePendingRequest(conn);
           }
         }
       } else {
@@ -588,150 +634,90 @@ export class HCS10AgentHandler extends EventEmitter {
    * Handle a connection that needs confirmation (status = 'needs_confirmation')
    * This follows the SDK example from polling-agent.ts
    */
-  async handleNeedsConfirmationRequest(connection) {
+  async handleNeedsConfirmation(connection) {
     try {
-      console.log(`🔄 Handling connection that needs confirmation: ${connection.connectionTopicId}`);
-      console.log(`   Target Account: ${connection.targetAccountId}`);
-      console.log(`   Request ID: ${connection.connectionRequestId}`);
+      console.log(`🔄 Processing connection needing confirmation from ${connection.targetAccountId}`);
       
-      // If the connectionRequestId is not available, try to derive it from other sources
-      if (!connection.connectionRequestId) {
-        console.log(`⚠️ Connection is missing connectionRequestId, attempting to extract from connection data...`);
-        console.log(`🔍 DEBUG: Connection object:`, JSON.stringify(connection, null, 2));
-        
-        // If we have a connection ID in a format like "inb-10:0.0.5949517@0.0.4340026"
-        // try to extract parts to form a request ID
-        if (connection.connectionTopicId && connection.connectionTopicId.includes('@')) {
-          const parts = connection.connectionTopicId.split('@');
-          if (parts.length === 2) {
-            // Use the sequence number or some default if not available
-            connection.connectionRequestId = connection.sequenceNumber || 1;
-            console.log(`✅ Derived connectionRequestId: ${connection.connectionRequestId}`);
-          }
-        }
-        
-        // If we still don't have a connectionRequestId, check if there's a connectionId field
-        if (!connection.connectionRequestId && connection.connectionId) {
-          connection.connectionRequestId = connection.connectionId;
-          console.log(`✅ Using connectionId as connectionRequestId: ${connection.connectionRequestId}`);
-        }
-        
-        // Last resort - generate a simple numeric ID
-        if (!connection.connectionRequestId) {
-          connection.connectionRequestId = Date.now();
-          console.log(`⚠️ Using generated timestamp as connectionRequestId: ${connection.connectionRequestId}`);
-        }
+      // Skip if we're using API and this account is not auto-approved
+      if (ENABLE_APPROVAL_API && !AUTO_APPROVED_ACCOUNTS.includes(connection.targetAccountId)) {
+        console.log(`⏳ Connection from ${connection.targetAccountId} requires manual approval via API`);
+        return;
       }
       
-      // If API is enabled, don't auto-approve unless in whitelist
-      if (ENABLE_APPROVAL_API) {
-        // Only auto-approve if explicitly in whitelist
-        const shouldAutoApprove = AUTO_APPROVED_ACCOUNTS.includes(connection.targetAccountId);
-        
-        console.log(`🔍 DEBUG: Should auto-approve (API enabled): ${shouldAutoApprove}`);
-        
-        if (shouldAutoApprove) {
-          console.log(`✅ Auto-approving connection from ${connection.targetAccountId} (in whitelist)`);
-          
-          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
-          if (!this.inboundTopicId) {
-            throw new Error('inboundTopicId is required for connection memo');
+      console.log(`✅ Approving connection from ${connection.targetAccountId}`);
+      
+      // Properly handle the connection request using requestId
+      const result = await this.client.handleConnectionRequest(
+        this.inboundTopicId,
+        connection.targetAccountId,
+        connection.connectionRequestId
+      );
+      
+      console.log(`✅ Connection established: ${result.connectionTopicId}`);
+      
+      // Update connection in ConnectionsManager
+      connection.status = 'established';
+      connection.needsConfirmation = false;
+      this.connectionsManager.updateOrAddConnection(connection);
+      
+      // Send welcome message
+      if (result && result.connectionTopicId) {
+        await this.sendMessage(
+          result.connectionTopicId,
+          {
+            type: 'welcome',
+            message: 'Welcome to Lynxify HCS-10 Agent!',
+            timestamp: new Date().toISOString()
           }
-          if (!connection.connectionRequestId) {
-            throw new Error('connectionRequestId is required for connection memo');
-          }
-          
-          const result = await this.client.handleConnectionRequest(
-            this.inboundTopicId,
-            connection.targetAccountId, 
-            connection.connectionRequestId
-          );
-          
-          console.log(`✅ Connection approved:`, result);
-          
-          // Update connection status
-          connection.status = 'established';
-          connection.needsConfirmation = false;
-          this.connectionsManager.updateOrAddConnection(connection);
-          
-          // Save for legacy code
-          await this.syncConnectionsFromManager();
-          await this.saveConnections();
-          
-          // Send welcome message
-          if (result && result.connectionTopicId) {
-            await this.sendMessage(
-              result.connectionTopicId,
-              {
-                type: 'welcome',
-                message: 'Welcome to Lynxify HCS-10 Agent!',
-                timestamp: new Date().toISOString()
-              }
-            );
-          }
-          
-          // Update status files
-          if (ENABLE_APPROVAL_API) {
-            await this.updateStatusFile();
-            await this.checkPendingConnections();
-          }
-        } else {
-          console.log(`⏳ Connection from ${connection.targetAccountId} requires manual approval via API`);
-          // Notification happens via the status file and pending connections file
-        }
-      } else {
-        // If API is not enabled, use the original auto-approval logic
-        const shouldAutoApprove = this.shouldAutoApproveConnection(connection.targetAccountId);
-        
-        console.log(`🔍 DEBUG: Should auto-approve (API disabled): ${shouldAutoApprove}`);
-        
-        if (shouldAutoApprove) {
-          console.log(`✅ Auto-approving connection from ${connection.targetAccountId}`);
-          
-          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
-          if (!this.inboundTopicId) {
-            throw new Error('inboundTopicId is required for connection memo');
-          }
-          if (!connection.connectionRequestId) {
-            throw new Error('connectionId is required for connection memo');
-          }
-          
-          // KEY CHANGE: Use client.handleConnectionRequest directly
-          const result = await this.client.handleConnectionRequest(
-            this.inboundTopicId,
-            connection.targetAccountId, 
-            connection.connectionRequestId
-          );
-          
-          console.log(`✅ Connection approved:`, result);
-          
-          // Update connection status
-          connection.status = 'established';
-          connection.needsConfirmation = false;
-          this.connectionsManager.updateOrAddConnection(connection);
-          
-          // Save for legacy code
-          await this.syncConnectionsFromManager();
-          await this.saveConnections();
-          
-          // Send welcome message
-          if (result && result.connectionTopicId) {
-            await this.sendMessage(
-              result.connectionTopicId,
-              {
-                type: 'welcome',
-                message: 'Welcome to Lynxify HCS-10 Agent!',
-                timestamp: new Date().toISOString()
-              }
-            );
-          }
-        } else {
-          console.log(`⏳ Connection from ${connection.targetAccountId} requires manual approval`);
-          this.emit('connection_needs_approval', connection);
-        }
+        );
       }
     } catch (error) {
-      console.error(`❌ Error handling needs_confirmation connection:`, error);
+      console.error(`❌ Error handling connection needing confirmation:`, error);
+    }
+  }
+  
+  /**
+   * Handle pending connection request
+   */
+  async handlePendingRequest(connection) {
+    try {
+      console.log(`🔄 Processing pending connection request from ${connection.targetAccountId}`);
+      
+      // Skip if we're using API and this account is not auto-approved
+      if (ENABLE_APPROVAL_API && !AUTO_APPROVED_ACCOUNTS.includes(connection.targetAccountId)) {
+        console.log(`⏳ Connection from ${connection.targetAccountId} requires manual approval via API`);
+        return;
+      }
+      
+      console.log(`✅ Approving connection from ${connection.targetAccountId}`);
+      
+      // Properly handle the connection request using requestId
+      const result = await this.client.handleConnectionRequest(
+        this.inboundTopicId,
+        connection.targetAccountId,
+        connection.connectionRequestId
+      );
+      
+      console.log(`✅ Connection established: ${result.connectionTopicId}`);
+      
+      // Update connection in ConnectionsManager
+      connection.status = 'established';
+      connection.isPending = false;
+      this.connectionsManager.updateOrAddConnection(connection);
+      
+      // Send welcome message
+      if (result && result.connectionTopicId) {
+        await this.sendMessage(
+          result.connectionTopicId,
+          {
+            type: 'welcome',
+            message: 'Welcome to Lynxify HCS-10 Agent!',
+            timestamp: new Date().toISOString()
+          }
+        );
+      }
+    } catch (error) {
+      console.error(`❌ Error handling pending connection request:`, error);
     }
   }
   
@@ -750,340 +736,276 @@ export class HCS10AgentHandler extends EventEmitter {
   }
   
   /**
+   * Get the current agent status for the API
+   */
+  getStatus() {
+    try {
+      const activeConnections = this.connectionsManager?.getActiveConnections() || [];
+      const pendingConnections = this.connectionsManager?.getPendingRequests() || [];
+      const needsConfirmation = this.connectionsManager?.getConnectionsNeedingConfirmation() || [];
+      
+      return {
+        status: 'running',
+        timestamp: new Date().toISOString(),
+        agent_id: this.agentId,
+        inbound_topic: this.inboundTopicId,
+        outbound_topic: this.outboundTopicId,
+        connections: {
+          active: activeConnections.length,
+          pending: pendingConnections.length,
+          needs_confirmation: needsConfirmation.length,
+          total: this.connections.size
+        },
+        message_stats: {
+          count: this.messageCount,
+          last_check: new Date().toISOString()
+        }
+      };
+    } catch (error) {
+      console.error('❌ Error getting agent status:', error);
+      return {
+        status: 'error',
+        timestamp: new Date().toISOString(),
+        error: error.message
+      };
+    }
+  }
+  
+  /**
+   * Update the pending connections file for the API
+   */
+  async updatePendingConnectionsFile() {
+    if (!ENABLE_APPROVAL_API) return;
+    
+    try {
+      // Get pending connections
+      const pendingRequests = this.connectionsManager?.getPendingRequests() || [];
+      const needsConfirmation = this.connectionsManager?.getConnectionsNeedingConfirmation() || [];
+      
+      // Combine and format for API
+      const pendingConnections = [...pendingRequests, ...needsConfirmation].map(conn => ({
+        id: conn.connectionTopicId,
+        requester_id: conn.targetAccountId,
+        status: conn.status || (conn.isPending ? 'pending' : 'needs_confirmation'),
+        timestamp: conn.created ? conn.created.toISOString() : new Date().toISOString()
+      }));
+      
+      // Write to file
+      await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify(pendingConnections, null, 2));
+      
+      console.log(`✅ Updated pending connections file with ${pendingConnections.length} connections`);
+    } catch (error) {
+      console.error('❌ Error updating pending connections file:', error);
+    }
+  }
+  
+  /**
    * Process a message from inbound topic
    */
   async processInboundMessage(message) {
     try {
-      console.log('📩 Processing inbound message:', JSON.stringify(message));
-      this.emit('message_received', message);
+      if (!message) return;
       
-      // Enhanced message format detection
-      // Many different formats are used in practice, so we need to be flexible
-      let messageOp = message.op;
+      this.messageCount++;
+      this.lastActivityTime = Date.now();
       
-      // Extract op from different possible formats
-      if (!messageOp) {
-        if (message.operation) messageOp = message.operation;
-        if (message.type) messageOp = message.type;
-        if (message.action) messageOp = message.action;
-        
-        // Try to parse data field if it exists and might contain an op
-        if (message.data && typeof message.data === 'string') {
-          try {
-            const parsedData = JSON.parse(message.data);
-            if (parsedData.op) messageOp = parsedData.op;
-            if (parsedData.operation) messageOp = parsedData.operation;
-            if (parsedData.type) messageOp = parsedData.type;
-            if (parsedData.action) messageOp = parsedData.action;
-          } catch (e) {
-            // Not valid JSON, ignore
-          }
-        }
-      }
+      // Log basic message info
+      console.log(`📩 Message received: ${message.sequence_number}`);
       
-      console.log(`🔍 DEBUG: Detected message op: ${messageOp || 'unknown'}`);
-      
-      // Connection requests are handled by ConnectionsManager
-      if (messageOp === 'connection_request') {
-        console.log('🔍 DEBUG: Detected connection_request message');
-        if (!this.connectionsManager) {
-          await this.handleConnectionRequest(message);
-        } else {
-          console.log('ℹ️ ConnectionsManager will handle this message during checkPendingConnections');
-        }
+      // Skip if we've already processed connection-related messages via ConnectionsManager
+      if (this.isConnectionMessage(message)) {
+        console.log('ℹ️ Skipping connection message (already handled by ConnectionsManager)');
         return;
       }
       
-      // HANDLE ALL POSSIBLE MESSAGE TYPES
-      const isChatMessage = 
-        messageOp === 'message' || 
-        messageOp === 'chat' || 
-        messageOp === 'text' || 
-        messageOp === 'direct_message' ||
-        (message.text && typeof message.text === 'string');
-      
-      if (isChatMessage) {
-        console.log('🔍 DEBUG: Detected chat message:', JSON.stringify(message, null, 2));
-        
-        try {
-          // Extract connection ID - many formats in the wild
-          let connectionId = 
-            message.connectionTopicId || 
-            message.topic_id || 
-            message.conversationTopicId || 
-            message.topicId;
-            
-          // Fallback: try using originTopicId as connectionId if exists
-          if (!connectionId && message.originTopicId) {
-            connectionId = message.originTopicId;
-          }
-          
-          // Parse message content based on HCS-10 protocol - handle ALL variants
-          let textContent = '';
-          
-          // Direct text field
-          if (message.text) {
-            textContent = message.text;
-          }
-          // Message field
-          else if (message.message) {
-            textContent = message.message;
-          }
-          // Content field
-          else if (message.content) {
-            textContent = message.content;
-          }
-          // Contents field
-          else if (message.contents) {
-            textContent = message.contents;
-          }
-          // Data field as string
-          else if (typeof message.data === 'string') {
-            try {
-              // Try parsing as JSON first
-              const parsedData = JSON.parse(message.data);
-              textContent = parsedData.text || parsedData.message || parsedData.content || parsedData.data;
-            } catch (e) {
-              // If not valid JSON, use the data as text
-              textContent = message.data;
-            }
-          }
-          // Data field as object
-          else if (typeof message.data === 'object') {
-            textContent = message.data.text || message.data.message || message.data.content || message.data.data;
-          }
-          
-          // If we still don't have a connection ID or text, dump everything to see what we're getting
-          if (!connectionId || !textContent) {
-            console.error('❌ Missing required data for chat response:');
-            console.error(`Connection ID: ${connectionId || 'missing'}`);
-            console.error(`Text content: ${textContent || 'missing'}`);
-            console.error('Full message:', JSON.stringify(message, null, 2));
-            
-            // Try one more fallback for connection ID - if we have any active connections
-            if (!connectionId) {
-              const activeConnections = this.connectionsManager?.getActiveConnections() || [];
-              if (activeConnections.length > 0) {
-                connectionId = activeConnections[0].connectionTopicId;
-                console.log(`ℹ️ Using fallback connection ID: ${connectionId}`);
-              }
-            }
-            
-            // Last resort fallback for text content
-            if (!textContent) {
-              textContent = "I received your message but couldn't parse the content. Could you try again?";
-            }
-            
-            if (!connectionId) {
-              console.error('❌ Could not determine connection ID for response, giving up.');
-              return;
-            }
-          }
-          
-          console.log(`📬 Received message: "${textContent}" on connection: ${connectionId}`);
-          
-          // Generate response
-          let responseText = '';
-          const lowerText = typeof textContent === 'string' ? textContent.toLowerCase() : 'hello';
-          
-          if (lowerText.includes('tell me about yourself') || lowerText.includes('who are you')) {
-            responseText = "I am the Lynxify Rebalancer Agent, designed to help manage the Lynx tokenized index. I can assist with rebalancing operations, risk assessments, and tokenized asset management.";
-          } 
-          else if (lowerText.includes('help') || lowerText.includes('what can you do')) {
-            responseText = "I can help with rebalancing token indexes, calculating optimal weights, monitoring price feeds, and executing token operations on the Hedera Token Service.";
-          }
-          else if (lowerText.includes('hello') || lowerText.includes('hi') || lowerText.includes('hey')) {
-            responseText = "Hello! I'm the Lynxify Rebalancer Agent. How can I assist you with your tokenized index today?";
-          }
-          else {
-            responseText = `Thank you for your message: "${textContent}". I am the Lynxify Rebalancer Agent, designed to help with tokenized index operations. How can I assist you further?`;
-          }
-          
-          // Send response according to HCS-10 protocol
-          console.log(`🔄 Sending response to ${connectionId}: "${responseText}"`);
-          
-          // EXACTLY FOLLOWING HCS-10 PROTOCOL
-          const response = {
-            p: 'hcs-10',
-            op: 'message',
-            text: responseText,
-            timestamp: new Date().toISOString()
-          };
-          
-          // Send directly to the connection topic
-          await this.client.sendMessage(connectionId, JSON.stringify(response));
-          console.log('✅ Response sent successfully');
-        } catch (error) {
-          console.error('❌ Error handling chat message:', error);
-        }
-        return;
+      // Process as chat message if on a connection topic
+      if (this.isStandardMessage(message)) {
+        await this.processChatMessage(message);
       }
-      
-      // Log any other message types
-      console.log(`ℹ️ Received message with unhandled operation type: ${messageOp || 'unknown'}`);
-      console.log('Full message:', JSON.stringify(message, null, 2));
-      
     } catch (error) {
       console.error('❌ Error processing inbound message:', error);
     }
   }
   
   /**
-   * Handle a pending connection request - follows standards-sdk example
+   * Check if a message is a connection-related message
+   * @param {Object} message The message to check
+   * @returns {boolean} True if connection-related
    */
-  async handlePendingConnectionRequest(pendingRequest) {
+  isConnectionMessage(message) {
+    const op = message.op || '';
+    return op.startsWith('connection_') || 
+           op === 'init_connection' || 
+           op === 'close_connection';
+  }
+  
+  /**
+   * Check if a message is a standard chat message
+   * @param {Object} message The message to check
+   * @returns {boolean} True if standard message
+   */
+  isStandardMessage(message) {
+    const op = message.op || '';
+    return op === 'message' || op === '';
+  }
+  
+  /**
+   * Process a chat message
+   * @param {Object} message The message to process
+   */
+  async processChatMessage(message) {
     try {
-      const requesterId = pendingRequest.targetAccountId;
-      let requestId = pendingRequest.connectionRequestId;
-      
-      console.log(`🔄 Processing pending connection request from ${requesterId}, requestId: ${requestId}`);
-      console.log('🔍 DEBUG: Full pending request:', JSON.stringify(pendingRequest, null, 2));
-      
-      // If the requestId is not available, try to derive it from other sources
-      if (!requestId) {
-        console.log(`⚠️ PendingRequest is missing connectionRequestId, attempting to extract from request data...`);
-        
-        // If we have a connection ID in a format like "inb-10:0.0.5949517@0.0.4340026"
-        // try to extract parts to form a request ID
-        if (pendingRequest.connectionTopicId && pendingRequest.connectionTopicId.includes('@')) {
-          const parts = pendingRequest.connectionTopicId.split('@');
-          if (parts.length === 2) {
-            // Use the sequence number or some default if not available
-            requestId = pendingRequest.sequenceNumber || 1;
-            console.log(`✅ Derived connectionRequestId: ${requestId}`);
-            pendingRequest.connectionRequestId = requestId;
-          }
-        }
-        
-        // If we still don't have a requestId, check if there's a connectionId field
-        if (!requestId && pendingRequest.connectionId) {
-          requestId = pendingRequest.connectionId;
-          console.log(`✅ Using connectionId as connectionRequestId: ${requestId}`);
-          pendingRequest.connectionRequestId = requestId;
-        }
-        
-        // Last resort - generate a simple numeric ID
-        if (!requestId) {
-          requestId = Date.now();
-          console.log(`⚠️ Using generated timestamp as connectionRequestId: ${requestId}`);
-          pendingRequest.connectionRequestId = requestId;
-        }
+      // Extract content from the message
+      const content = this.extractMessageContent(message);
+      if (!content) {
+        console.log('⚠️ No content found in message:', message);
+        return;
       }
       
-      // If API is enabled, don't auto-approve unless in whitelist
-      if (ENABLE_APPROVAL_API) {
-        // Only auto-approve if explicitly in whitelist
-        const shouldAutoApprove = AUTO_APPROVED_ACCOUNTS.includes(requesterId);
-        
-        console.log(`🔍 DEBUG: Should auto-approve (API enabled): ${shouldAutoApprove}`);
-        console.log(`🔍 DEBUG: Requester ID: "${requesterId}"`);
-        console.log(`🔍 DEBUG: Whitelist contains: ${AUTO_APPROVED_ACCOUNTS.join(', ')}`);
-        
-        if (shouldAutoApprove) {
-          console.log(`✅ Auto-approving connection from ${requesterId} (in whitelist)`);
-          
-          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
-          if (!this.inboundTopicId) {
-            throw new Error('inboundTopicId is required for connection memo');
-          }
-          if (!connection.connectionRequestId) {
-            throw new Error('connectionRequestId is required for connection memo');
-          }
-          
-          const result = await this.client.handleConnectionRequest(
-            this.inboundTopicId,
-            connection.targetAccountId, 
-            connection.connectionRequestId
-          );
-          
-          console.log(`✅ Connection approved:`, result);
-          
-          // Update connection status
-          connection.status = 'established';
-          connection.needsConfirmation = false;
-          this.connectionsManager.updateOrAddConnection(connection);
-          
-          // Save for legacy code
-          await this.syncConnectionsFromManager();
-          await this.saveConnections();
-          
-          // Send welcome message
-          if (result && result.connectionTopicId) {
-            await this.sendMessage(
-              result.connectionTopicId,
-              {
-                type: 'welcome',
-                message: 'Welcome to Lynxify HCS-10 Agent!',
-                timestamp: new Date().toISOString()
-              }
-            );
-          }
-          
-          // Update status files
-          if (ENABLE_APPROVAL_API) {
-            await this.updateStatusFile();
-            await this.checkPendingConnections();
-          }
-        } else {
-          console.log(`⏳ Connection from ${requesterId} requires manual approval`);
-          this.emit('connection_needs_approval', connection);
-        }
-      } else {
-        // If API is not enabled, use the original auto-approval logic
-        const shouldAutoApprove = this.shouldAutoApproveConnection(requesterId);
-        
-        console.log(`🔍 DEBUG: Should auto-approve (API disabled): ${shouldAutoApprove}`);
-        
-        if (shouldAutoApprove) {
-          console.log(`✅ Auto-approving connection from ${requesterId}`);
-          
-          // Ensure that both inboundTopicId and connectionId (which is the connectionRequestId) are passed
-          if (!this.inboundTopicId) {
-            throw new Error('inboundTopicId is required for connection memo');
-          }
-          if (!connection.connectionRequestId) {
-            throw new Error('connectionId is required for connection memo');
-          }
-          
-          // KEY CHANGE: Use client.handleConnectionRequest directly
-          const result = await this.client.handleConnectionRequest(
-            this.inboundTopicId,
-            connection.targetAccountId, 
-            connection.connectionRequestId
-          );
-          
-          console.log(`✅ Connection approved:`, result);
-          
-          // Update connection status
-          connection.status = 'established';
-          connection.needsConfirmation = false;
-          this.connectionsManager.updateOrAddConnection(connection);
-          
-          // Save for legacy code
-          await this.syncConnectionsFromManager();
-          await this.saveConnections();
-          
-          // Send welcome message
-          if (result && result.connectionTopicId) {
-            await this.sendMessage(
-              result.connectionTopicId,
-              {
-                type: 'welcome',
-                message: 'Welcome to Lynxify HCS-10 Agent!',
-                timestamp: new Date().toISOString()
-              }
-            );
-          }
-        } else {
-          console.log(`⏳ Connection from ${requesterId} requires manual approval`);
-          this.emit('connection_needs_approval', connection);
-        }
+      console.log(`📝 Extracted message content: "${content}"`);
+      
+      // Get connection topic ID for sending response
+      const connectionTopicId = message.origin_topic_id || message.connectionTopicId;
+      if (!connectionTopicId) {
+        console.log('⚠️ No connection topic ID found for message:', message);
+        return;
       }
+      
+      // Generate response
+      const responseText = await this.generateResponse(content);
+      
+      // Send response
+      await this.sendChatResponse(connectionTopicId, responseText);
+      
     } catch (error) {
-      console.error(`❌ Error handling pending connection request:`, error);
+      console.error('❌ Error processing chat message:', error);
     }
   }
-
+  
+  /**
+   * Extract content from a message
+   * @param {Object} message The message
+   * @returns {string} The extracted content
+   */
+  extractMessageContent(message) {
+    // If message has a text field
+    if (message.text) {
+      return message.text;
+    }
+    
+    // If message has a data field as string
+    if (typeof message.data === 'string') {
+      try {
+        // Try parsing as JSON
+        const parsedData = JSON.parse(message.data);
+        return parsedData.text || parsedData.message || parsedData.content || parsedData;
+      } catch (e) {
+        // If not valid JSON, use the data directly
+        return message.data;
+      }
+    }
+    
+    // If data is an object
+    if (typeof message.data === 'object' && message.data !== null) {
+      return message.data.text || message.data.message || message.data.content || JSON.stringify(message.data);
+    }
+    
+    return null;
+  }
+  
+  /**
+   * Generate a response to a message
+   * @param {string} content The message content
+   * @returns {string} The response text
+   */
+  async generateResponse(content) {
+    // Simple response generation based on content
+    const lowerContent = content.toLowerCase();
+    
+    if (lowerContent.includes('hello') || lowerContent.includes('hi')) {
+      return "Hello! I'm the Lynxify agent. How can I assist you with the tokenized index today?";
+    }
+    
+    if (lowerContent.includes('help') || lowerContent.includes('what can you do')) {
+      return "I can help with the Lynxify tokenized index, including rebalancing operations, price information, and token management. What would you like to know?";
+    }
+    
+    if (lowerContent.includes('about') || lowerContent.includes('who are you')) {
+      return "I am the Lynxify Agent, designed to help manage the Lynx tokenized index. I can provide information and assist with token operations.";
+    }
+    
+    if (lowerContent.includes('rebalance') || lowerContent.includes('tokens') || lowerContent.includes('index')) {
+      return "The Lynxify index is a tokenized basket of digital assets, managed through automated rebalancing. Would you like to know more about the current composition or rebalancing process?";
+    }
+    
+    // Default response
+    return `Thank you for your message. I've received: "${content}". How can I assist you with the Lynxify tokenized index?`;
+  }
+  
+  /**
+   * Send a chat response message
+   * @param {string} connectionTopicId The connection topic ID
+   * @param {string} text The response text
+   */
+  async sendChatResponse(connectionTopicId, text) {
+    try {
+      console.log(`🔄 Sending chat response to ${connectionTopicId}: "${text}"`);
+      
+      // Format as proper HCS-10 message
+      const message = {
+        p: 'hcs-10',
+        op: 'message',
+        text: text,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Send to the connection topic
+      await this.client.sendMessage(connectionTopicId, JSON.stringify(message));
+      
+      console.log('✅ Chat response sent successfully');
+    } catch (error) {
+      console.error('❌ Error sending chat response:', error);
+    }
+  }
+  
+  /**
+   * Process pending connections using ConnectionsManager
+   * This is critical to avoid duplicate connections
+   */
+  async processPendingConnections() {
+    if (!this.connectionsManager) return;
+    
+    try {
+      // Fetch fresh connection data
+      await this.connectionsManager.fetchConnectionData(this.agentId);
+      
+      // Get connections needing confirmation
+      const needsConfirmation = this.connectionsManager.getConnectionsNeedingConfirmation();
+      console.log(`🔄 Found ${needsConfirmation.length} connections needing confirmation`);
+      
+      // Handle each connection needing confirmation
+      for (const connection of needsConfirmation) {
+        await this.handleNeedsConfirmation(connection);
+      }
+      
+      // Get pending requests
+      const pendingRequests = this.connectionsManager.getPendingRequests();
+      console.log(`🔄 Found ${pendingRequests.length} pending connection requests`);
+      
+      // Handle each pending request
+      for (const connection of pendingRequests) {
+        await this.handlePendingRequest(connection);
+      }
+      
+      // After processing, sync connections
+      this.syncConnectionsFromManager();
+      await this.saveConnections();
+      await this.updateStatusFile();
+    } catch (error) {
+      console.error('❌ Error processing pending connections:', error);
+    }
+  }
+  
   /**
    * Send a message to a connection topic
    * @param {string} connectionId The connection topic ID
@@ -1111,6 +1033,76 @@ export class HCS10AgentHandler extends EventEmitter {
       throw error;
     }
   }
+
+  /**
+   * Send a debug message to the outbound topic
+   * This is useful for debugging when connections aren't working
+   */
+  async sendDebugMessage() {
+    try {
+      if (!this.outboundTopicId || !this.client) {
+        console.log('⚠️ Cannot send debug message - outbound topic or client not initialized');
+        return;
+      }
+
+      // Get connection information
+      const activeConnections = this.connectionsManager?.getActiveConnections() || [];
+      const pendingConnections = this.connectionsManager?.getPendingRequests() || [];
+      const needsConfirmation = this.connectionsManager?.getConnectionsNeedingConfirmation() || [];
+
+      // Create debug message
+      const debugMessage = {
+        p: 'hcs-10',
+        op: 'debug_info',
+        agent_id: this.agentId,
+        timestamp: new Date().toISOString(),
+        connections: {
+          active: activeConnections.length,
+          pending: pendingConnections.length, 
+          needs_confirmation: needsConfirmation.length,
+          total: this.connections.size
+        },
+        active_connection_ids: activeConnections.map(c => c.connectionTopicId),
+        message_stats: {
+          count: this.messageCount,
+          last_check: new Date().toISOString()
+        }
+      };
+
+      console.log('🔍 Sending debug message to outbound topic:', JSON.stringify(debugMessage, null, 2));
+      
+      // Send to outbound topic
+      const result = await this.client.sendMessage(this.outboundTopicId, JSON.stringify(debugMessage));
+      console.log('✅ Debug message sent successfully:', result);
+      
+      return result;
+    } catch (error) {
+      console.error('❌ Error sending debug message:', error);
+    }
+  }
+
+  /**
+   * Log connection statistics
+   */
+  logConnectionStats() {
+    if (!this.connectionsManager) return;
+    
+    try {
+      const allConnections = this.connectionsManager.getAllConnections();
+      const active = this.connectionsManager.getActiveConnections();
+      const pending = this.connectionsManager.getPendingRequests();
+      const needsConfirmation = this.connectionsManager.getConnectionsNeedingConfirmation();
+      
+      console.log('=============== CONNECTION STATS ===============');
+      console.log(`Total connections: ${allConnections.length}`);
+      console.log(`Active connections: ${active.length}`);
+      console.log(`Pending requests: ${pending.length}`);
+      console.log(`Needs confirmation: ${needsConfirmation.length}`);
+      console.log('===============================================');
+    } catch (error) {
+      console.error('❌ Error logging connection stats:', error);
+    }
+  }
 }
 
 /**
@@ -1124,7 +1116,7 @@ async function main() {
     const handler = new HCS10AgentHandler();
     
     // Initialize the handler
-    await handler.initialize();
+    await handler.initialize(process.env.OPERATOR_KEY, process.env.NEXT_PUBLIC_HCS_AGENT_ID, process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC, process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC);
     
     // Start monitoring for messages
     await handler.startMonitoring();
