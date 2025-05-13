@@ -3,8 +3,8 @@ services:
     name: lynxify-hcs10-agent
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build-server
-    startCommand: npx ts-node --compiler-options '{"module":"commonjs"}' src/app/scripts/unified-server.ts
+    buildCommand: npm install && npm run build
+    startCommand: node scripts/restart-agent.mjs
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
@@ -12,9 +12,7 @@ services:
       - key: NODE_VERSION
         value: 18.x
       - key: PORT
-        value: 3000
-      - key: WS_PORT
-        value: 3000
+        value: "3000"
       - key: NEXT_PUBLIC_OPERATOR_ID
         sync: false
       - key: OPERATOR_KEY
@@ -29,5 +27,11 @@ services:
         value: 0.0.5966035
       - key: NEXT_PUBLIC_HCS_REGISTRY_TOPIC
         value: 0.0.5949504
-      - key: LOG_EVENTS
+      - key: DEBOUNCE_MS
+        value: "1000"
+      - key: AUTO_APPROVED_ACCOUNTS
+        value: 0.0.4340026,0.0.5527744
+      - key: ENABLE_CONNECTION_APPROVAL_API
+        value: "false"
+      - key: DEBUG
         value: "true" 
