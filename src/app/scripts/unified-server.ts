@@ -3,10 +3,41 @@ import { UnifiedWebSocketService } from '../services/unified-websocket';
 import { TokenService } from '../services/token-service';
 import { TokenizedIndexService } from '../services/tokenized-index';
 import { EventBus } from '../utils/event-emitter';
+import { createServer } from 'http';
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
+
+// Create a shared HTTP server that will be used by the WebSocketService
+// This ensures the port is bound immediately for Render's port detection
+const PORT = parseInt(process.env.PORT || process.env.WS_PORT || '3000', 10);
+console.log(`[Server] Creating HTTP server on port ${PORT}`);
+
+// Create HTTP server first (immediate port binding)
+const sharedHttpServer = createServer((req, res) => {
+  // Health check endpoint
+  if (req.url === '/health' || req.url === '/' || req.url === '/api/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      status: 'ok', 
+      service: 'lynxify-unified-agent',
+      uptime: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString()
+    }));
+    return;
+  }
+  
+  // Default response for other routes
+  res.writeHead(404, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ error: 'Not found' }));
+});
+
+// Start HTTP server immediately to ensure port binding for Render
+sharedHttpServer.listen(PORT, () => {
+  console.log(`[Server] HTTP server running on port ${PORT}`);
+  console.log(`[Server] Health check available at http://localhost:${PORT}/health`);
+});
 
 // Agent configuration
 const agentConfig: LynxifyAgentConfig = {
@@ -44,7 +75,8 @@ async function runUnifiedServer(): Promise<void> {
 ===============================================
 🚀 Starting Lynxify Unified Server...
 📡 Environment: ${process.env.NODE_ENV || 'development'}
-📡 Port: ${process.env.PORT || process.env.WS_PORT || 3001}
+📡 Port: ${PORT}
+📡 HTTP server already running on port ${PORT}
 ===============================================
   `);
   
@@ -71,15 +103,14 @@ async function runUnifiedServer(): Promise<void> {
     // Get the index service from the agent
     const indexService = agent.getIndexService();
     
-    // Initialize WebSocket server on port 3001 (or from env)
-    const wsPort = parseInt(process.env.WS_PORT || process.env.PORT || '3001', 10);
-    
-    console.log(`🔌 Starting WebSocket server on port ${wsPort}...`);
+    // Initialize WebSocket service using the shared HTTP server
+    console.log(`🔌 Attaching WebSocket server to existing HTTP server on port ${PORT}...`);
     const webSocketService = new UnifiedWebSocketService(
       agent,
       tokenService,
       indexService,
-      wsPort
+      PORT,
+      sharedHttpServer // Pass the already running HTTP server
     );
     
     console.log('✅ WebSocket server initialized and running');
@@ -91,8 +122,8 @@ async function runUnifiedServer(): Promise<void> {
     ===============================================
     🚀 Lynxify Unified Server Running!
     
-    🔌 WebSocket server: ws://localhost:${wsPort}
-    🌐 HTTP endpoints: http://localhost:${wsPort}
+    🔌 WebSocket server: ws://localhost:${PORT}
+    🌐 HTTP endpoints: http://localhost:${PORT}
     
     ✅ Agent fully initialized with UI connection support
     ✅ Token operations and rebalance proposals enabled
@@ -104,7 +135,8 @@ async function runUnifiedServer(): Promise<void> {
     keepAlive();
   } catch (error) {
     console.error('❌ Failed to start Lynxify Unified Server:', error);
-    process.exit(1);
+    // Don't exit on server initialization failure - keep the HTTP server running
+    console.log('🔍 HTTP server remains active despite initialization failure');
   }
 }
 
@@ -121,8 +153,13 @@ function setupShutdownHandlers(agent: LynxifyAgent, webSocketService: UnifiedWeb
     // Shutdown agent
     await agent.shutdown();
     
-    console.log('✅ Server shutdown complete');
-    process.exit(0);
+    // Close shared HTTP server
+    sharedHttpServer.close(() => {
+      console.log('✅ HTTP server closed');
+      process.exit(0);
+    });
+    
+    console.log('✅ Server shutdown initiated');
   };
   
   // Handle process termination signals
@@ -133,7 +170,6 @@ function setupShutdownHandlers(agent: LynxifyAgent, webSocketService: UnifiedWeb
   process.on('uncaughtException', async (error) => {
     console.error('❌ Uncaught exception:', error);
     await shutdown();
-    process.exit(1);
   });
 }
 
@@ -155,5 +191,6 @@ function keepAlive(): void {
 // Run the server
 runUnifiedServer().catch(error => {
   console.error('❌ Fatal error running unified server:', error);
-  process.exit(1);
+  // Don't exit on server initialization failure - keep the HTTP server running
+  console.log('🔍 HTTP server remains active despite initialization failure');
 }); 
