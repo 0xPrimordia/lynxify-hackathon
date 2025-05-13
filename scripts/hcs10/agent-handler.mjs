@@ -369,15 +369,14 @@ export class HCS10AgentHandler extends EventEmitter {
         throw new Error('Agent handler not initialized');
       }
       
-      // Set up polling interval with longer time between polls (20 seconds)
-      // This reduces server load significantly while still being responsive
-      const pollingIntervalMs = 20000; // 20 seconds
+      // Set up polling interval with much longer time between polls
+      // This reduces server load dramatically while still being responsive enough
+      const pollingIntervalMs = 60000; // 60 seconds (1 minute)
       console.log(`🔄 Starting message polling with ${pollingIntervalMs/1000}s interval...`);
       
-      // Check immediately on startup
-      await this.checkInboundTopic();
+      // Do NOT check immediately on startup - let the server stabilize
       
-      // Then set up regular polling
+      // Set up regular polling with a much longer interval
       this.monitorInterval = setInterval(async () => {
         await this.checkInboundTopic();
       }, pollingIntervalMs);
@@ -391,13 +390,15 @@ export class HCS10AgentHandler extends EventEmitter {
         // Update pending connections file with current state
         await this.updatePendingConnectionsFile();
         
-        // Check pending connections immediately
-        await this.checkPendingConnections();
+        // Check pending connections with a delay
+        setTimeout(async () => {
+          await this.checkPendingConnections();
+        }, 10000); // 10 second initial delay
         
-        // Set up interval for checking pending connections - less frequent (30 seconds)
+        // Set up interval for checking pending connections - much less frequent
         setInterval(async () => {
           await this.checkPendingConnections();
-        }, 30000); // Check every 30 seconds
+        }, 120000); // Check every 2 minutes
       }
       
       return true;
@@ -438,24 +439,15 @@ export class HCS10AgentHandler extends EventEmitter {
       const connectionsList = this.connectionsManager?.getActiveConnections() || [];
       console.log(`🔍 Active connections: ${connectionsList.length}`);
       
-      // IMPORTANT: Limit the number of connections we log to avoid spamming logs
+      // IMPORTANT: Don't log all connection IDs - just count them
       if (connectionsList.length > 0) {
-        const connectionsToLog = connectionsList.length > 20 ? 
-          [...connectionsList.slice(0, 10), '...', ...connectionsList.slice(-10)] : 
-          connectionsList;
-          
-        console.log('🔍 Connection topics to check:', connectionsToLog.map(c => c.connectionTopicId).join(', '));
+        console.log(`🔍 Found ${connectionsList.length} active connections`);
       }
       
-      // More aggressive message checking - try multiple approaches
-      
-      // 1. First try the standard GetMessageStream approach
+      // ONLY use the standard approach for messages - no connection-by-connection checking
       try {
-        console.log('🔍 Attempting to get messages using standard getMessageStream...');
+        console.log('🔍 Checking for new messages using standard getMessageStream...');
         const messages = await this.client.getMessageStream(this.inboundTopicId);
-        
-        console.log(`🔍 DEBUG: Raw message response type: ${typeof messages}`);
-        console.log(`🔍 DEBUG: Raw message count: ${messages?.length || 'undefined'}`);
         
         if (messages && messages.length > 0) {
           console.log(`📬 Found ${messages.length} messages on inbound topic`);
@@ -471,64 +463,13 @@ export class HCS10AgentHandler extends EventEmitter {
             await this.processInboundMessage(message);
           }
         } else {
-          console.log('ℹ️ No new messages found with standard approach');
+          console.log('ℹ️ No new messages found');
         }
       } catch (standardError) {
-        console.error(`⚠️ Error with standard message retrieval:`, standardError);
+        console.error(`⚠️ Error with message retrieval:`, standardError);
       }
       
-      // 2. Now check active connections for messages - LIMIT TO 5 MAX TO AVOID OVERWHELMING THE SERVER
-      console.log('🔍 Checking active connections for messages...');
-      const activeConnections = this.connectionsManager?.getActiveConnections() || [];
-      
-      if (activeConnections.length > 0) {
-        console.log(`📬 Found ${activeConnections.length} active connections to check for messages`);
-        
-        // IMPORTANT: Limit to 5 at a time to prevent overwhelming the server
-        const samplesToCheck = Math.min(5, activeConnections.length);
-        
-        // Rotate which connections we check each time
-        const startIndex = this.lastCheckedConnectionIndex || 0;
-        this.lastCheckedConnectionIndex = (startIndex + samplesToCheck) % activeConnections.length;
-        
-        // Get a slice of connections to check, wrapping around if needed
-        let connectionsToCheck = [];
-        if (startIndex + samplesToCheck <= activeConnections.length) {
-          connectionsToCheck = activeConnections.slice(startIndex, startIndex + samplesToCheck);
-        } else {
-          // Handle wraparound case
-          const firstPart = activeConnections.slice(startIndex);
-          const secondPart = activeConnections.slice(0, samplesToCheck - firstPart.length);
-          connectionsToCheck = [...firstPart, ...secondPart];
-        }
-        
-        console.log(`🔍 Checking ${connectionsToCheck.length} connections out of ${activeConnections.length} total (rotating)`);
-        
-        for (const connection of connectionsToCheck) {
-          try {
-            console.log(`🔍 Checking for messages on connection ${connection.connectionTopicId}`);
-            
-            // Try to get messages on this connection topic
-            const connectionMessages = await this.client.getMessageStream(connection.connectionTopicId);
-            
-            if (connectionMessages && connectionMessages.length > 0) {
-              console.log(`📬 Found ${connectionMessages.length} messages on connection ${connection.connectionTopicId}`);
-              
-              // Process each message
-              for (const message of connectionMessages) {
-                await this.processInboundMessage({
-                  ...message,
-                  connectionTopicId: connection.connectionTopicId // Ensure we have connection ID
-                });
-              }
-            }
-          } catch (connError) {
-            console.error(`⚠️ Error checking messages for connection ${connection.connectionTopicId}:`, connError);
-          }
-        }
-      }
-      
-      // 3. Now check the outbound topic as well (some clients send here by mistake)
+      // Check the outbound topic once per poll
       if (this.outboundTopicId) {
         try {
           console.log(`🔍 Checking outbound topic ${this.outboundTopicId} for misrouted messages...`);
@@ -560,64 +501,21 @@ export class HCS10AgentHandler extends EventEmitter {
       // Get pending connections from ConnectionsManager
       await this.connectionsManager.fetchConnectionData(this.agentId);
       
-      // Log all connections for debugging
+      // Log minimal connection information
       const allConnections = this.connectionsManager.getAllConnections();
-      console.log(`🔍 DEBUG: Total connections in ConnectionsManager: ${allConnections.length}`);
-      console.log(`🔍 DEBUG: Connection detail sample:`, 
-        allConnections.length > 0 
-          ? JSON.stringify(allConnections[0], null, 2) 
-          : 'No connections'
-      );
+      console.log(`🔍 Total connections in ConnectionsManager: ${allConnections.length}`);
       
       // Standard pending requests (isPending = true)
       const pendingRequests = this.connectionsManager.getPendingRequests();
       
-      // IMPORTANT: Also check for connections that need confirmation (status = 'needs_confirmation')
-      // This is the key fix - we need to handle these connections too
+      // Check for connections that need confirmation (status = 'needs_confirmation')
       const needsConfirmationConnections = this.connectionsManager.getConnectionsNeedingConfirmation();
-      console.log(`🔍 DEBUG: Connections needing confirmation: ${needsConfirmationConnections.length}`);
+      console.log(`🔍 Connections needing confirmation: ${needsConfirmationConnections.length}`);
       
       // Combine both types for processing
-      const allPendingConnections = [...pendingRequests];
+      const allPendingConnections = [...pendingRequests, ...needsConfirmationConnections];
       
-      // Add needs_confirmation connections if they're not already in the pending list
-      for (const conn of needsConfirmationConnections) {
-        const alreadyInPending = allPendingConnections.some(p => 
-          p.connectionTopicId === conn.connectionTopicId
-        );
-        
-        if (!alreadyInPending) {
-          console.log(`🔍 DEBUG: Adding needs_confirmation connection to pending list: ${conn.connectionTopicId}`);
-          allPendingConnections.push(conn);
-        }
-      }
-      
-      // More detailed logging about pending connections
-      console.log(`🔍 DEBUG: ConnectionsManager.getPendingRequests() returned ${pendingRequests.length} connections`);
-      console.log(`🔍 DEBUG: Total pending connections (including needs_confirmation): ${allPendingConnections.length}`);
-      
-      if (pendingRequests.length > 0) {
-        console.log('🔍 DEBUG: Pending request sample:', JSON.stringify(pendingRequests[0], null, 2));
-      }
-      
-      if (needsConfirmationConnections.length > 0) {
-        console.log('🔍 DEBUG: Needs confirmation sample:', JSON.stringify(needsConfirmationConnections[0], null, 2));
-      }
-      
-      // Log how the pending status is determined
-      console.log(`🔍 DEBUG: Raw connections data with status and isPending flags:`);
-      allConnections.forEach(conn => {
-        console.log(` Connection ${conn.connectionTopicId || 'unknown'}: status=${conn.status}, isPending=${!!conn.isPending}, needsConfirmation=${!!conn.needsConfirmation}`);
-      });
-      
-      // Log the active connections for comparison
-      const activeConnections = this.connectionsManager.getActiveConnections();
-      console.log(`🔍 DEBUG: ConnectionsManager.getActiveConnections() returned ${activeConnections.length} connections`);
-      if (activeConnections.length > 0) {
-        console.log('🔍 DEBUG: Active connection sample:', JSON.stringify(activeConnections[0], null, 2));
-      }
-      
-      // Continue with processing all pending connections including those needing confirmation
+      // Simple log of connection counts
       console.log(`{ module: 'ConnectionsManager' } Total connections in map: ${allConnections.length}`);
       console.log(`{ module: 'ConnectionsManager' } Standard pending connections: ${pendingRequests.length}`);
       console.log(`{ module: 'ConnectionsManager' } Connections needing confirmation: ${needsConfirmationConnections.length}`);
@@ -629,34 +527,30 @@ export class HCS10AgentHandler extends EventEmitter {
         
         // Process each pending connection
         for (const conn of allPendingConnections) {
-          console.log(`🔍 DEBUG: Processing connection: ${conn.connectionTopicId}, status=${conn.status}`);
+          // Only log the connection ID to reduce log spam
+          console.log(`🔄 Processing connection: ${conn.connectionTopicId}`);
           
-          // Important: Process connections with different handling based on status
+          // Process based on status
           if (conn.status === 'needs_confirmation') {
-            // This is the key part from the example - handle needs_confirmation connections
-            console.log(`🔄 Processing connection needing confirmation: ${conn.connectionTopicId}`);
             await this.handleNeedsConfirmationRequest(conn);
           } else if (conn.isPending) {
-            // Normal pending connection handling
-            console.log(`🔄 Processing standard pending connection: ${conn.connectionTopicId}`);
             await this.handlePendingConnectionRequest(conn);
           }
         }
-        
-        // Write all pending connections to file for API
-        console.log(`ℹ️ Writing ${allPendingConnections.length} pending connection requests to file`);
-        await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify(allPendingConnections, null, 2));
       } else {
         console.log(`{ module: 'ConnectionsManager' } No pending connections found`);
-        console.log(`ℹ️ No pending connection requests, clearing file`);
-        await fs.writeFile(PENDING_CONNECTIONS_FILE, JSON.stringify([], null, 2));
       }
       
-      // Check if there's a command to approve a connection
-      await this.checkApprovalCommands();
+      // Update pending connections file
+      if (ENABLE_APPROVAL_API) {
+        await this.updatePendingConnectionsFile();
+      }
       
+      // Update status file
+      await this.updateStatusFile();
     } catch (error) {
       console.error('❌ Error checking pending connections:', error);
+      this.emit('error', error);
     }
   }
   
