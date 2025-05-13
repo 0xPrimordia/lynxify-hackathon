@@ -1,101 +1,178 @@
 #!/usr/bin/env node
 
-import { spawn } from 'child_process';
+import { exec, spawn } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
 
-const MIN_UPTIME_MS = 10000; // 10 seconds
-const MAX_RESTARTS = 5;
+// Get the directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Global variables
+// Constants
+const AGENT_SCRIPT = path.join(__dirname, 'hcs10', 'agent-handler.mjs');
+const MAX_RESTART_COUNT = 10;
+const RESTART_THRESHOLD = 1000 * 60 * 60; // 1 hour
+const CHECK_INTERVAL = 1000 * 60 * 5; // Check every 5 minutes
+const INACTIVITY_THRESHOLD = 1000 * 60 * 15; // 15 minutes
+
+// Validate required environment variables
+function validateEnvironment() {
+  const requiredVars = [
+    'OPERATOR_KEY',
+    'NEXT_PUBLIC_HCS_AGENT_ID',
+    'NEXT_PUBLIC_HCS_INBOUND_TOPIC',
+    'NEXT_PUBLIC_HCS_OUTBOUND_TOPIC'
+  ];
+  
+  const missing = requiredVars.filter(varName => !process.env[varName]);
+  
+  if (missing.length > 0) {
+    console.error('❌ Missing required environment variables:', missing.join(', '));
+    process.exit(1);
+  }
+  
+  console.log('✅ Environment variables validated');
+}
+
+// State
 let agentProcess = null;
-let startTime = null;
 let restartCount = 0;
-let isShuttingDown = false;
+let lastRestartTime = Date.now();
+let lastActivityTime = Date.now();
+let checkIntervalId = null;
 
 /**
  * Start the agent process
  */
 async function startAgent() {
-  try {
-    console.log('🚀 Starting HCS10 agent process...');
-    
-    // Clear out any old connections.json file
+  // Validate environment first
+  validateEnvironment();
+  
+  console.log('🚀 Starting HCS10 agent process...');
+  
+  // Kill any existing process
+  if (agentProcess) {
     try {
-      await fs.writeFile(path.join(process.cwd(), '.connections.json'), '[]');
-    } catch (e) {
+      process.kill(agentProcess.pid, 'SIGTERM');
+      console.log('⚠️ Killed existing agent process');
+    } catch (error) {
       // Ignore errors
     }
-    
-    // Start the process
-    agentProcess = spawn('node', ['scripts/hcs10/agent-handler.mjs'], {
-      env: process.env,
-      stdio: 'inherit'
-    });
-    
-    startTime = Date.now();
-    
-    agentProcess.on('exit', (code, signal) => {
-      const uptime = Date.now() - startTime;
-      console.log(`⚠️ Agent process exited with code ${code} after ${uptime/1000} seconds`);
-      
-      if (isShuttingDown) return;
-      
-      // If the process crashed too quickly, increment restart count
-      if (uptime < MIN_UPTIME_MS) {
-        restartCount++;
-        console.log(`⚠️ Process crashed quickly. Restart count: ${restartCount}/${MAX_RESTARTS}`);
-        
-        if (restartCount >= MAX_RESTARTS) {
-          console.error('❌ Too many quick restarts. Exiting.');
-          process.exit(1);
-        }
-      } else {
-        // If the process ran for a while, reset restart count
-        restartCount = 0;
-      }
-      
-      // Restart the process after a delay
-      console.log('🔄 Restarting agent in 2 seconds...');
-      setTimeout(startAgent, 2000);
-    });
-    
-    console.log('✅ Agent process started');
-  } catch (error) {
-    console.error('❌ Error starting agent process:', error);
-    
-    if (restartCount < MAX_RESTARTS) {
-      restartCount++;
-      console.log(`🔄 Trying again in 5 seconds (attempt ${restartCount}/${MAX_RESTARTS})...`);
-      setTimeout(startAgent, 5000);
-    } else {
-      console.error('❌ Too many restart attempts. Exiting.');
-      process.exit(1);
-    }
   }
+  
+  // Start the agent process with explicit environment variables
+  const env = {
+    ...process.env,
+    OPERATOR_KEY: process.env.OPERATOR_KEY,
+    NEXT_PUBLIC_HCS_AGENT_ID: process.env.NEXT_PUBLIC_HCS_AGENT_ID,
+    NEXT_PUBLIC_HCS_INBOUND_TOPIC: process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC,
+    NEXT_PUBLIC_HCS_OUTBOUND_TOPIC: process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC
+  };
+  
+  // Start the agent process
+  agentProcess = spawn('node', [AGENT_SCRIPT], {
+    stdio: 'inherit',
+    detached: false,
+    env
+  });
+  
+  // Set the last activity time
+  lastActivityTime = Date.now();
+  
+  // Track events
+  agentProcess.on('error', (error) => {
+    console.error('❌ Agent process error:', error);
+    restartAgent();
+  });
+  
+  agentProcess.on('exit', (code, signal) => {
+    console.log(`ℹ️ Agent process exited with code ${code} and signal ${signal}`);
+    
+    // Only restart if not killed intentionally
+    if (signal !== 'SIGTERM') {
+      restartAgent();
+    }
+  });
+  
+  console.log('✅ Agent process started');
+  
+  // Set up periodic health check
+  if (checkIntervalId) {
+    clearInterval(checkIntervalId);
+  }
+  
+  checkIntervalId = setInterval(checkAgentHealth, CHECK_INTERVAL);
 }
 
 /**
- * Handle shutdown
+ * Restart the agent process
  */
-function shutdown() {
-  console.log('🛑 Shutting down...');
-  isShuttingDown = true;
+async function restartAgent() {
+  // Check if we've restarted too many times in a short period
+  const now = Date.now();
   
-  if (agentProcess) {
-    agentProcess.kill();
+  if (now - lastRestartTime < RESTART_THRESHOLD) {
+    restartCount++;
+    
+    if (restartCount > MAX_RESTART_COUNT) {
+      console.error('❌ Too many restarts in a short period, exiting');
+      process.exit(1);
+    }
+  } else {
+    // Reset restart count
+    restartCount = 0;
   }
   
-  process.exit(0);
+  lastRestartTime = now;
+  
+  // Start the agent
+  await startAgent();
 }
 
-// Handle signals for clean shutdown
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
+/**
+ * Check agent health
+ */
+async function checkAgentHealth() {
+  try {
+    // Check if agent process is running
+    if (!agentProcess || agentProcess.exitCode !== null) {
+      console.log('⚠️ Agent process not running, restarting...');
+      await restartAgent();
+      return;
+    }
+    
+    // Check for agent activity by monitoring agent status file
+    try {
+      const statusFile = path.join(process.cwd(), '.agent_status.json');
+      const stats = await fs.stat(statusFile);
+      
+      // Update last activity time if status file was updated
+      if (stats.mtimeMs > lastActivityTime) {
+        lastActivityTime = stats.mtimeMs;
+      }
+      
+      // Check for inactivity
+      const now = Date.now();
+      if (now - lastActivityTime > INACTIVITY_THRESHOLD) {
+        console.log('⚠️ Agent inactive for too long, restarting...');
+        console.log(`   Last activity: ${new Date(lastActivityTime).toISOString()}`);
+        console.log(`   Current time: ${new Date().toISOString()}`);
+        console.log(`   Inactivity period: ${Math.round((now - lastActivityTime) / 1000 / 60)} minutes`);
+        
+        await restartAgent();
+      }
+    } catch (error) {
+      // File might not exist yet, ignore
+    }
+  } catch (error) {
+    console.error('❌ Error checking agent health:', error);
+  }
+}
 
 // Start the agent
-startAgent(); 
+await startAgent(); 

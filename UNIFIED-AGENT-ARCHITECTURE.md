@@ -58,95 +58,490 @@ The unified architecture implements a structured approach to message handling ac
   - Agent Information Query
   - Status Query
   - Capability Query
-- **Notification Messages**: Messages for broadcasting events
+- **Notification Messages**: Messages for broadcasting updates
   - Status Update
   - Event Notification
 
-#### Tokenized Index Messages
-- **Rebalance Messages**: Messages related to index rebalancing
-  - Rebalance Proposal
-  - Rebalance Approval
-  - Rebalance Execution
-- **Price Update Messages**: Messages with token price updates
-  - Price Feed Update
-  - Price Alert
-- **Risk Assessment Messages**: Messages related to risk evaluation
-  - Risk Alert
-  - Risk Update
-- **Governance Messages**: Messages for governance decisions
-  - Proposal Creation
-  - Proposal Vote
-  - Proposal Execution
+All messages follow the standard HCS-10 protocol format:
+```json
+{
+  "p": "hcs-10",
+  "op": "<operation_type>",
+  "operator_id": "<topic_id>@<account_id>",
+  "data": "<message_data>",
+  "m": "<optional_memo>"
+}
+```
 
-### 4.2 Message Routing and Processing
+### 4.2 Message Processing Pipeline
 
-Messages flow through the system following this pattern:
+The architecture implements a robust message processing pipeline:
 
-1. **Reception**: Messages are received via HCS topic subscriptions through the `SharedHederaService`
-2. **Decoding**: Raw messages are decoded and validated by the `HCS10ProtocolService`
-3. **Classification**: Messages are classified by type and purpose
-4. **Routing**: The `LynxifyAgent` routes messages to the appropriate service:
-   - Protocol messages → `HCS10ProtocolService`
-   - Business logic messages → `TokenizedIndexService`
-5. **Processing**: The respective service processes the message
-6. **Response Generation**: If required, a response message is generated
-7. **Encoding**: Response is encoded by the `HCS10ProtocolService`
-8. **Transmission**: Response is sent via the `SharedHederaService`
+1. **Message Reception**: Messages are received from the HCS topics via Mirror Node subscriptions
+2. **Message Parsing**: Raw message data is parsed and validated against the HCS-10 schema
+3. **Operation Classification**: Messages are classified based on their operation type
+4. **Specialized Handling**: Each message type is routed to the appropriate handler
+5. **State Updates**: Message processing results in state updates in the ConnectionsManager
+6. **Response Generation**: Appropriate responses are generated and sent when needed
 
-### 4.3 Error Handling
+### 4.3 Connections Management
 
-The message handling system implements several layers of error handling:
+The architecture uses the `ConnectionsManager` class from the standards-sdk to handle all connection-related operations:
 
-1. **Transport Errors**: Network and Hedera connection issues are handled by the `SharedHederaService`
-2. **Parsing Errors**: Message format and validation errors are caught in the `HCS10ProtocolService`
-3. **Processing Errors**: Business logic errors are handled by the respective service
-4. **Response Errors**: Failed operations return structured error responses
+#### Key Responsibilities
+- Tracking connection states (pending, established, closed)
+- Managing connection requests and responses
+- Preventing duplicate connection establishments
+- Providing access to active and pending connections
+- Updating connection status based on message processing
 
-All errors are:
-- Logged with appropriate context
-- Propagated through the EventBus when relevant
-- Included in response messages when applicable
-- Tracked for monitoring and retry mechanisms
+#### Connection States
+- **Pending**: Connection request sent, waiting for confirmation
+- **Needs Confirmation**: Connection request received, waiting for agent approval
+- **Established**: Connection confirmed and active
+- **Closed**: Connection explicitly or implicitly terminated
 
-### 4.4 Message Persistence
+### 4.4 Implementation Details
 
-Messages are persisted at different levels:
+#### Initializing the ConnectionsManager
+```typescript
+import { ConnectionsManager } from '@hashgraphonline/standards-sdk';
 
-1. **Consensus Storage**: All messages are naturally persisted on the Hedera network
-2. **Local Cache**: Recent messages are cached locally for performance
-3. **State Storage**: Critical state derived from messages is persisted locally
-4. **Recovery Mechanism**: The system can recover state from the consensus record if local storage is lost
+// Initialize within the agent
+this.connectionsManager = new ConnectionsManager({
+  client: this.client, // HCS10Client instance
+  logLevel: 'info',
+  prettyPrint: true
+});
 
-### 4.5 Integration with EventBus
+// Set the agent's account and topic information
+await this.connectionsManager.setAgentInfo({
+  accountId: this.agentId,
+  inboundTopicId: this.inboundTopicId,
+  outboundTopicId: this.outboundTopicId
+});
 
-The message handling system is tightly integrated with the EventBus:
+// Load existing connections
+await this.connectionsManager.fetchConnectionData(this.agentId);
+```
 
-1. Messages received trigger events on the EventBus
-2. Services listen for specific event types
-3. Event handlers process messages and trigger business logic
-4. Results are published back as events
-5. Response generation is triggered by events
+#### Processing Messages
+```typescript
+// Process incoming messages
+const processMessages = async (messages) => {
+  // Handle connection messages via ConnectionsManager
+  this.connectionsManager.processInboundMessages(messages);
+  
+  // Process connection requests that need confirmation
+  await this.processConnectionRequests();
+  
+  // Process standard messages for established connections
+  for (const message of messages) {
+    if (isStandardMessage(message)) {
+      await this.processStandardMessage(message);
+    }
+  }
+};
+```
 
-This event-driven architecture ensures loose coupling between components while maintaining a consistent message flow.
+#### Handling Connection Requests
+```typescript
+// Example function to handle connection requests
+const handleConnectionRequest = async () => {
+  // Get connections needing confirmation
+  const pendingRequests = this.connectionsManager.getPendingRequests();
+  
+  for (const request of pendingRequests) {
+    // Approve the connection (or implement custom approval logic)
+    const connectionTopic = await this.connectionsManager.acceptConnectionRequest({
+      requestId: request.id,
+      memo: 'Connection accepted'
+    });
+    
+    // Log the new connection
+    console.log(`New connection established: ${connectionTopic}`);
+  }
+};
+```
 
-### 4.6 WebSocket Interface
+### 4.5 Chat Message Handling
 
-The WebSocket server provides a real-time interface to the agent's message system:
+The standard examples handle chat messages in the following way:
 
-1. **Client Connections**: WebSocket clients connect to receive real-time updates
-2. **Message Publication**: EventBus events are published to WebSocket clients
-3. **Command Reception**: Clients can send commands to control the agent
-4. **UI Integration**: Enables a reactive UI for monitoring and controlling the agent
+#### 1. Extracting Message Content
+```typescript
+// Extract content from a message
+const extractMessageContent = (message) => {
+  // If message has a data field as string
+  if (typeof message.data === 'string') {
+    // Check if it's JSON
+    try {
+      const parsedData = JSON.parse(message.data);
+      return parsedData.text || parsedData.message || parsedData.content;
+    } catch (e) {
+      // If not JSON, use directly as content
+      return message.data;
+    }
+  }
+  
+  // If message has a text field
+  if (message.text) {
+    return message.text;
+  }
+  
+  // If data is an object
+  if (typeof message.data === 'object') {
+    return message.data.text || message.data.message || message.data.content;
+  }
+  
+  return null;
+};
+```
 
-### 4.7 Deployment Considerations
+#### 2. Processing Chat Message
+```typescript
+// Process standard chat message
+const processStandardMessage = async (message) => {
+  // Extract the content
+  const content = extractMessageContent(message);
+  if (!content) return;
+  
+  // Generate a response (could involve AI, logic, etc.)
+  const responseText = await generateResponse(content);
+  
+  // Send response in proper HCS-10 format
+  await sendResponse(message.origin_topic_id, responseText);
+};
+```
 
-When deploying the agent, several message handling considerations apply:
+#### 3. Sending Response
+```typescript
+// Send a response to a chat message
+const sendResponse = async (topicId, text) => {
+  // Format as proper HCS-10 message
+  const message = {
+    p: 'hcs-10',
+    op: 'message',
+    text: text,
+    timestamp: new Date().toISOString()
+  };
+  
+  // Send through the HCS client
+  await this.client.sendMessage(topicId, JSON.stringify(message));
+};
+```
 
-1. **Port Binding**: For proper operation, especially in cloud environments like Render, HTTP and WebSocket servers must bind to `0.0.0.0` (all interfaces) rather than just localhost
-2. **Topic Subscriptions**: Ensure proper subscription initialization and error handling
-3. **Connection Resilience**: Implement reconnection logic for network disruptions
-4. **Message Backlog**: Handle potential message backlogs after reconnection
-5. **Health Checks**: Expose health endpoints that check message system status
+#### 4. Message Processing Flow
+- Connection messages are processed by ConnectionsManager
+- Chat messages are processed only AFTER connection handling is complete
+- All message sending follows the HCS-10 protocol format
+- Message context is tracked by connection topic ID, not by sender
+
+### 4.6 Best Practices from Standard Examples
+
+The standards-expert-agent example demonstrates these key practices:
+
+1. **Always use ConnectionsManager for connections**
+   - Never implement your own connection tracking
+   - Let ConnectionsManager handle all connection states
+   
+2. **Follow proper message sequence**
+   - Process all messages through ConnectionsManager first
+   - Then handle specialized message types
+   
+3. **Format all messages according to protocol**
+   - Include required fields: `p`, `op`
+   - Use standard operation types
+   
+4. **Track context by connection topic**
+   - Maintain state for each connection
+   - Send responses to correct connection topic
+   
+5. **Handle error cases gracefully**
+   - Validate message format before processing
+   - Provide fallbacks for missing data
+
+### 4.7 Error Handling and Retries
+
+The architecture implements robust error handling at multiple levels:
+
+1. **Message-Level Validation**
+   - Schema validation for all incoming messages
+   - Proper operator_id validation
+   - Timestamp validation to prevent replay attacks
+
+2. **Connection-Level Error Handling**
+   - Handling connection conflicts
+   - Managing duplicate connection requests
+   - Detecting connection timeouts
+
+3. **Network-Level Error Management**
+   - Transient connectivity issues
+   - Mirror node subscription recovery
+   - Transaction submission retries
+
+4. **Classification-Based Handling**
+   - Critical errors (security-related)
+   - Recoverable errors (retry-eligible)
+   - Warning-level issues (non-fatal)
+
+### 4.8 Port Binding Implementation
+
+For Render and other cloud deployment platforms, proper port binding is critical. The implementation:
+
+1. **Explicitly binds HTTP server to `0.0.0.0`** (required by Render)
+2. **Uses the `PORT` environment variable** provided by the platform
+3. **Creates a basic HTTP server early** in the initialization process
+4. **Provides health check endpoints** on the bound port
+5. **Shares the HTTP server instance** with the WebSocket service
+
+Example implementation:
+```typescript
+// In unified-server.ts
+const PORT = parseInt(process.env.PORT || '3000', 10);
+console.log(`[Server] Creating HTTP server on port ${PORT} bound to 0.0.0.0`);
+
+// Create HTTP server first (immediate port binding)
+const httpServer = createServer((req, res) => {
+  // Basic routing for health checks
+  if (req.url === '/health' || req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }));
+    return;
+  }
+  
+  res.writeHead(404);
+  res.end();
+});
+
+// Explicitly bind to 0.0.0.0 to make the port visible to Render's port scanner
+httpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`[Server] HTTP server running at http://0.0.0.0:${PORT}`);
+});
+
+// Pass the HTTP server to the WebSocketService
+const webSocketService = new UnifiedWebSocketService(
+  eventBus,
+  lynxifyAgent,
+  tokenService,
+  tokenizedIndexService,
+  httpServer // Pass the HTTP server instance
+);
+```
+
+### 4.9 Render Deployment Requirements
+
+When deploying to Render, several critical factors must be considered for successful port binding:
+
+1. **Immediate Port Binding**:
+   - Render requires a service to bind to a port within 60 seconds of startup
+   - Port binding must be one of the first operations performed in your application
+   - Failure to bind a port results in deployment termination
+
+2. **Correct Host Binding**:
+   - Always bind to `0.0.0.0` (not `localhost` or `127.0.0.1`)
+   - Explicitly specify the host parameter when calling `listen()`
+   - Example: `server.listen(PORT, '0.0.0.0', () => {...})`
+
+3. **Environment Variable Usage**:
+   - Always use the `PORT` environment variable provided by Render
+   - Provide a reasonable default (e.g., 3000) for local development
+   - Example: `const PORT = parseInt(process.env.PORT || '3000', 10);`
+
+4. **Health Check Endpoint**:
+   - Implement a basic health check endpoint (e.g., `/health` or `/`)
+   - Return a 200 status code and simple JSON response
+   - Include this endpoint in your Render configuration (`healthCheckPath`)
+
+5. **Order of Operations**:
+   - Create and bind the HTTP server before initializing other services
+   - Only start background processing after the server is listening
+   - Use the `listening` event to trigger subsequent initialization
+
+6. **Logging for Troubleshooting**:
+   - Log port binding details explicitly (`Server listening on 0.0.0.0:${PORT}`)
+   - Include timestamps in logs to track startup sequence
+   - Log confirmation when binding succeeds
+
+By following these requirements, you'll ensure that Render correctly detects your service as properly started and keeps it running.
+
+### 4.10 HCS-10 Message Format Compliance
+
+For proper interoperability with other HCS-10 agents, strict adherence to the standard message formats is essential. The following examples demonstrate correctly formatted messages for various operations:
+
+#### Connection Request (from client to agent's inbound topic)
+```json
+{
+  "p": "hcs-10",
+  "op": "connection_request",
+  "operator_id": "0.0.123456@0.0.789101",
+  "m": "Request to connect to the Lynxify agent"
+}
+```
+
+#### Connection Created (from agent to client via agent's outbound topic)
+```json
+{
+  "p": "hcs-10",
+  "op": "connection_created",
+  "connection_topic_id": "0.0.567890",
+  "connected_account_id": "0.0.789101",
+  "operator_id": "0.0.123456@0.0.456789",
+  "connection_id": 12345,
+  "m": "Connection established"
+}
+```
+
+#### Standard Message (on connection topic)
+```json
+{
+  "p": "hcs-10",
+  "op": "message",
+  "operator_id": "0.0.567890@0.0.123456",
+  "data": "{\"command\":\"getPrices\",\"tokens\":[\"BTC\",\"ETH\",\"HBAR\"]}",
+  "m": "Price data request"
+}
+```
+
+#### Message with Large Content (using HCS-1 reference)
+```json
+{
+  "p": "hcs-10",
+  "op": "message",
+  "operator_id": "0.0.567890@0.0.123456",
+  "data": "hcs://1/0.0.999999",
+  "m": "Large content stored via HCS-1"
+}
+```
+
+#### Close Connection (on connection topic)
+```json
+{
+  "p": "hcs-10",
+  "op": "close_connection",
+  "operator_id": "0.0.567890@0.0.123456",
+  "reason": "Conversation completed",
+  "m": "Closing connection"
+}
+```
+
+Implementing these message formats ensures compatibility with the broader HCS-10 ecosystem and allows your agent to communicate with any other standard-compliant agent.
+
+### 4.11 Troubleshooting Chat Agent Responsiveness
+
+The following measures were implemented to ensure reliable chat agent operation in production:
+
+#### 4.11.1 Message Polling Optimization
+
+For a responsive chat agent experience, the message polling frequency has been optimized:
+
+1. **Reduced Polling Interval**: Message polling is configured for 10-second intervals instead of 60 seconds to provide faster response times.
+2. **Immediate Initial Check**: Messages are checked immediately on startup rather than waiting for the first polling interval.
+3. **Health Monitoring**: The agent actively monitors its health and activity, restarting if no message activity is detected for 15 minutes.
+
+#### 4.11.2 Connection Handling Improvements
+
+To manage the large number of connections effectively:
+
+1. **Consistent Variable Naming**: Fixed inconsistent variable references between `connection` and `pendingRequest` in approval handlers.
+2. **Auto-Approval Logic**: Simplified auto-approval logic to reduce potential points of failure.
+3. **Robust Error Handling**: Added try/catch blocks around critical connection operations.
+4. **Enhanced Logging**: Added detailed connection tracking with message count statistics.
+
+#### 4.11.3 Diagnostic Tools
+
+To identify and resolve communication issues:
+
+1. **Debug Messages**: The agent regularly sends diagnostic messages to its outbound topic with connection statistics.
+2. **Status File Updates**: Detailed status information is logged to disk for the wrapper process to monitor.
+3. **Activity Tracking**: Last activity times are tracked to detect and recover from agent stalls.
+
+#### 4.11.4 Common Issues and Solutions
+
+| Issue | Possible Causes | Solution |
+|-------|----------------|----------|
+| No response to messages | Polling interval too long | Reduce polling interval to 10 seconds or less |
+| | Connection not established | Check connection status and send debug messages |
+| | Message format mismatch | Ensure messages follow the proper HCS-10 format |
+| Duplicate connections | Missing connection status updates | Implement proper connection tracking and cleanup |
+| | ConnectionsManager not synchronized | Call `syncConnectionsFromManager()` after status changes |
+| Agent crashes | Memory issues in ConnectionsManager | Implement health monitoring and automatic restarts |
+| | Networking timeouts | Add robust error handling and retry logic |
+
+#### 4.11.5 Recommended Configuration
+
+For production deployment of chat functionality:
+
+```javascript
+// Polling configuration
+const pollingIntervalMs = 10000; // 10 seconds for responsive chat
+const connectionCheckIntervalMs = 30000; // 30 seconds for connection status
+
+// Restart parameters (in restart-agent.mjs)
+const INACTIVITY_THRESHOLD = 1000 * 60 * 15; // 15 minutes
+const CHECK_INTERVAL = 1000 * 60 * 5; // Check every 5 minutes
+```
+
+By implementing these optimizations, the agent achieves reliable chat response while maintaining a stable connection to the Hedera network.
+
+### 4.12 Testing HCS-10 Message Handling Locally
+
+The following standardized testing approach should be used for validating HCS-10 message handling in the unified architecture:
+
+#### 4.12.1 Official Testing Solution
+
+The project includes a canonical testing tool that should be used for all HCS-10 protocol and message handling testing:
+
+- **Tool**: `scripts/test-local-agent.mjs`
+- **Usage**: `npm run test:local-agent`
+- **Documentation**: `scripts/local-agent-usage.md`
+
+This is the **only approved testing solution** for HCS-10 chat messages and connection handling. No additional test scripts should be created that duplicate this functionality.
+
+#### 4.12.2 Test Client Capabilities
+
+The official test client provides:
+
+1. **Interactive command interface** for connection and message testing
+2. **Protocol-compliant message formatting** that follows HCS-10 standards
+3. **Message content extraction and display** using the same logic as the agent
+4. **Connection lifecycle testing** (establish, message, close)
+5. **Response monitoring** with proper message polling
+
+#### 4.12.3 Testing Workflow
+
+The standard testing workflow is:
+
+1. Start the agent in one terminal: `npm run start:agent`
+2. Run the test client in another terminal: `npm run test:local-agent`
+3. Use the interactive commands to test all aspects of messaging:
+   ```
+   connect       # Establish connection
+   send <text>   # Send a test message
+   status        # Check connection status
+   close         # Close the connection properly
+   ```
+
+#### 4.12.4 Validation Criteria
+
+When testing chat message handling, verify:
+
+1. **Connection establishment** works correctly
+2. **Message parsing** extracts content properly
+3. **Response generation** produces protocol-compliant messages
+4. **Connection context** is properly maintained
+5. **Error handling** gracefully manages issues
+
+#### 4.12.5 Pre-Deployment Verification
+
+Before deploying to production environments:
+
+1. Run the local agent with the test client
+2. Verify all message handling works correctly
+3. Confirm no duplicate connections are created
+4. Validate protocol compliance in all messages
+
+This local testing approach eliminates the need to deploy to Render simply to test basic message handling functionality.
 
 ## This document builds upon the following existing documentation:
 
@@ -548,4 +943,143 @@ While implementing the unified agent architecture, it's important to note that t
 
 This integration will ensure that the existing HTS demo functionality is preserved while maintaining focus on the core agent and HCS protocol implementation. Actual LYNX token management will remain separate as it's implemented in a different technology stack.
 
-The unified agent architecture is now in a solid state with all core components integrated and communicating properly. We can proceed with implementing the business logic in Phase 3 with confidence that the foundation is robust and well-structured. 
+The unified agent architecture is now in a solid state with all core components integrated and communicating properly. We can proceed with implementing the business logic in Phase 3 with confidence that the foundation is robust and well-structured.
+
+## 5. Deployment Architecture and Execution Flow
+
+This section clarifies the deployment architecture and execution flow to avoid confusion about which files are used in various environments.
+
+### 5.1 Current Production Deployment
+
+The production deployment on Render uses the following execution flow:
+
+1. **Entry Point**: `scripts/restart-agent.mjs`
+   - This script is specified in `render.yaml` as the `startCommand`
+   - It sets up a process monitoring wrapper that can restart the agent on failure
+   - The script launches `scripts/hcs10/agent-handler.mjs`
+
+2. **Agent Implementation**: `scripts/hcs10/agent-handler.mjs`
+   - This is the actual HCS-10 agent implementation currently used in production
+   - It creates an HTTP server bound to 0.0.0.0 to satisfy Render's port requirements
+   - It handles HCS-10 connections, requests, and messaging
+   - This implementation predates the unified architecture but has been updated with port binding
+
+3. **Port Binding**:
+   - The HTTP server in `agent-handler.mjs` binds to the port specified by the `PORT` environment variable (default: 3000)
+   - It binds explicitly to host `0.0.0.0` as required by Render
+   - The health check endpoint is available at `/health`
+
+### 5.2 Unified Architecture Implementation
+
+The unified architecture is implemented but not yet used in production:
+
+1. **Entry Point**: `src/app/scripts/unified-server.ts`
+   - This script can be run with `npm run unified-server`
+   - It creates a proper HTTP and WebSocket server bound to 0.0.0.0
+   - It initializes the unified architecture components
+
+2. **Agent Implementation**: `src/app/services/lynxify-agent.ts`
+   - This is the newer, unified agent implementation
+   - It handles both HCS-10 protocol and business logic
+   - It's not yet used in production
+
+3. **Services**:
+   - `src/app/services/hcs10-protocol.ts` - HCS-10 protocol handling
+   - `src/app/services/tokenized-index.ts` - Business logic for the index
+   - `src/app/services/unified-websocket.ts` - WebSocket interface for UI integration
+   - `src/app/services/token-service.ts` - Token operations
+
+### 5.3 NPM Scripts Map
+
+The following npm scripts map to different entry points:
+
+| npm script | Purpose | Implementation | Entry Point | Used In |
+|------------|---------|----------------|------------|---------|
+| `npm run start:agent` | Production agent | Legacy HCS-10 | `scripts/restart-agent.mjs` | Render production |
+| `npm run unified-server` | Unified agent | Unified architecture | `src/app/scripts/unified-server.ts` | Development |
+| `npm run start` | Legacy server | Combined server | `combined-server.js` | Legacy mode |
+| `npm run demo` | Legacy demo | Combined server | `combined-server.js` | Legacy demo |
+| `npm run demo:refactored` | Refactored demo | Unified architecture | `src/app/scripts/start-server.ts` | Development |
+| `npm run agent` | Unified agent | Unified architecture | `dist/app/scripts/run-agent.js` | Development |
+| `npm run rebalance-agent` | Rebalance agent | Specialized agent | `src/app/scripts/rebalance-agent.ts` | Development |
+| `npm run hcs10:start-server` | HCS-10 server | Legacy HCS-10 | `scripts/start-hcs10-server.mjs` | Development |
+
+### 5.4 Build Process
+
+Different build processes are used for different parts of the architecture:
+
+1. **Next.js UI Build**: `npm run build`
+   - Builds the Next.js application for UI deployment
+   - Used for the web interface
+
+2. **Unified Server Build**: `npm run build-server`
+   - Runs TypeScript compiler with `tsconfig.server.json`
+   - Compiles unified architecture files to `dist/` directory
+
+3. **HCS-10 Agent Build**: `npm run build:hcs10-agent`
+   - Runs TypeScript compiler with `tsconfig.hcs10.json`
+   - Compiles HCS-10 specific files to `dist-hcs10/` directory
+
+4. **Scripts Build**: `npm run build-scripts`
+   - Runs TypeScript compiler with `tsconfig.scripts.json`
+   - Compiles utility scripts to `dist/` directory
+
+### 5.5 Migration Plan
+
+To transition from the legacy implementation to the unified architecture:
+
+1. **Update render.yaml**:
+   ```yaml
+   startCommand: npx ts-node --compiler-options '{"module":"commonjs"}' src/app/scripts/unified-server.ts
+   ```
+   Or alternatively:
+   ```yaml
+   buildCommand: npm install && npm run build-server
+   startCommand: node dist/app/scripts/unified-server.js
+   ```
+
+2. **Ensure Environment Variables**:
+   - Make sure all required environment variables are set in render.yaml
+   - Pay special attention to port-related variables
+
+3. **Health Check Configuration**:
+   - Ensure the health check endpoints are consistent
+
+4. **Testing**:
+   - Test locally with the unified architecture before deploying
+   - Use the same port binding approach (0.0.0.0) in development
+
+### 5.6 File Hierarchy
+
+The important file paths and their roles:
+
+```
+.
+├── render.yaml                      # Render deployment configuration
+├── package.json                     # NPM scripts and dependencies
+├── combined-server.js               # Legacy entry point
+├── scripts/
+│   ├── restart-agent.mjs            # Current production entry point
+│   └── hcs10/
+│       └── agent-handler.mjs        # Current production implementation
+├── src/
+│   └── app/
+│       ├── services/                # Unified architecture services
+│       │   ├── lynxify-agent.ts     # Unified agent implementation
+│       │   ├── unified-websocket.ts # WebSocket service
+│       │   ├── hcs10-protocol.ts    # HCS-10 protocol handling
+│       │   ├── tokenized-index.ts   # Business logic
+│       │   └── token-service.ts     # Token operations
+│       └── scripts/
+│           ├── unified-server.ts    # Unified server entry point
+│           └── run-agent.ts         # Direct agent execution
+└── dist/                            # Compiled JavaScript files
+```
+
+## This document builds upon the following existing documentation:
+
+- [MOONSCAPE-AGENT-REGISTRATION.md](MOONSCAPE-AGENT-REGISTRATION.md) - Details the registration process for HCS-10 agents
+- [MOONSCAPE-AGENT-IMPLEMENTATION.md](docs/MOONSCAPE-AGENT-IMPLEMENTATION.md) - Outlines the complete implementation requirements for HCS-10 agents
+- [README.md](README.md) - outlines the client side demo of the rebalancing flow
+
+**Important**: All functionality described in these documents must be preserved in the unified architecture. 

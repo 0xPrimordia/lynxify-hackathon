@@ -52,7 +52,9 @@
     "hcs10:update-env": "node scripts/hcs10/update-env.mjs",
     "hcs10:server": "node combined-server.js",
     "generate-docs": "typedoc --out docs src/app",
-    "prepare-demo": "ts-node scripts/prepare-demo.ts"
+    "prepare-demo": "ts-node scripts/prepare-demo.ts",
+    "cleanup:connections": "node scripts/cleanup-connections.mjs",
+    "test:local-agent": "node scripts/test-local-agent.mjs"
   },
   "dependencies": {
     "@hashgraph/sdk": "^2.63.0",
