@@ -5,13 +5,16 @@ services:
     plan: free
     buildCommand: npm install && npm run build-server
     startCommand: npx ts-node --compiler-options '{"module":"commonjs"}' src/app/scripts/unified-server.ts
+    healthCheckPath: /health
     envVars:
+      - key: NODE_ENV
+        value: production
       - key: NODE_VERSION
         value: 18.x
       - key: PORT
-        value: 3001
+        value: 3000
       - key: WS_PORT
-        value: 3001
+        value: 3000
       - key: NEXT_PUBLIC_OPERATOR_ID
         sync: false
       - key: OPERATOR_KEY

@@ -1,50 +1,91 @@
-2025-05-13T01:00:05.605233407Z       "type": 0,
-2025-05-13T01:00:05.605235616Z       "display_name": "Rebalancer Agent",
-2025-05-13T01:00:05.605237847Z       "alias": "lynx_rebalancer_agent",
-2025-05-13T01:00:05.605240157Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
-2025-05-13T01:00:05.607266337Z       "profileImage": "hcs://1/0.0.5949502",
-2025-05-13T01:00:05.609710226Z       "version": "1.0",
-2025-05-13T01:00:05.611986362Z     "targetOutboundTopicId": "0.0.5949516"
-2025-05-13T01:00:05.611988313Z   },
-2025-05-13T01:00:05.611990242Z   {
-2025-05-13T01:00:05.611992133Z     "connectionTopicId": "0.0.5989483",
-2025-05-13T01:00:05.613348976Z   {
-2025-05-13T01:00:05.615677173Z       "inboundTopicId": "0.0.5949517",
-2025-05-13T01:00:05.618303698Z       },
-2025-05-13T01:00:05.61878398Z     "memo": "Connection accepted. Looking forward to collaborating!",
-2025-05-13T01:00:05.61878594Z     "profileInfo": {
-2025-05-13T01:00:05.621977958Z       "profileImage": "hcs://1/0.0.5949502",
-2025-05-13T01:00:48.146885559Z ==> No open ports detected, continuing to scan...
-2025-05-13T01:00:48.247597371Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
-2025-05-13T01:01:05.566603069Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
-2025-05-13T01:01:05.567107751Z 🔍 Active connections: 670
-2025-05-13T01:01:05.567119232Z 🔍 Found 670 active connections
-2025-05-13T01:01:05.567134562Z 🔍 Checking for new messages using standard getMessageStream...
-2025-05-13T01:01:12.590334052Z ℹ️ No new messages found
-2025-05-13T01:01:12.590364913Z 🔍 Checking outbound topic 0.0.5966031 for misrouted messages...
-2025-05-13T01:01:49.172000281Z ==> No open ports detected, continuing to scan...
-2025-05-13T01:01:49.2576545Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
-2025-05-13T01:02:05.618033931Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
-2025-05-13T01:02:05.618053682Z 🔍 Active connections: 670
-2025-05-13T01:02:05.618058312Z 🔍 Found 670 active connections
-2025-05-13T01:02:05.618062472Z 🔍 Checking for new messages using standard getMessageStream...
-2025-05-13T01:02:09.094048237Z ℹ️ No new messages found
-2025-05-13T01:02:09.094083158Z 🔍 Checking outbound topic 0.0.5966031 for misrouted messages...
-2025-05-13T01:02:50.126334841Z ==> No open ports detected, continuing to scan...
-2025-05-13T01:02:50.216193943Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
-2025-05-13T01:03:05.667152944Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
-2025-05-13T01:03:05.66738062Z 🔍 Active connections: 670
-2025-05-13T01:03:05.667971184Z 🔍 Found 670 active connections
-2025-05-13T01:03:05.667981275Z 🔍 Checking for new messages using standard getMessageStream...
-2025-05-13T01:03:09.372523796Z ℹ️ No new messages found
-2025-05-13T01:03:09.372547526Z 🔍 Checking outbound topic 0.0.5966031 for misrouted messages...
-2025-05-13T01:03:51.081682258Z ==> No open ports detected, continuing to scan...
-2025-05-13T01:03:51.167519887Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
-2025-05-13T01:04:05.719491293Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
-2025-05-13T01:04:05.719597235Z 🔍 Active connections: 670
-2025-05-13T01:04:05.719610175Z 🔍 Found 670 active connections
-2025-05-13T01:04:05.719657167Z 🔍 Checking for new messages using standard getMessageStream...
-2025-05-13T01:04:08.085257272Z ℹ️ No new messages found
-2025-05-13T01:04:08.085276583Z 🔍 Checking outbound topic 0.0.5966031 for misrouted messages...
-2025-05-13T01:04:16.558625349Z ==> Port scan timeout reached, no open ports detected. Bind your service to at least one port. If you don't need to receive traffic on any port, create a background worker instead.
-2025-05-13T01:04:16.639224092Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2025-05-13T01:18:30.737069942Z ✅ HederaService initialized successfully!
+2025-05-13T01:18:30.737072302Z Using fallback token data (no file access or in production)
+2025-05-13T01:18:30.737074982Z ✅ RebalanceAgent initialized with TokenService
+2025-05-13T01:18:30.737085203Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T01:18:30.737092843Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T01:18:30.737095394Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T01:18:30.737100674Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T01:18:30.849761423Z    Generating static pages (2/8) 
+2025-05-13T01:18:30.858403481Z    Generating static pages (4/8) 
+2025-05-13T01:18:30.858423802Z    Generating static pages (6/8) 
+2025-05-13T01:18:30.858490486Z  ✓ Generating static pages (8/8)
+2025-05-13T01:18:31.31668414Z    Finalizing page optimization ...
+2025-05-13T01:18:31.316704851Z    Collecting build traces ...
+2025-05-13T01:18:36.425288376Z 
+2025-05-13T01:18:36.435053305Z Route (app)                                 Size  First Load JS
+2025-05-13T01:18:36.435069096Z ┌ ○ /                                    16.1 kB         126 kB
+2025-05-13T01:18:36.435072226Z ├ ○ /_not-found                            977 B         102 kB
+2025-05-13T01:18:36.435074826Z ├ ƒ /api/agent/connections                 179 B         101 kB
+2025-05-13T01:18:36.435077516Z ├ ƒ /api/agent/connections/approve         179 B         101 kB
+2025-05-13T01:18:36.435091437Z ├ ƒ /api/agent/connections/pending         179 B         101 kB
+2025-05-13T01:18:36.435094438Z ├ ƒ /api/agents/[action]                   179 B         101 kB
+2025-05-13T01:18:36.435096878Z ├ ƒ /api/agents/ai-rebalance               179 B         101 kB
+2025-05-13T01:18:36.435099418Z ├ ƒ /api/agents/status                     179 B         101 kB
+2025-05-13T01:18:36.435101728Z ├ ƒ /api/connections                       179 B         101 kB
+2025-05-13T01:18:36.435104348Z ├ ƒ /api/connections/approve               179 B         101 kB
+2025-05-13T01:18:36.435106708Z ├ ƒ /api/connections/pending               179 B         101 kB
+2025-05-13T01:18:36.435109058Z ├ ƒ /api/debug-message                     179 B         101 kB
+2025-05-13T01:18:36.435112348Z ├ ƒ /api/env-check                         179 B         101 kB
+2025-05-13T01:18:36.435115139Z ├ ƒ /api/governance/proposals              179 B         101 kB
+2025-05-13T01:18:36.435117599Z ├ ƒ /api/governance/vote                   179 B         101 kB
+2025-05-13T01:18:36.435120129Z ├ ƒ /api/hcs-test                          179 B         101 kB
+2025-05-13T01:18:36.435122269Z ├ ƒ /api/hcs/messages                      179 B         101 kB
+2025-05-13T01:18:36.435124839Z ├ ƒ /api/index/composition                 179 B         101 kB
+2025-05-13T01:18:36.43512714Z ├ ƒ /api/prices/history                    179 B         101 kB
+2025-05-13T01:18:36.43512958Z ├ ƒ /api/risk/metrics                      179 B         101 kB
+2025-05-13T01:18:36.43513197Z ├ ƒ /api/token-operations                  179 B         101 kB
+2025-05-13T01:18:36.43513445Z └ ○ /token-operations                    1.79 kB         106 kB
+2025-05-13T01:18:36.43513741Z + First Load JS shared by all             101 kB
+2025-05-13T01:18:36.43514002Z   ├ chunks/4bd1b696-f1358af2203e7582.js  53.2 kB
+2025-05-13T01:18:36.43514241Z   ├ chunks/684-2c4e27258dd1c010.js       45.8 kB
+2025-05-13T01:18:36.435144701Z   └ other shared chunks (total)          1.86 kB
+2025-05-13T01:18:36.435146961Z 
+2025-05-13T01:18:36.435149231Z 
+2025-05-13T01:18:36.435166192Z ○  (Static)   prerendered as static content
+2025-05-13T01:18:36.435169592Z ƒ  (Dynamic)  server-rendered on demand
+2025-05-13T01:18:36.435171992Z 
+2025-05-13T01:18:39.8504907Z ==> Uploading build...
+2025-05-13T01:19:05.230978278Z ==> Uploaded in 16.7s. Compression took 8.7s
+2025-05-13T01:19:05.316188877Z ==> Build successful 🎉
+2025-05-13T01:19:15.305457362Z ==> Deploying...
+2025-05-13T01:20:01.069629225Z ==> Running 'npm run start:agent'
+2025-05-13T01:20:02.686978866Z 
+2025-05-13T01:20:02.687019676Z > lynxify-hackathon@0.1.0 start:agent
+2025-05-13T01:20:02.687026387Z > node scripts/restart-agent.mjs
+2025-05-13T01:20:02.687028636Z 
+2025-05-13T01:20:03.273757478Z 🚀 Starting HCS10 agent process...
+2025-05-13T01:20:03.371795608Z ✅ Agent process started
+2025-05-13T01:20:11.670437176Z 🔍 DEBUG: Auto approved accounts: [ '0.0.4340026' ]
+2025-05-13T01:20:11.670555357Z 🔍 DEBUG: Connection approval API enabled: false
+2025-05-13T01:20:11.670669428Z 🚀 Starting HCS10 agent...
+2025-05-13T01:20:11.673407857Z ✅ Loaded agent registration info:
+2025-05-13T01:20:11.673421537Z    Agent ID: 0.0.5966030
+2025-05-13T01:20:11.673491988Z    Inbound Topic: 0.0.5966032
+2025-05-13T01:20:11.673603629Z    Outbound Topic: 0.0.5966031
+2025-05-13T01:20:11.6736534Z 🔄 Creating HCS10 client...
+2025-05-13T01:20:11.678717694Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T01:20:12.192549312Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T01:20:12.274934705Z ✅ HCS10 client created
+2025-05-13T01:20:12.274952926Z 🔄 Initializing ConnectionsManager...
+2025-05-13T01:20:12.274955626Z ✅ ConnectionsManager initialized
+2025-05-13T01:20:12.274957446Z 🔄 Fetching connections from Hedera...
+2025-05-13T01:20:12.275181228Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.5966030
+2025-05-13T01:20:12.27627918Z { module: 'HCS-11' } Fetching profile for account 0.0.5966030 on testnet
+2025-05-13T01:20:13.07605978Z { module: 'HCS-11' } Got account memo: hcs-11:hcs://1/0.0.5966035
+2025-05-13T01:20:13.076088431Z { module: 'HCS-11' } Found HCS-11 memo: hcs-11:hcs://1/0.0.5966035
+2025-05-13T01:20:13.076099981Z { module: 'HCS-11' } Retrieving profile from Kiloscribe CDN: 0.0.5966035
+2025-05-13T01:20:15.74497067Z { module: 'ConnectionsManager' } Total connections in map: 731
+2025-05-13T01:20:15.745107591Z { module: 'ConnectionsManager' } Connections with status='pending': 0
+2025-05-13T01:20:15.745248373Z { module: 'ConnectionsManager' } No pending connections found
+2025-05-13T01:20:15.745741128Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.4340026
+2025-05-13T01:20:15.746743229Z { module: 'HCS-11' } Fetching profile for account 0.0.4340026 on testnet
+2025-05-13T01:20:15.747496986Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.5527744
+2025-05-13T01:20:15.748303795Z { module: 'HCS-11' } Fetching profile for account 0.0.5527744 on testnet
+2025-05-13T01:20:15.823545613Z { module: 'HCS-11' } Got account memo: hcs-11:hcs://1/0.0.5949520
+2025-05-13T01:20:15.823730425Z { module: 'HCS-11' } Found HCS-11 memo: hcs-11:hcs://1/0.0.5949520
+2025-05-13T01:20:15.823741495Z { module: 'HCS-11' } Retrieving profile from Kiloscribe CDN: 0.0.5949520
+2025-05-13T01:20:15.832460957Z { module: 'HCS-11' } Got account memo: hcs-11:hcs://1/0.0.5949567
+2025-05-13T01:20:15.832474178Z { module: 'HCS-11' } Found HCS-11 memo: hcs-11:hcs://1/0.0.5949567
+2025-05-13T01:20:15.832569428Z { module: 'HCS-11' } Retrieving profile from Kiloscribe CDN: 0.0.5949567
+2025-05-13T01:20:19.713474852Z ==> No open ports detected, continuing to scan...
+2025-05-13T01:20:19.807833916Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding

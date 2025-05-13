@@ -40,10 +40,24 @@ const agentConfig: LynxifyAgentConfig = {
  * Main function to run the unified server
  */
 async function runUnifiedServer(): Promise<void> {
-  console.log('🚀 Starting Lynxify Unified Server...');
+  console.log(`
+===============================================
+🚀 Starting Lynxify Unified Server...
+📡 Environment: ${process.env.NODE_ENV || 'development'}
+📡 Port: ${process.env.PORT || process.env.WS_PORT || 3001}
+===============================================
+  `);
+  
+  // Log process environment
+  console.log('🔍 Process environment:');
+  console.log(`- NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`- PORT: ${process.env.PORT}`);
+  console.log(`- WS_PORT: ${process.env.WS_PORT}`);
+  console.log(`- cwd: ${process.cwd()}`);
   
   try {
     // Create and initialize the agent
+    console.log('🔄 Creating and initializing LynxifyAgent...');
     const agent = new LynxifyAgent(agentConfig);
     await agent.initialize();
     
@@ -58,7 +72,7 @@ async function runUnifiedServer(): Promise<void> {
     const indexService = agent.getIndexService();
     
     // Initialize WebSocket server on port 3001 (or from env)
-    const wsPort = parseInt(process.env.WS_PORT || '3001', 10);
+    const wsPort = parseInt(process.env.WS_PORT || process.env.PORT || '3001', 10);
     
     console.log(`🔌 Starting WebSocket server on port ${wsPort}...`);
     const webSocketService = new UnifiedWebSocketService(
@@ -78,6 +92,7 @@ async function runUnifiedServer(): Promise<void> {
     🚀 Lynxify Unified Server Running!
     
     🔌 WebSocket server: ws://localhost:${wsPort}
+    🌐 HTTP endpoints: http://localhost:${wsPort}
     
     ✅ Agent fully initialized with UI connection support
     ✅ Token operations and rebalance proposals enabled
