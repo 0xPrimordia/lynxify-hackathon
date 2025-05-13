@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { HCS10Client } from '@hashgraphonline/standards-sdk';
+import { HCS10Client, ConnectionsManager } from '@hashgraphonline/standards-sdk';
 import dotenv from 'dotenv';
 import fs from 'fs/promises';
 import path from 'path';
@@ -29,69 +29,24 @@ async function initialize() {
   try {
     console.log('🔍 Reading test credentials...');
     
-    // Create a test identity for the client - use fallbacks for easier testing
-    const operatorId = process.env.TEST_ACCOUNT_ID || process.env.HEDERA_OPERATOR_ID || process.env.OPERATOR_ID;
-    const operatorKey = process.env.TEST_PRIVATE_KEY || process.env.HEDERA_OPERATOR_KEY || process.env.OPERATOR_KEY;
+    // Use the available environment variables that work with the agent
+    const operatorId = process.env.NEXT_PUBLIC_OPERATOR_ID;
+    const operatorKey = process.env.OPERATOR_KEY;
+    agentId = process.env.NEXT_PUBLIC_HCS_AGENT_ID;
     
-    if (!operatorId || !operatorKey) {
-      console.warn('⚠️ Missing required environment variables. Will attempt to use mock values for testing.');
-      
-      // Mock credentials for testing - ONLY FOR DEVELOPMENT
-      const mockCredentials = {
-        operatorId: '0.0.12345',
-        operatorKey: '302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10'
-      };
-      
-      console.log('⚠️ Using MOCK credentials:', mockCredentials.operatorId);
-      console.log('⚠️ WARNING: This is only for local testing and will not connect to a real network');
-      
-      agentId = process.env.NEXT_PUBLIC_HCS_AGENT_ID || '0.0.5966030'; // Mock agent ID
-      
-      // Create a mock client for testing that doesn't actually connect
-      client = {
-        initiateConnection: async () => {
-          console.log('🔄 MOCK: Initiating connection to agent...');
-          return { connectionTopicId: '0.0.54321' };
-        },
-        sendMessage: async (topicId, message) => {
-          console.log(`🔄 MOCK: Sending message to ${topicId}:`, message);
-          return { success: true };
-        },
-        getMessageStream: async (topicId) => {
-          console.log(`🔄 MOCK: Fetching messages from ${topicId}...`);
-          // Simulate a response from the agent
-          return [{
-            p: 'hcs-10',
-            op: 'message',
-            text: 'Hello! I\'m the Lynxify agent. How can I assist you with the tokenized index today?',
-            timestamp: new Date().toISOString(),
-            sequence_number: '1',
-            created: new Date().toISOString()
-          }];
-        }
-      };
-      
-      console.log('ℹ️ Mock client created for testing');
-      return true;
-    }
-    
-    // Target agent ID is required
-    agentId = process.env.NEXT_PUBLIC_HCS_AGENT_ID; 
-    
-    if (!agentId) {
-      console.warn('⚠️ Missing NEXT_PUBLIC_HCS_AGENT_ID. Using fallback agent ID.');
-      agentId = '0.0.5966030'; // Fallback agent ID
+    if (!operatorId || !operatorKey || !agentId) {
+      throw new Error('Missing required environment variables: NEXT_PUBLIC_OPERATOR_ID, OPERATOR_KEY, NEXT_PUBLIC_HCS_AGENT_ID');
     }
     
     console.log(`✅ Will test connection to agent: ${agentId}`);
-    console.log(`✅ Using test identity: ${operatorId}`);
+    console.log(`✅ Using identity: ${operatorId}`);
     
     // Create HCS10 client
     console.log('🔄 Creating HCS10 client...');
     client = new HCS10Client({
       network: 'testnet',
       operatorId: operatorId,
-      operatorKey: operatorKey,
+      operatorPrivateKey: operatorKey,
       logLevel: 'debug'
     });
     
@@ -111,12 +66,81 @@ async function connectToAgent() {
   try {
     console.log(`🔄 Initiating connection to agent ${agentId}...`);
     
-    const result = await client.initiateConnection(agentId, {
-      memo: 'Test connection from debug client'
+    // Create a ConnectionsManager to handle connections
+    console.log('🔄 Creating ConnectionsManager...');
+    const connectionsManager = new ConnectionsManager({
+      baseClient: client
     });
     
-    connectionTopicId = result.connectionTopicId;
-    console.log(`✅ Connection established! Topic ID: ${connectionTopicId}`);
+    console.log('✅ ConnectionsManager created');
+    
+    try {
+      // Method 1: Try creating a connection with ConnectionsManager
+      console.log('Attempt 1: Using ConnectionsManager to create connection request');
+      // We need the inbound topic of the agent
+      // Let's try to get it directly from the environment variable
+      const targetInboundTopicId = process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC;
+      
+      if (!targetInboundTopicId) {
+        throw new Error('Missing NEXT_PUBLIC_HCS_INBOUND_TOPIC environment variable');
+      }
+      
+      // Create a connection request to the agent
+      const result = await connectionsManager.createConnectionRequest(
+        agentId,
+        targetInboundTopicId
+      );
+      
+      connectionTopicId = result.connectionTopicId;
+      console.log(`✅ Connection established! Topic ID: ${connectionTopicId}`);
+    } catch (error) {
+      console.error('❌ Error with method 1:', error);
+      
+      // Method 2: Try to get existing connections
+      console.log('Attempt 2: Checking for existing connections...');
+      await connectionsManager.fetchConnectionData(client.operatorId);
+      const connections = connectionsManager.getAllConnections();
+      
+      console.log(`Found ${connections.length} existing connections`);
+      
+      // Find an established connection with the target agent
+      const existingConnection = connections.find(
+        conn => conn.targetAccountId === agentId && conn.status === 'established'
+      );
+      
+      if (existingConnection) {
+        connectionTopicId = existingConnection.connectionTopicId;
+        console.log(`✅ Using existing connection! Topic ID: ${connectionTopicId}`);
+      } else {
+        console.log('❌ No existing connection found');
+        
+        // Try one more method - get connections file
+        try {
+          console.log('Attempt 3: Checking connections file...');
+          const connectionsFile = path.join(process.cwd(), '.connections.json');
+          const fileData = await fs.readFile(connectionsFile, 'utf8');
+          const fileConnections = JSON.parse(fileData);
+          
+          if (fileConnections && fileConnections.length > 0) {
+            const validConnection = fileConnections.find(
+              conn => conn.connectionTopicId && /^0\.0\.\d+$/.test(conn.connectionTopicId)
+            );
+            
+            if (validConnection) {
+              connectionTopicId = validConnection.connectionTopicId;
+              console.log(`✅ Using connection from file! Topic ID: ${connectionTopicId}`);
+            } else {
+              throw new Error('No valid connections found in file');
+            }
+          } else {
+            throw new Error('No connections found in file');
+          }
+        } catch (fileError) {
+          console.error('❌ Error with method 3:', fileError);
+          throw new Error('Failed to establish or find a connection');
+        }
+      }
+    }
     
     // Start polling for messages on this connection
     startPolling();
