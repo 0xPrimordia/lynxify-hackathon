@@ -35,7 +35,7 @@ const server = createServer((req, res) => {
   }
 
   // Basic health check endpoint that responds immediately
-  if (req.url === '/api/health') {
+  if (req.url === '/api/health' || req.url === '/health' || req.url === '/') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ 
       status: 'ok', 
@@ -92,6 +92,15 @@ wss.on('connection', (ws) => {
   });
 });
 
+// Log startup sequence for debugging
+console.log(`
+===============================================
+🚀 Starting Lynxify Server...
+📡 Will bind to port: ${PORT}
+🏁 Using Render deployment configuration
+===============================================
+`);
+
 // Start the server FIRST - without any agent initialization
 server.listen(PORT, () => {
   console.log(`
@@ -99,6 +108,7 @@ server.listen(PORT, () => {
   🚀 Lynxify Server Running!
   
   🌐 Server listening on port ${PORT}
+  🔗 TCP listener active - should be detected by Render
   ✅ Health check: http://localhost:${PORT}/api/health
   ✅ Status: http://localhost:${PORT}/api/server-status
   ===============================================

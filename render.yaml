@@ -3,12 +3,14 @@ services:
     name: lynxify-hcs10-agent
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm run demo
+    buildCommand: npm install && npm run build-server
+    startCommand: npx ts-node --compiler-options '{"module":"commonjs"}' src/app/scripts/unified-server.ts
     envVars:
       - key: NODE_VERSION
         value: 18.x
       - key: PORT
+        value: 3001
+      - key: WS_PORT
         value: 3001
       - key: NEXT_PUBLIC_OPERATOR_ID
         sync: false
@@ -23,4 +25,6 @@ services:
       - key: NEXT_PUBLIC_HCS_PROFILE_TOPIC
         value: 0.0.5966035
       - key: NEXT_PUBLIC_HCS_REGISTRY_TOPIC
-        value: 0.0.5949504 
+        value: 0.0.5949504
+      - key: LOG_EVENTS
+        value: "true" 
