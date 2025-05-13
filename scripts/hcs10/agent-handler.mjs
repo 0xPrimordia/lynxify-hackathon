@@ -97,12 +97,19 @@ export class HCS10AgentHandler extends EventEmitter {
         // Create HCS10 client with proper configuration
         console.log('🔄 Creating HCS10 client...');
         
-        // The key seems to be in DER format already from the environment, so we'll
-        // use it directly without additional formatting
+        // Convert plain hex key to DER format if needed
+        let formattedKey = this.agentKey.trim();
+        
+        // If it's a plain hex key (64 characters), convert to DER format
+        if (formattedKey.length === 64 && /^[0-9a-fA-F]{64}$/.test(formattedKey)) {
+          console.log('🔑 Converting plain hex key to DER format...');
+          formattedKey = `302e020100300506032b657004220420${formattedKey}`;
+        }
+        
         const clientConfig = {
           network: 'testnet',
           operatorId: this.agentId,
-          operatorKey: this.agentKey,
+          operatorKey: formattedKey,
           mirrorNode: process.env.MIRROR_NODE_URL || 'https://testnet.mirrornode.hedera.com',
           useEncryption: false
         };
@@ -120,12 +127,18 @@ export class HCS10AgentHandler extends EventEmitter {
         // Try an alternative approach if there was an issue with the key
         console.log('🔄 Attempting alternative client initialization...');
         
+        // Try with DER prefix if not already in that format
+        let altKey = this.agentKey.trim();
+        if (!altKey.startsWith('302e020100300506032b6570')) {
+          console.log('🔑 Adding DER prefix to key...');
+          altKey = `302e020100300506032b657004220420${altKey}`;
+        }
+        
         // Some SDKs expect different key formats, try with explicit configuration
         this.client = new HCS10Client({
           network: 'testnet',
           operatorId: this.agentId,
-          // Pass just the key string without additional formatting
-          operatorKey: this.agentKey.trim(),
+          operatorKey: altKey,
           mirrorNode: process.env.MIRROR_NODE_URL || 'https://testnet.mirrornode.hedera.com',
           useEncryption: false
         });
