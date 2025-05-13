@@ -1,90 +1,50 @@
-import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-
-// Constants
-const APPROVAL_COMMAND_FILE = path.join(process.cwd(), '.approval_commands.json');
+import { NextRequest, NextResponse } from 'next/server';
 
 // Force dynamic rendering for API routes
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 /**
- * POST endpoint to approve a connection - follows standards-expert example
+ * This is a compatibility route that forwards to the standardized /api/connections/approve route
  */
-export async function POST(
-  request: Request,
-) {
+export async function POST(request: NextRequest) {
   try {
-    // Get the connection ID either from URL or request body
-    let connectionId;
+    console.log('🔍 DEBUG: Approval URL path:', request.nextUrl.pathname);
     
-    // Try to get from URL first
-    const url = new URL(request.url);
-    console.log('🔍 DEBUG: Approval URL path:', url.pathname);
-    
-    // Get the ID from the path segments
-    const pathSegments = url.pathname.split('/');
-    
-    // Check if we have an ID in the path
-    if (pathSegments.length > 0 && pathSegments[pathSegments.length - 1] !== 'approve') {
-      connectionId = pathSegments[pathSegments.length - 1];
-      console.log(`🔍 DEBUG: Found connection ID in URL: ${connectionId}`);
-    }
-    
-    // Next try to get from request body if not found in URL
-    if (!connectionId) {
-      try {
-        const body = await request.json();
-        connectionId = body.connectionId;
-        console.log(`🔍 DEBUG: Found connection ID in body: ${connectionId}`);
-      } catch (e) {
-        console.log('⚠️ Failed to parse request body:', e);
-      }
+    // Extract connection ID from request body
+    let connectionId: string | undefined;
+    try {
+      const body = await request.json();
+      connectionId = body.connectionId;
+      console.log('🔍 DEBUG: Found connection ID in body:', connectionId);
+    } catch (error) {
+      console.error('❌ Error parsing request body:', error);
+      return NextResponse.json(
+        { success: false, error: 'Invalid request body' },
+        { status: 400 }
+      );
     }
     
     if (!connectionId) {
-      console.log('❌ Missing connection ID in request');
       return NextResponse.json(
         { success: false, error: 'Missing connection ID in request' },
         { status: 400 }
       );
     }
-    
-    console.log(`Processing approval request for connection: ${connectionId}`);
-    
-    // Write approval command to file for agent to process (following standards-expert example)
-    const approvalCommand = {
-      type: 'approve_connection',
-      connectionId,
-      timestamp: Date.now()
-    };
-    
-    // Read existing commands (if any)
-    let commands = [];
-    try {
-      const existingData = await fs.readFile(APPROVAL_COMMAND_FILE, 'utf8');
-      commands = JSON.parse(existingData);
-    } catch (err) {
-      // File doesn't exist yet, start with empty array
-      console.log('No existing commands file, creating new one');
-    }
-    
-    // Add new command to list
-    commands.push(approvalCommand);
-    
-    // Write back to file
-    await fs.writeFile(APPROVAL_COMMAND_FILE, JSON.stringify(commands, null, 2));
-    console.log(`Wrote approval command to ${APPROVAL_COMMAND_FILE}`);
-    
-    return NextResponse.json({ 
-      success: true, 
-      status: 'approval_requested', 
-      message: 'Connection approval requested',
-      connectionId 
+
+    // Forward the request to the standard endpoint
+    const forwardUrl = new URL('/api/connections/approve', request.nextUrl.origin);
+    const forwardRequest = new Request(forwardUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ connectionId }),
     });
+    
+    return fetch(forwardRequest);
   } catch (error) {
-    console.error('Error handling connection approval:', error);
+    console.error('❌ Error handling connection approval:', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }

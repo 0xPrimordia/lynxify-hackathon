@@ -518,3 +518,39 @@ The project is split into two parts for deployment:
 ### Connecting the Frontend to the WebSocket Server
 
 After both deployments are complete, update the `NEXT_PUBLIC_WS_URL` environment variable in your Vercel project to point to your Render WebSocket server URL with the `wss://` protocol.
+
+## Unified Agent Architecture and Moonscape Integration
+
+This project uses a unified approach to Hedera Consensus Service (HCS) integration following the HCS-10 protocol standard, as described in the [UNIFIED-AGENT-ARCHITECTURE.md](./UNIFIED-AGENT-ARCHITECTURE.md) document.
+
+### API Routes
+
+All agent interaction is handled through standardized REST API endpoints:
+
+- **GET /api/connections** - Lists all active connections
+- **GET /api/connections/pending** - Lists pending connection requests
+- **POST /api/connections/approve** - Approves a pending connection request
+
+### Running the Agent
+
+The agent is integrated into the Next.js application and runs automatically when the app is started. For monitoring connection approvals, use:
+
+```bash
+# Run the Next.js app (includes the integrated agent)
+npm run dev
+
+# Optional: Run the connection approval monitor in a separate terminal
+node scripts/run-agent.js
+```
+
+The monitor script watches for connection approval commands and logs them, but the actual processing happens through the unified agent architecture in the Next.js API routes.
+
+### HCS-10 Protocol Implementation
+
+The implementation follows the Moonscape HCS-10 protocol standard and uses the `@hashgraphonline/standards-sdk` package. The unified architecture consists of:
+
+1. **LynxifyAgent** - Main coordinator that integrates all services
+2. **HCS10ProtocolService** - Handles all HCS-10 protocol operations
+3. **TokenizedIndexService** - Implements the business logic for the tokenized index
+4. **SharedHederaService** - Manages Hedera connections and operations
+5. **EventBus** - Provides communication between components

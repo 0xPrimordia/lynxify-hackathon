@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
 import { LynxifyAgent } from '@/app/services/lynxify-agent';
-import fs from 'fs/promises';
-import path from 'path';
-
-// Configuration constants
 import dotenv from 'dotenv';
 
 // Load environment variables for agent configuration
@@ -60,52 +56,37 @@ async function getAgentInstance() {
  */
 export async function GET() {
   try {
-    // Try to get pending connections from agent
+    // Try to use the agent if available
     try {
       const agentInstance = await getAgentInstance();
       if (agentInstance) {
         const hcs10Service = agentInstance.getHCS10Service();
-        // Use internal methods to get pending connections
-        const pendingConnections = [];
         
-        // Get all pending requests that are connection requests
-        const pendingRequests = hcs10Service.getAllPendingRequests();
-        if (pendingRequests) {
-          // Convert Map entries to array for easier iteration
-          const requestEntries = Array.from(pendingRequests.entries());
-          for (const [id, request] of requestEntries) {
-            if (request.contents?.action === 'connection_request' || 
-                request.contents?.op === 'connection_request') {
-              pendingConnections.push({
-                id: request.id,
-                recipientId: request.recipientId,
-                timestamp: request.timestamp,
-                status: request.status,
-                contents: request.contents
-              });
-            }
-          }
-        }
+        // Get all pending requests from the HCS-10 service
+        const allRequests = hcs10Service.getAllPendingRequests();
+        const pendingConnections = Array.from(allRequests.values())
+          .filter(request => request.status === 'pending' && 
+                 request.contents && request.contents.type === 'connection');
         
-        return NextResponse.json({
-          success: true,
-          pendingConnections: pendingConnections,
+        return NextResponse.json({ 
+          success: true, 
+          pendingConnections
         });
       }
     } catch (agentError) {
-      console.error('Error getting pending connections from agent:', agentError);
+      console.error('Error getting pending connections through agent:', agentError);
     }
     
-    // If agent is not available, return empty array
-    return NextResponse.json({
-      success: true,
+    // If agent is not available, return empty list
+    return NextResponse.json({ 
+      success: true, 
       pendingConnections: [],
-      source: 'fallback',
+      message: 'Agent not initialized, returning empty pending connections list'
     });
   } catch (error) {
     console.error('Error retrieving pending connections:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to retrieve pending connections' },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
     );
   }
