@@ -40,6 +40,7 @@ export class HCS10AgentHandler extends EventEmitter {
     this.monitoring = false;
     this.monitorInterval = null;
     this.commandCheckInterval = null;
+    this.lastCheckedConnectionIndex = null;
   }
 
   /**
@@ -355,34 +356,56 @@ export class HCS10AgentHandler extends EventEmitter {
   }
   
   /**
-   * Start monitoring inbound topic for messages
+   * Start monitoring the inbound topic for new messages
    */
   async startMonitoring() {
-    if (!this.initialized) {
-      await this.initialize();
-    }
-    
-    if (this.monitoring) return;
-    
-    console.log('👂 Starting to monitor inbound topic for messages...');
-    
-    // Set up a more frequent polling mechanism - check every 2 seconds instead of 3 or 10
-    this.monitorInterval = setInterval(async () => {
-      console.log('🔄 Polling for new messages...');
+    try {
+      if (this.monitoring) {
+        console.log('⚠️ Monitoring already active');
+        return;
+      }
+      
+      if (!this.initialized) {
+        throw new Error('Agent handler not initialized');
+      }
+      
+      // Set up polling interval with longer time between polls (20 seconds)
+      // This reduces server load significantly while still being responsive
+      const pollingIntervalMs = 20000; // 20 seconds
+      console.log(`🔄 Starting message polling with ${pollingIntervalMs/1000}s interval...`);
+      
+      // Check immediately on startup
       await this.checkInboundTopic();
-      await this.checkPendingConnections();
-      await this.updateStatusFile();
-    }, 2000); // Check every 2 seconds for better responsiveness
-    
-    // Do an immediate check
-    await this.checkInboundTopic();
-    await this.checkPendingConnections();
-    await this.updateStatusFile();
-    
-    this.monitoring = true;
-    this.emit('monitoring_started');
-    
-    console.log('✅ Monitoring started with 2-second intervals for better responsiveness');
+      
+      // Then set up regular polling
+      this.monitorInterval = setInterval(async () => {
+        await this.checkInboundTopic();
+      }, pollingIntervalMs);
+      
+      this.monitoring = true;
+      this.emit('monitoring_started');
+      console.log('✅ Started monitoring inbound topic');
+      
+      // Also set up connection state file updates if API enabled
+      if (ENABLE_APPROVAL_API) {
+        // Update pending connections file with current state
+        await this.updatePendingConnectionsFile();
+        
+        // Check pending connections immediately
+        await this.checkPendingConnections();
+        
+        // Set up interval for checking pending connections - less frequent (30 seconds)
+        setInterval(async () => {
+          await this.checkPendingConnections();
+        }, 30000); // Check every 30 seconds
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('❌ Error starting monitoring:', error);
+      this.emit('error', error);
+      return false;
+    }
   }
   
   /**
@@ -414,8 +437,14 @@ export class HCS10AgentHandler extends EventEmitter {
       // Debug - active connections list
       const connectionsList = this.connectionsManager?.getActiveConnections() || [];
       console.log(`🔍 Active connections: ${connectionsList.length}`);
+      
+      // IMPORTANT: Limit the number of connections we log to avoid spamming logs
       if (connectionsList.length > 0) {
-        console.log('🔍 Connection topics to check:', connectionsList.map(c => c.connectionTopicId).join(', '));
+        const connectionsToLog = connectionsList.length > 20 ? 
+          [...connectionsList.slice(0, 10), '...', ...connectionsList.slice(-10)] : 
+          connectionsList;
+          
+        console.log('🔍 Connection topics to check:', connectionsToLog.map(c => c.connectionTopicId).join(', '));
       }
       
       // More aggressive message checking - try multiple approaches
@@ -448,19 +477,34 @@ export class HCS10AgentHandler extends EventEmitter {
         console.error(`⚠️ Error with standard message retrieval:`, standardError);
       }
       
-      // 2. Now check active connections for any new messages (more aggressive approach)
+      // 2. Now check active connections for messages - LIMIT TO 5 MAX TO AVOID OVERWHELMING THE SERVER
       console.log('🔍 Checking active connections for messages...');
       const activeConnections = this.connectionsManager?.getActiveConnections() || [];
       
       if (activeConnections.length > 0) {
         console.log(`📬 Found ${activeConnections.length} active connections to check for messages`);
         
-        // Check a sample of active connections (to avoid overloading)
-        const samplesToCheck = Math.min(10, activeConnections.length);
+        // IMPORTANT: Limit to 5 at a time to prevent overwhelming the server
+        const samplesToCheck = Math.min(5, activeConnections.length);
         
-        for (let i = 0; i < samplesToCheck; i++) {
-          const connection = activeConnections[i];
-          
+        // Rotate which connections we check each time
+        const startIndex = this.lastCheckedConnectionIndex || 0;
+        this.lastCheckedConnectionIndex = (startIndex + samplesToCheck) % activeConnections.length;
+        
+        // Get a slice of connections to check, wrapping around if needed
+        let connectionsToCheck = [];
+        if (startIndex + samplesToCheck <= activeConnections.length) {
+          connectionsToCheck = activeConnections.slice(startIndex, startIndex + samplesToCheck);
+        } else {
+          // Handle wraparound case
+          const firstPart = activeConnections.slice(startIndex);
+          const secondPart = activeConnections.slice(0, samplesToCheck - firstPart.length);
+          connectionsToCheck = [...firstPart, ...secondPart];
+        }
+        
+        console.log(`🔍 Checking ${connectionsToCheck.length} connections out of ${activeConnections.length} total (rotating)`);
+        
+        for (const connection of connectionsToCheck) {
           try {
             console.log(`🔍 Checking for messages on connection ${connection.connectionTopicId}`);
             
