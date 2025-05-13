@@ -11,6 +11,9 @@ const PENDING_CONNECTIONS_FILE = path.join(process.cwd(), '.pending_connections.
 const APPROVAL_COMMAND_FILE = path.join(process.cwd(), '.approval_commands.json');
 const AGENT_STATUS_FILE = path.join(process.cwd(), '.agent_status.json');
 
+console.log(`Starting render-agent-wrapper on port ${PORT}`);
+console.log(`Server will be accessible at http://localhost:${PORT}/`);
+
 // Create a simple HTTP server
 const server = http.createServer(async (req, res) => {
   // Enable CORS for all requests
@@ -26,7 +29,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Basic health check endpoint
-  if (req.url === '/health' || req.url === '/') {
+  if (req.url === '/health' || req.url === '/' || req.url === '/api/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ 
       status: 'ok',
