@@ -26,7 +26,129 @@ This disconnected approach results in:
 
 ## Reference Documentation
 
-This document builds upon the following existing documentation:
+### Examples
+
+https://github.com/hashgraph-online/standards-agent-kit/blob/main/examples/cli-demo.ts
+
+https://github.com/hashgraph-online/standards-agent-kit/blob/main/examples/langchain-demo.ts
+
+https://github.com/hashgraph-online/standards-agent-kit/blob/main/examples/standards-expert/standards-expert-agent.ts
+
+https://github.com/hashgraph-online/standards-sdk/blob/main/demo/hcs-10/polling-agent.ts
+
+### Important Docs
+
+https://hashgraphonline.com/docs/libraries/standards-sdk/hcs-10/connections-manager/
+
+## 4. Message Handling
+
+The unified architecture implements a structured approach to message handling across the HCS-10 protocol. This section details the specific message flow, processing, and error handling mechanisms.
+
+### 4.1 Message Types and Structure
+
+#### HCS-10 Protocol Messages
+- **Connection Messages**: Messages for establishing connections between agents
+  - Connection Request
+  - Connection Response
+  - Connection Update
+- **Command Messages**: Messages for executing operations
+  - Direct Command
+  - Broadcast Command
+- **Query Messages**: Messages for requesting information
+  - Agent Information Query
+  - Status Query
+  - Capability Query
+- **Notification Messages**: Messages for broadcasting events
+  - Status Update
+  - Event Notification
+
+#### Tokenized Index Messages
+- **Rebalance Messages**: Messages related to index rebalancing
+  - Rebalance Proposal
+  - Rebalance Approval
+  - Rebalance Execution
+- **Price Update Messages**: Messages with token price updates
+  - Price Feed Update
+  - Price Alert
+- **Risk Assessment Messages**: Messages related to risk evaluation
+  - Risk Alert
+  - Risk Update
+- **Governance Messages**: Messages for governance decisions
+  - Proposal Creation
+  - Proposal Vote
+  - Proposal Execution
+
+### 4.2 Message Routing and Processing
+
+Messages flow through the system following this pattern:
+
+1. **Reception**: Messages are received via HCS topic subscriptions through the `SharedHederaService`
+2. **Decoding**: Raw messages are decoded and validated by the `HCS10ProtocolService`
+3. **Classification**: Messages are classified by type and purpose
+4. **Routing**: The `LynxifyAgent` routes messages to the appropriate service:
+   - Protocol messages → `HCS10ProtocolService`
+   - Business logic messages → `TokenizedIndexService`
+5. **Processing**: The respective service processes the message
+6. **Response Generation**: If required, a response message is generated
+7. **Encoding**: Response is encoded by the `HCS10ProtocolService`
+8. **Transmission**: Response is sent via the `SharedHederaService`
+
+### 4.3 Error Handling
+
+The message handling system implements several layers of error handling:
+
+1. **Transport Errors**: Network and Hedera connection issues are handled by the `SharedHederaService`
+2. **Parsing Errors**: Message format and validation errors are caught in the `HCS10ProtocolService`
+3. **Processing Errors**: Business logic errors are handled by the respective service
+4. **Response Errors**: Failed operations return structured error responses
+
+All errors are:
+- Logged with appropriate context
+- Propagated through the EventBus when relevant
+- Included in response messages when applicable
+- Tracked for monitoring and retry mechanisms
+
+### 4.4 Message Persistence
+
+Messages are persisted at different levels:
+
+1. **Consensus Storage**: All messages are naturally persisted on the Hedera network
+2. **Local Cache**: Recent messages are cached locally for performance
+3. **State Storage**: Critical state derived from messages is persisted locally
+4. **Recovery Mechanism**: The system can recover state from the consensus record if local storage is lost
+
+### 4.5 Integration with EventBus
+
+The message handling system is tightly integrated with the EventBus:
+
+1. Messages received trigger events on the EventBus
+2. Services listen for specific event types
+3. Event handlers process messages and trigger business logic
+4. Results are published back as events
+5. Response generation is triggered by events
+
+This event-driven architecture ensures loose coupling between components while maintaining a consistent message flow.
+
+### 4.6 WebSocket Interface
+
+The WebSocket server provides a real-time interface to the agent's message system:
+
+1. **Client Connections**: WebSocket clients connect to receive real-time updates
+2. **Message Publication**: EventBus events are published to WebSocket clients
+3. **Command Reception**: Clients can send commands to control the agent
+4. **UI Integration**: Enables a reactive UI for monitoring and controlling the agent
+
+### 4.7 Deployment Considerations
+
+When deploying the agent, several message handling considerations apply:
+
+1. **Port Binding**: For proper operation, especially in cloud environments like Render, HTTP and WebSocket servers must bind to `0.0.0.0` (all interfaces) rather than just localhost
+2. **Topic Subscriptions**: Ensure proper subscription initialization and error handling
+3. **Connection Resilience**: Implement reconnection logic for network disruptions
+4. **Message Backlog**: Handle potential message backlogs after reconnection
+5. **Health Checks**: Expose health endpoints that check message system status
+
+## This document builds upon the following existing documentation:
 
 - [MOONSCAPE-AGENT-REGISTRATION.md](MOONSCAPE-AGENT-REGISTRATION.md) - Details the registration process for HCS-10 agents
 - [MOONSCAPE-AGENT-IMPLEMENTATION.md](docs/MOONSCAPE-AGENT-IMPLEMENTATION.md) - Outlines the complete implementation requirements for HCS-10 agents
