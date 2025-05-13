@@ -15,51 +15,7 @@ const PORT = process.env.PORT || 3001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Initialize HCS-10 agent handler
-console.log('🚀 Initializing HCS-10 Agent Handler...');
-try {
-  await agentHandler.initialize();
-  console.log('✅ HCS-10 Agent Handler initialized');
-  
-  // Start monitoring inbound topic
-  await agentHandler.startMonitoring();
-  console.log('✅ HCS-10 Agent monitoring started');
-} catch (error) {
-  console.error('❌ Error initializing HCS-10 Agent:', error);
-}
-
-// Set up event handlers for agent
-agentHandler.on('message_received', (message) => {
-  console.log('📩 Agent received message:', message);
-  
-  // Broadcast message to all WebSocket clients
-  wss.clients.forEach((client) => {
-    if (client.readyState === client.OPEN) {
-      client.send(JSON.stringify({
-        type: 'agent_message',
-        message,
-        timestamp: new Date().toISOString()
-      }));
-    }
-  });
-});
-
-agentHandler.on('connection_established', (connection) => {
-  console.log('🔗 Agent established connection:', connection);
-  
-  // Broadcast connection to all WebSocket clients
-  wss.clients.forEach((client) => {
-    if (client.readyState === client.OPEN) {
-      client.send(JSON.stringify({
-        type: 'agent_connection',
-        connection,
-        timestamp: new Date().toISOString()
-      }));
-    }
-  });
-});
-
-// Initialize server
+// Initialize server FIRST!
 const server = createServer((req, res) => {
   if (req.url === '/api/health') {
     // Health check endpoint
@@ -70,10 +26,13 @@ const server = createServer((req, res) => {
 
   if (req.url === '/api/agent-status') {
     // Agent status endpoint
-    const status = {
+    const status = agentHandler.initialized ? {
       ...agentHandler.getStatus(),
       registered: Boolean(agentHandler.agentId),
       status: agentHandler.monitoring ? 'running' : 'initialized'
+    } : {
+      status: 'starting',
+      registered: false
     };
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -101,7 +60,7 @@ wss.on('connection', (ws) => {
   // Send current agent status
   ws.send(JSON.stringify({
     type: 'agent_status',
-    status: agentHandler.getStatus(),
+    status: agentHandler.initialized ? agentHandler.getStatus() : { status: 'starting' },
     timestamp: new Date().toISOString()
   }));
 
@@ -111,8 +70,8 @@ wss.on('connection', (ws) => {
       const data = JSON.parse(message.toString());
       console.log('Received from WebSocket:', data);
 
-      // Handle agent-related commands
-      if (data.type === 'agent_command') {
+      // Handle agent-related commands only if agent is initialized
+      if (data.type === 'agent_command' && agentHandler.initialized) {
         switch (data.command) {
           case 'send_message':
             if (data.connectionTopicId && data.content) {
@@ -167,29 +126,87 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Start the server
-server.listen(PORT, () => {
-  const agentStatus = agentHandler.getStatus();
-  
+// Start the server FIRST - before any agent initialization
+server.listen(PORT, async () => {
   console.log(`
   ===============================================
-  🚀 Lynxify HCS-10 Agent Server Running!
+  🚀 Lynxify HCS-10 Agent Server Starting!
   
   🌐 Server listening on port ${PORT}
   🔗 API: http://localhost:${PORT}/api
   🔌 WebSocket: ws://localhost:${PORT}
   
-  📝 Agent Status:
-  - Agent ID: ${agentStatus.agentId || 'Not configured'}
-  - Inbound Topic: ${agentStatus.inboundTopicId || 'Not configured'}
-  - Outbound Topic: ${agentStatus.outboundTopicId || 'Not configured'}
-  - Connections: ${agentStatus.connectionCount || 0}
-  - Monitoring: ${agentStatus.monitoring ? 'Active' : 'Inactive'}
+  📝 Agent Status: Initializing...
   
   ✅ Health check: http://localhost:${PORT}/api/health
   ✅ Agent status: http://localhost:${PORT}/api/agent-status
   ===============================================
   `);
+
+  // NOW initialize the agent AFTER the server is up
+  try {
+    console.log('🚀 Initializing HCS-10 Agent Handler...');
+    await agentHandler.initialize();
+    console.log('✅ HCS-10 Agent Handler initialized');
+    
+    // Set up event handlers for agent
+    agentHandler.on('message_received', (message) => {
+      console.log('📩 Agent received message:', message);
+      
+      // Broadcast message to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === client.OPEN) {
+          client.send(JSON.stringify({
+            type: 'agent_message',
+            message,
+            timestamp: new Date().toISOString()
+          }));
+        }
+      });
+    });
+
+    agentHandler.on('connection_established', (connection) => {
+      console.log('🔗 Agent established connection:', connection);
+      
+      // Broadcast connection to all WebSocket clients
+      wss.clients.forEach((client) => {
+        if (client.readyState === client.OPEN) {
+          client.send(JSON.stringify({
+            type: 'agent_connection',
+            connection,
+            timestamp: new Date().toISOString()
+          }));
+        }
+      });
+    });
+    
+    // Start monitoring inbound topic AFTER server is up and running
+    // This is the part that was blocking the server startup
+    console.log('Starting agent monitoring...');
+    
+    // Start with a delay to ensure server is fully responsive
+    setTimeout(async () => {
+      try {
+        await agentHandler.startMonitoring();
+        console.log('✅ HCS-10 Agent monitoring started');
+        // Update all clients with agent status
+        wss.clients.forEach((client) => {
+          if (client.readyState === client.OPEN) {
+            client.send(JSON.stringify({
+              type: 'agent_status',
+              status: agentHandler.getStatus(),
+              timestamp: new Date().toISOString()
+            }));
+          }
+        });
+      } catch (monitorError) {
+        console.error('❌ Error starting monitoring:', monitorError);
+      }
+    }, 5000); // 5-second delay before starting monitoring
+    
+  } catch (error) {
+    console.error('❌ Error initializing HCS-10 Agent:', error);
+  }
 });
 
 // Handle process termination
@@ -197,7 +214,9 @@ process.on('SIGINT', () => {
   console.log('Server shutting down...');
   
   // Stop agent monitoring
-  agentHandler.stopMonitoring();
+  if (agentHandler.initialized) {
+    agentHandler.stopMonitoring();
+  }
   
   server.close(() => {
     console.log('Server stopped');
