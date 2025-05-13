@@ -3,9 +3,39 @@ import fs from 'fs/promises';
 import dotenv from 'dotenv';
 import path from 'path';
 import { EventEmitter } from 'events';
+import http from 'http';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
+
+// Create a simple HTTP server to satisfy Render's port detection requirements
+const PORT = parseInt(process.env.PORT || '3000', 10);
+console.log(`🌐 Creating HTTP server on port ${PORT} bound to 0.0.0.0 for Render`);
+
+// Simple HTTP server for Render port detection
+const server = http.createServer((req, res) => {
+  // Health check endpoint
+  if (req.url === '/health' || req.url === '/' || req.url === '/api/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      status: 'ok', 
+      service: 'lynxify-hcs10-agent',
+      uptime: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString()
+    }));
+    return;
+  }
+  
+  // Default response for other routes
+  res.writeHead(404, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ error: 'Not found' }));
+});
+
+// CRITICAL: Explicitly bind to 0.0.0.0 as required by Render
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🌐 HTTP server running at http://0.0.0.0:${PORT}`);
+  console.log(`🌐 Health check available at http://0.0.0.0:${PORT}/health`);
+});
 
 // Define whitelist for auto-approved connections (optional)
 const AUTO_APPROVED_ACCOUNTS = process.env.AUTO_APPROVED_ACCOUNTS 

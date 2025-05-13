@@ -1,108 +1,91 @@
-2025-05-13T01:29:42.73300578Z     "targetAgentName": "Rebalancer Agent",
-2025-05-13T01:29:42.733007289Z     "targetInboundTopicId": "0.0.5949517",
-2025-05-13T01:29:42.73300882Z     "targetOutboundTopicId": "0.0.5949516",
-2025-05-13T01:29:42.73301033Z     "lastActivity": "2025-05-12T19:47:07.653Z"
-2025-05-13T01:29:42.73301185Z   },
-2025-05-13T01:29:42.7330134Z   {
-2025-05-13T01:29:42.73301494Z     "connectionTopicId": "0.0.5988703",
-2025-05-13T01:29:42.7330165Z     "targetAccountId": "0.0.4340026",
-2025-05-13T01:29:42.73301888Z     "status": "established",
-2025-05-13T01:29:42.73302049Z     "isPending": false,
-2025-05-13T01:29:42.733022041Z     "needsConfirmation": false,
-2025-05-13T01:29:42.733023561Z     "created": "2025-05-12T19:46:39.330Z",
-2025-05-13T01:29:42.73302509Z     "inboundRequestId": 1,
-2025-05-13T01:29:42.733026611Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
-2025-05-13T01:29:42.733031101Z     "originTopicId": "0.0.5988703",
-2025-05-13T01:29:42.733032621Z     "processed": false,
-2025-05-13T01:29:42.733034161Z     "memo": "Connection accepted. Looking forward to collaborating!",
-2025-05-13T01:29:42.733035641Z     "profileInfo": {
-2025-05-13T01:29:42.733037141Z       "version": "1.0",
-2025-05-13T01:29:42.733038661Z       "type": 0,
-2025-05-13T01:29:42.733040151Z       "display_name": "Rebalancer Agent",
-2025-05-13T01:29:42.733041642Z       "alias": "lynx_rebalancer_agent",
-2025-05-13T01:29:42.733043222Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
-2025-05-13T01:29:42.733044782Z       "profileImage": "hcs://1/0.0.5949502",
-2025-05-13T01:29:42.733046312Z       "properties": {
-2025-05-13T01:29:42.733047842Z         "organization": "Lynxify"
-2025-05-13T01:29:42.733049352Z       },
-2025-05-13T01:29:42.733050882Z       "inboundTopicId": "0.0.5949517",
-2025-05-13T01:29:42.733052432Z       "outboundTopicId": "0.0.5949516"
-2025-05-13T01:29:42.733053952Z     },
-2025-05-13T01:29:42.733055462Z     "targetAgentName": "Rebalancer Agent",
-2025-05-13T01:29:42.733057012Z     "targetInboundTopicId": "0.0.5949517",
-2025-05-13T01:29:42.733058543Z     "targetOutboundTopicId": "0.0.5949516",
-2025-05-13T01:29:42.733060063Z     "lastActivity": "2025-05-12T19:47:13.231Z"
-2025-05-13T01:29:42.733061583Z   },
-2025-05-13T01:29:42.733063073Z   {
-2025-05-13T01:29:42.733064583Z     "connectionTopicId": "0.0.5988702",
-2025-05-13T01:29:42.733066093Z     "targetAccountId": "0.0.4340026",
-2025-05-13T01:29:42.733618225Z     },
-2025-05-13T01:29:42.737694322Z   {
-2025-05-13T01:29:42.738054973Z     "profileInfo": {
-2025-05-13T01:29:42.738881621Z     },
-2025-05-13T01:29:42.742102038Z     "inboundRequestId": 1,
-2025-05-13T01:29:42.744863159Z       "outboundTopicId": "0.0.5949516"
-2025-05-13T01:29:42.747660741Z     "created": "2025-05-12T23:13:09.660Z",
-2025-05-13T01:29:42.747773458Z       "alias": "lynx_rebalancer_agent",
-2025-05-13T01:29:42.747775038Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
-2025-05-13T01:29:42.747776578Z       "profileImage": "hcs://1/0.0.5949502",
-2025-05-13T01:29:42.74953077Z     "targetInboundTopicId": "0.0.5949517",
-2025-05-13T01:29:42.753398635Z   {
-2025-05-13T01:29:42.753400135Z     "connectionTopicId": "0.0.5989709",
-2025-05-13T01:29:42.753401645Z     "targetAccountId": "0.0.4340026",
-2025-05-13T01:29:42.753403155Z     "status": "established",
-2025-05-13T01:29:42.753404685Z     "isPending": false,
-2025-05-13T01:29:42.754989858Z     "targetOutboundTopicId": "0.0.5949516"
-2025-05-13T01:29:42.757550346Z     "connectionTopicId": "0.0.5989930",
-2025-05-13T01:29:42.758548744Z       "version": "1.0",
-2025-05-13T01:29:42.758550294Z       "type": 0,
-2025-05-13T01:29:42.758551784Z       "display_name": "Rebalancer Agent",
-2025-05-13T01:29:42.758553294Z       "alias": "lynx_rebalancer_agent",
-2025-05-13T01:29:42.760613584Z     "needsConfirmation": false,
-2025-05-13T01:29:42.763645821Z       "profileImage": "hcs://1/0.0.5949502",
-2025-05-13T01:29:42.76398053Z     "targetAccountId": "0.0.4340026",
-2025-05-13T01:29:42.76398204Z     "status": "established",
-2025-05-13T01:29:42.76398354Z     "isPending": false,
-2025-05-13T01:29:42.765300867Z     "memo": "Connection accepted. Looking forward to collaborating!",
-2025-05-13T01:29:42.768238837Z     "profileInfo": {
-2025-05-13T01:29:42.769238316Z     "created": "2025-05-12T19:28:59.934Z",
-2025-05-13T01:29:42.769240216Z     "inboundRequestId": 1,
-2025-05-13T01:29:42.769242266Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
-2025-05-13T01:29:42.770498129Z     "isPending": false,
-2025-05-13T01:29:42.774247907Z     "inboundRequestId": 1,
-2025-05-13T01:29:42.775065564Z     "created": "2025-05-12T20:13:07.485Z",
-2025-05-13T01:29:42.775068634Z     "inboundRequestId": 1,
-2025-05-13T01:29:42.775071765Z     "uniqueRequestKey": "inb-1:0.0.5949517@0.0.4340026",
-2025-05-13T01:29:42.775982828Z       "type": 0,
-2025-05-13T01:29:42.779132701Z     },
-2025-05-13T01:29:42.780613397Z     "needsConfirmation": false,
-2025-05-13T01:29:42.780614947Z     "created": "2025-05-12T21:32:59.490Z",
-2025-05-13T01:29:42.780616467Z     "inboundRequestId": 1,
-2025-05-13T01:29:42.78135066Z       "version": "1.0",
-2025-05-13T01:29:42.784782609Z       "inboundTopicId": "0.0.5949517",
-2025-05-13T01:29:42.786116177Z       "profileImage": "hcs://1/0.0.5949502",
-2025-05-13T01:29:42.786117687Z       "properties": {
-2025-05-13T01:29:42.786119217Z         "organization": "Lynxify"
-2025-05-13T01:29:42.786948515Z       "outboundTopicId": "0.0.5949516"
-2025-05-13T01:29:42.790337512Z     "targetAgentName": "Rebalancer Agent",
-2025-05-13T01:29:42.79167393Z     "targetAccountId": "0.0.4340026",
-2025-05-13T01:29:42.79167548Z     "status": "established",
-2025-05-13T01:29:42.79167702Z     "isPending": false,
-2025-05-13T01:29:42.79167904Z     "needsConfirmation": false,
-2025-05-13T01:29:42.793845306Z     "targetInboundTopicId": "0.0.5949517",
-2025-05-13T01:29:42.796701732Z     "targetAccountId": "0.0.4340026",
-2025-05-13T01:29:42.797205291Z       "display_name": "Rebalancer Agent",
-2025-05-13T01:29:42.797206871Z       "alias": "lynx_rebalancer_agent",
-2025-05-13T01:29:42.797208432Z       "bio": "Testnet rebalancer agent for the Lynx tokenized index",
-2025-05-13T01:29:42.797344799Z       "alias": "lynx_rebalancer_agent",
-2025-05-13T01:29:42.800371185Z       "display_name": "Rebalancer Agent",
-2025-05-13T01:30:27.052461338Z ==> No open ports detected, continuing to scan...
-2025-05-13T01:30:27.154447596Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
-2025-05-13T01:30:42.76097877Z 🔄 Checking inbound topic 0.0.5966032 for new messages...
-2025-05-13T01:30:42.76114065Z 🔍 Active connections: 721
-2025-05-13T01:30:42.7611508Z 🔍 Found 721 active connections
-2025-05-13T01:30:42.7611566Z 🔍 Checking for new messages using standard getMessageStream...
-2025-05-13T01:30:49.731760035Z ℹ️ No new messages found
-2025-05-13T01:30:49.731785437Z 🔍 Checking outbound topic 0.0.5966031 for misrouted messages...
-2025-05-13T01:31:27.879546346Z ==> No open ports detected, continuing to scan...
-2025-05-13T01:31:27.978388246Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2025-05-13T02:07:54.446001493Z ✅ HEDERA: Successfully initialized client with REAL Hedera testnet
+2025-05-13T02:07:54.446004333Z Using fallback token data (no file access or in production)
+2025-05-13T02:07:54.446006883Z ✅ HederaService initialized successfully!
+2025-05-13T02:07:54.446009884Z Using fallback token data (no file access or in production)
+2025-05-13T02:07:54.446012624Z ✅ RebalanceAgent initialized with TokenService
+2025-05-13T02:07:54.446025735Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T02:07:54.446039676Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T02:07:54.446044546Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T02:07:54.446048716Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T02:07:54.472352852Z    Generating static pages (2/8) 
+2025-05-13T02:07:54.573158265Z    Generating static pages (4/8) 
+2025-05-13T02:07:54.573206108Z    Generating static pages (6/8) 
+2025-05-13T02:07:54.573312515Z  ✓ Generating static pages (8/8)
+2025-05-13T02:07:54.798341654Z    Finalizing page optimization ...
+2025-05-13T02:07:54.798366866Z    Collecting build traces ...
+2025-05-13T02:08:00.052243093Z 
+2025-05-13T02:08:00.061713253Z Route (app)                                 Size  First Load JS
+2025-05-13T02:08:00.061726754Z ┌ ○ /                                    16.1 kB         126 kB
+2025-05-13T02:08:00.061730534Z ├ ○ /_not-found                            977 B         102 kB
+2025-05-13T02:08:00.061733934Z ├ ƒ /api/agent/connections                 179 B         101 kB
+2025-05-13T02:08:00.061746335Z ├ ƒ /api/agent/connections/approve         179 B         101 kB
+2025-05-13T02:08:00.061748445Z ├ ƒ /api/agent/connections/pending         179 B         101 kB
+2025-05-13T02:08:00.061750435Z ├ ƒ /api/agents/[action]                   179 B         101 kB
+2025-05-13T02:08:00.061752355Z ├ ƒ /api/agents/ai-rebalance               179 B         101 kB
+2025-05-13T02:08:00.061754315Z ├ ƒ /api/agents/status                     179 B         101 kB
+2025-05-13T02:08:00.061756225Z ├ ƒ /api/connections                       179 B         101 kB
+2025-05-13T02:08:00.061758165Z ├ ƒ /api/connections/approve               179 B         101 kB
+2025-05-13T02:08:00.061760036Z ├ ƒ /api/connections/pending               179 B         101 kB
+2025-05-13T02:08:00.061761896Z ├ ƒ /api/debug-message                     179 B         101 kB
+2025-05-13T02:08:00.061763776Z ├ ƒ /api/env-check                         179 B         101 kB
+2025-05-13T02:08:00.061765676Z ├ ƒ /api/governance/proposals              179 B         101 kB
+2025-05-13T02:08:00.061767556Z ├ ƒ /api/governance/vote                   179 B         101 kB
+2025-05-13T02:08:00.061769516Z ├ ƒ /api/hcs-test                          179 B         101 kB
+2025-05-13T02:08:00.061771406Z ├ ƒ /api/hcs/messages                      179 B         101 kB
+2025-05-13T02:08:00.061773526Z ├ ƒ /api/index/composition                 179 B         101 kB
+2025-05-13T02:08:00.061775426Z ├ ƒ /api/prices/history                    179 B         101 kB
+2025-05-13T02:08:00.061777277Z ├ ƒ /api/risk/metrics                      179 B         101 kB
+2025-05-13T02:08:00.061779167Z ├ ƒ /api/token-operations                  179 B         101 kB
+2025-05-13T02:08:00.061781037Z └ ○ /token-operations                    1.79 kB         106 kB
+2025-05-13T02:08:00.061784507Z + First Load JS shared by all             101 kB
+2025-05-13T02:08:00.061786457Z   ├ chunks/4bd1b696-f1358af2203e7582.js  53.2 kB
+2025-05-13T02:08:00.061788427Z   ├ chunks/684-2c4e27258dd1c010.js       45.8 kB
+2025-05-13T02:08:00.061790358Z   └ other shared chunks (total)          1.86 kB
+2025-05-13T02:08:00.061792107Z 
+2025-05-13T02:08:00.061793938Z 
+2025-05-13T02:08:00.06182672Z ○  (Static)   prerendered as static content
+2025-05-13T02:08:00.06183314Z ƒ  (Dynamic)  server-rendered on demand
+2025-05-13T02:08:00.06183545Z 
+2025-05-13T02:08:01.428349771Z ==> Uploading build...
+2025-05-13T02:08:22.791453103Z ==> Deploying...
+2025-05-13T02:09:04.909892996Z ==> Running 'npm run start:agent'
+2025-05-13T02:09:06.722385377Z 
+2025-05-13T02:09:06.722418948Z > lynxify-hackathon@0.1.0 start:agent
+2025-05-13T02:09:06.722423438Z > node scripts/restart-agent.mjs
+2025-05-13T02:09:06.722425818Z 
+2025-05-13T02:09:07.40576586Z 🚀 Starting HCS10 agent process...
+2025-05-13T02:09:07.501022729Z ✅ Agent process started
+2025-05-13T02:09:15.00133288Z 🔍 DEBUG: Auto approved accounts: [ '0.0.4340026' ]
+2025-05-13T02:09:15.001820611Z 🔍 DEBUG: Connection approval API enabled: false
+2025-05-13T02:09:15.001955644Z 🚀 Starting HCS10 agent...
+2025-05-13T02:09:15.004372589Z ✅ Loaded agent registration info:
+2025-05-13T02:09:15.0044304Z    Agent ID: 0.0.5966030
+2025-05-13T02:09:15.004486161Z    Inbound Topic: 0.0.5966032
+2025-05-13T02:09:15.004616464Z    Outbound Topic: 0.0.5966031
+2025-05-13T02:09:15.004662175Z 🔄 Creating HCS10 client...
+2025-05-13T02:09:15.010360665Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T02:09:15.409572325Z WARNING: Consider using fromStringECDSA() or fromStringED25519() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.
+2025-05-13T02:09:15.503732839Z ✅ HCS10 client created
+2025-05-13T02:09:15.50375949Z 🔄 Initializing ConnectionsManager...
+2025-05-13T02:09:15.503942484Z ✅ ConnectionsManager initialized
+2025-05-13T02:09:15.503947704Z 🔄 Fetching connections from Hedera...
+2025-05-13T02:09:15.504458176Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.5966030
+2025-05-13T02:09:15.60210439Z { module: 'HCS-11' } Fetching profile for account 0.0.5966030 on testnet
+2025-05-13T02:09:16.309831395Z { module: 'HCS-11' } Got account memo: hcs-11:hcs://1/0.0.5966035
+2025-05-13T02:09:16.35463499Z { module: 'HCS-11' } Found HCS-11 memo: hcs-11:hcs://1/0.0.5966035
+2025-05-13T02:09:16.354648941Z { module: 'HCS-11' } Retrieving profile from Kiloscribe CDN: 0.0.5966035
+2025-05-13T02:09:19.138590446Z { module: 'ConnectionsManager' } Total connections in map: 731
+2025-05-13T02:09:19.138916944Z { module: 'ConnectionsManager' } Connections with status='pending': 0
+2025-05-13T02:09:19.139153639Z { module: 'ConnectionsManager' } No pending connections found
+2025-05-13T02:09:19.139581868Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.4340026
+2025-05-13T02:09:19.140650223Z { module: 'HCS-11' } Fetching profile for account 0.0.4340026 on testnet
+2025-05-13T02:09:19.14141134Z { module: 'HCS-SDK' } Retrieving profile for account: 0.0.5527744
+2025-05-13T02:09:19.142056725Z { module: 'HCS-11' } Fetching profile for account 0.0.5527744 on testnet
+2025-05-13T02:09:19.218851576Z { module: 'HCS-11' } Got account memo: hcs-11:hcs://1/0.0.5949520
+2025-05-13T02:09:19.218877476Z { module: 'HCS-11' } Found HCS-11 memo: hcs-11:hcs://1/0.0.5949520
+2025-05-13T02:09:19.218924897Z { module: 'HCS-11' } Retrieving profile from Kiloscribe CDN: 0.0.5949520
+2025-05-13T02:09:19.232920085Z { module: 'HCS-11' } Got account memo: hcs-11:hcs://1/0.0.5949567
+2025-05-13T02:09:19.232944455Z { module: 'HCS-11' } Found HCS-11 memo: hcs-11:hcs://1/0.0.5949567
+2025-05-13T02:09:19.232956345Z { module: 'HCS-11' } Retrieving profile from Kiloscribe CDN: 0.0.5949567
+2025-05-13T02:09:30.693238017Z ==> No open ports detected, continuing to scan...
+2025-05-13T02:09:30.838541389Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
