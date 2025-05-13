@@ -12,7 +12,7 @@ dotenv.config({ path: '.env.local' });
 // Create a shared HTTP server that will be used by the WebSocketService
 // This ensures the port is bound immediately for Render's port detection
 const PORT = parseInt(process.env.PORT || process.env.WS_PORT || '3000', 10);
-console.log(`[Server] Creating HTTP server on port ${PORT}`);
+console.log(`[Server] Creating HTTP server on port ${PORT} bound to 0.0.0.0`);
 
 // Create HTTP server first (immediate port binding)
 const sharedHttpServer = createServer((req, res) => {
@@ -34,9 +34,10 @@ const sharedHttpServer = createServer((req, res) => {
 });
 
 // Start HTTP server immediately to ensure port binding for Render
-sharedHttpServer.listen(PORT, () => {
-  console.log(`[Server] HTTP server running on port ${PORT}`);
-  console.log(`[Server] Health check available at http://localhost:${PORT}/health`);
+// CRITICAL: Explicitly bind to 0.0.0.0 as required by Render
+sharedHttpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`[Server] HTTP server running at http://0.0.0.0:${PORT}`);
+  console.log(`[Server] Health check available at http://0.0.0.0:${PORT}/health`);
 });
 
 // Agent configuration
@@ -75,7 +76,7 @@ async function runUnifiedServer(): Promise<void> {
 ===============================================
 🚀 Starting Lynxify Unified Server...
 📡 Environment: ${process.env.NODE_ENV || 'development'}
-📡 Port: ${PORT}
+📡 Port: ${PORT} (bound to 0.0.0.0)
 📡 HTTP server already running on port ${PORT}
 ===============================================
   `);
@@ -122,8 +123,8 @@ async function runUnifiedServer(): Promise<void> {
     ===============================================
     🚀 Lynxify Unified Server Running!
     
-    🔌 WebSocket server: ws://localhost:${PORT}
-    🌐 HTTP endpoints: http://localhost:${PORT}
+    🔌 WebSocket server: ws://0.0.0.0:${PORT}
+    🌐 HTTP endpoints: http://0.0.0.0:${PORT}
     
     ✅ Agent fully initialized with UI connection support
     ✅ Token operations and rebalance proposals enabled
@@ -174,7 +175,7 @@ function setupShutdownHandlers(agent: LynxifyAgent, webSocketService: UnifiedWeb
 }
 
 /**
- * Keep the process alive until terminated
+ * Keep the process alive
  */
 function keepAlive(): void {
   // Setup a simple interval to keep the process alive

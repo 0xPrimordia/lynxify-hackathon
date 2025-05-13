@@ -60,7 +60,7 @@ export class UnifiedWebSocketService {
       this.wss = new WebSocketServer({ server: existingServer });
     } else {
       // Create a new HTTP server
-      console.log('🔌 WEBSOCKET: Creating new HTTP server');
+      console.log('🔌 WEBSOCKET: Creating new HTTP server on port ' + port);
       this.httpServer = createServer((req, res) => {
         // Basic health check endpoint
         if (req.url === '/health' || req.url === '/' || req.url === '/api/health') {
@@ -79,10 +79,10 @@ export class UnifiedWebSocketService {
         res.end('Not found');
       });
       
-      // Start the HTTP server
-      this.httpServer.listen(port, () => {
-        console.log(`🌐 HTTP server listening on port ${port}`);
-        console.log(`🌐 Health check available at http://localhost:${port}/health`);
+      // Start the HTTP server - CRITICAL: Bind to 0.0.0.0 for Render
+      this.httpServer.listen(port, '0.0.0.0', () => {
+        console.log(`🌐 HTTP server listening at http://0.0.0.0:${port}`);
+        console.log(`🌐 Health check available at http://0.0.0.0:${port}/health`);
       });
       
       // Create WebSocket server attached to the HTTP server
