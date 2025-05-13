@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "node combined-server.js",
     "start:agent": "node scripts/restart-agent.mjs",
-    "start:minimal-agent": "node scripts/hcs10/minimal-agent.mjs",
     "test:api-endpoints": "node scripts/test-api-endpoints.mjs",
     "test:message": "node scripts/test-agent-message.mjs",
     "test:direct-message": "node scripts/direct-message-test.mjs",

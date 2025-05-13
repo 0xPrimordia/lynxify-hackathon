@@ -59,47 +59,38 @@ async function getAgentInstance() {
 }
 
 /**
- * GET endpoint to retrieve active connections
+ * GET endpoint to retrieve all connections
  */
 export async function GET() {
   try {
-    // First try to get connections from agent
+    // Try to use the agent if available
     try {
       const agentInstance = await getAgentInstance();
       if (agentInstance) {
         const hcs10Service = agentInstance.getHCS10Service();
-        const connections = Array.from(hcs10Service.getKnownAgents().values());
         
-        return NextResponse.json({
-          success: true,
-          connections: connections,
+        // Get all connections from the HCS-10 service
+        const connections = hcs10Service.getKnownAgents();
+        
+        return NextResponse.json({ 
+          success: true, 
+          connections: Array.from(connections.values())
         });
       }
     } catch (agentError) {
-      console.error('Error getting connections from agent:', agentError);
+      console.error('Error getting connections through agent:', agentError);
     }
     
-    // Fallback to file-based connections if agent is not available
-    try {
-      const data = await fs.readFile(CONNECTION_STATE_FILE, 'utf8');
-      const connections = JSON.parse(data);
-      return NextResponse.json({
-        success: true,
-        connections: connections,
-        source: 'file',
-      });
-    } catch (fileError) {
-      // If file doesn't exist, return empty array
-      return NextResponse.json({
-        success: true,
-        connections: [],
-        source: 'empty',
-      });
-    }
+    // If agent is not available, return empty list
+    return NextResponse.json({ 
+      success: true, 
+      connections: [],
+      message: 'Agent not initialized, returning empty connections list'
+    });
   } catch (error) {
     console.error('Error retrieving connections:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to retrieve connections' },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
     );
   }
