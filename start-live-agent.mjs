@@ -7,6 +7,11 @@
 import dotenv from 'dotenv';
 import { Client, PrivateKey, TopicMessageSubmitTransaction, TopicMessageQuery } from '@hashgraph/sdk';
 import { HCS10AgentWithConnections } from './dist-esm/lib/hcs10-connection/hcs10-agent-with-connections.js';
+import * as http from 'node:http';
+import * as fs from 'node:fs';
+
+// Set up port for Render deployment
+const port = process.env.PORT || 3000;
 
 // Load environment variables - make sure to use the path option
 dotenv.config({ path: './.env.local' });
@@ -39,37 +44,139 @@ const operatorId = process.env.NEXT_PUBLIC_OPERATOR_ID;
 const operatorKey = process.env.OPERATOR_KEY;
 const inboundTopicId = process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC;
 const outboundTopicId = process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC;
-const network = process.env.NEXT_PUBLIC_NETWORK || 'testnet';
+const networkName = process.env.NEXT_PUBLIC_NETWORK || 'testnet';
 
 console.log('🚀 Starting live HCS-10 agent');
-console.log(`Network: ${network}`);
+console.log(`Network: ${networkName}`);
 console.log(`Operator ID: ${operatorId}`);
 console.log(`Inbound topic: ${inboundTopicId}`);
 console.log(`Outbound topic: ${outboundTopicId}`);
 
+// Create HTTP server for Render
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ 
+    status: 'ok', 
+    agent: 'Lynxify HCS-10 Agent',
+    timestamp: new Date().toISOString() 
+  }));
+});
+
+// Start HTTP server before agent
+server.listen(port, '0.0.0.0', () => {
+  console.log(`✅ HTTP server running on port ${port} bound to 0.0.0.0`);
+  
+  // Start the agent after server is listening
+  startAgent();
+});
+
+// Function to start the agent
+async function startAgent() {
+  console.log('🚀 Starting live HCS-10 agent');
+  console.log(`Network: ${networkName}`);
+  console.log(`Operator ID: ${operatorId}`);
+  console.log(`Inbound topic: ${inboundTopicId}`);
+  console.log(`Outbound topic: ${outboundTopicId}`);
+
+  try {
+    // Initialize Hedera client
+    console.log('🔄 Initializing Hedera client...');
+    const client = new HederaHCS10Client({
+      operatorId,
+      operatorKey,
+      network: networkName,
+    });
+    
+    // Create the agent
+    const agent = new HCS10AgentWithConnections(
+      client,
+      inboundTopicId,
+      outboundTopicId,
+      operatorId
+    );
+
+    // Set up event listeners
+    agent.on('connectionsManagerReady', () => {
+      console.log('✅ ConnectionsManager is ready!');
+    });
+
+    agent.on('connectionsManagerError', (error) => {
+      console.error('❌ ConnectionsManager error:', error);
+    });
+    
+    agent.on('message', (content) => {
+      console.log('📩 Message received:', content);
+      
+      // Try to parse the message
+      try {
+        const message = JSON.parse(content);
+        console.log('Parsed message:', message);
+      } catch (error) {
+        console.log('Could not parse message as JSON');
+      }
+    });
+
+    // Start the agent
+    console.log('🚀 Starting agent polling...');
+    agent.start(10000); // Poll every 10 seconds
+    
+    // Wait for ConnectionsManager initialization
+    console.log('⏳ Waiting for ConnectionsManager to initialize...');
+    const ready = await agent.waitUntilReady(30000);
+    
+    if (ready) {
+      console.log('✅ Agent successfully initialized and ready for messages');
+    } else {
+      console.log('⚠️ Agent initialization timed out or failed');
+      console.log('Continuing with base functionality...');
+    }
+    
+    console.log('✅ Agent is now running and listening for messages');
+    console.log('Press Ctrl+C to stop the agent...');
+    
+    // Keep the process running
+    process.stdin.resume();
+    
+    // Handle graceful shutdown
+    process.on('SIGINT', () => {
+      console.log('🛑 Shutting down agent...');
+      agent.stop();
+      process.exit(0);
+    });
+  } catch (error) {
+    console.error('❌ Error starting agent:', error);
+    process.exit(1);
+  }
+}
+
 // Create a real Hedera client
 class HederaHCS10Client {
-  constructor() {
+  constructor(options) {
+    this.privateKey = null;
     this.client = null;
-    this.operatorId = operatorId;
-    this.network = network;
+    this.operatorId = options.operatorId;
+    this.operatorKey = options.operatorKey;
+    this.network = options.network;
     this.init();
   }
 
   init() {
-    console.log('🔄 Initializing Hedera client...');
+    console.log(`Initializing client for network: ${this.network}`);
     
     try {
-      if (network === 'testnet') {
+      if (this.network === 'testnet') {
         this.client = Client.forTestnet();
-      } else if (network === 'mainnet') {
+      } else if (this.network === 'mainnet') {
         this.client = Client.forMainnet();
       } else {
-        throw new Error(`Unknown network: ${network}`);
+        throw new Error(`Unknown network: ${this.network}`);
       }
       
-      // Set operator
-      this.client.setOperator(operatorId, operatorKey);
+      // Create private key instance
+      this.privateKey = PrivateKey.fromString(this.operatorKey);
+      
+      // Set the client operator
+      this.client.setOperator(this.operatorId, this.privateKey);
       
       console.log('✅ Hedera client initialized');
     } catch (error) {
@@ -97,7 +204,7 @@ class HederaHCS10Client {
       const txFrozen = await messageSubmit.freezeWith(this.client);
       
       // Sign explicitly with the client's key
-      const signedTx = await txFrozen.sign(PrivateKey.fromString(operatorKey));
+      const signedTx = await txFrozen.sign(this.privateKey);
       
       // Execute the transaction
       const response = await signedTx.execute(this.client);
@@ -231,8 +338,8 @@ class HederaHCS10Client {
           p: 'hcs-10',
           op: 'connection_created',
           connection_topic_id: outboundTopicId,
-          connected_account_id: operatorId,
-          operator_id: `${outboundTopicId}@${operatorId}`,
+          connected_account_id: this.operatorId,
+          operator_id: `${outboundTopicId}@${this.operatorId}`,
           connection_id: Date.now(),
           m: 'Connection established from direct handler'
         };
@@ -273,74 +380,6 @@ class HederaHCS10Client {
     return {
       getTopicMessages: async () => ({ messages: [] })
     };
-  }
-}
-
-// Start the agent
-async function startAgent() {
-  try {
-    // Create the client
-    const client = new HederaHCS10Client();
-    
-    // Create the agent
-    const agent = new HCS10AgentWithConnections(
-      client,
-      inboundTopicId,
-      outboundTopicId,
-      operatorId
-    );
-    
-    // Set up event listeners
-    agent.on('connectionsManagerReady', () => {
-      console.log('✅ ConnectionsManager is ready!');
-    });
-    
-    agent.on('connectionsManagerError', (error) => {
-      console.error('❌ ConnectionsManager error:', error);
-    });
-    
-    agent.on('message', (content) => {
-      console.log('📩 Message received:', content);
-      
-      // Try to parse the message
-      try {
-        const message = JSON.parse(content);
-        console.log('Parsed message:', message);
-      } catch (error) {
-        console.log('Could not parse message as JSON');
-      }
-    });
-    
-    // Start polling for messages
-    console.log('🚀 Starting agent polling...');
-    agent.start(10000); // Poll every 10 seconds
-    
-    // Wait for ConnectionsManager initialization
-    console.log('⏳ Waiting for ConnectionsManager to initialize...');
-    const ready = await agent.waitUntilReady(30000);
-    
-    if (ready) {
-      console.log('✅ Agent successfully initialized and ready for messages');
-    } else {
-      console.log('⚠️ Agent initialization timed out or failed');
-      console.log('Continuing with base functionality...');
-    }
-    
-    console.log('✅ Agent is now running and listening for messages');
-    console.log('Press Ctrl+C to stop the agent...');
-    
-    // Keep the process running
-    process.stdin.resume();
-    
-    // Handle graceful shutdown
-    process.on('SIGINT', () => {
-      console.log('🛑 Shutting down agent...');
-      agent.stop();
-      process.exit(0);
-    });
-  } catch (error) {
-    console.error('❌ Error starting agent:', error);
-    process.exit(1);
   }
 }
 
