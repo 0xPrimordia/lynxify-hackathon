@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   HCS10ProtocolMessage, 
@@ -10,7 +10,7 @@ import {
   RebalanceApproved,
   RebalanceExecuted,
   MessageStreamResponse
-} from './types/hcs10-types';
+} from './types/hcs10-types.js';
 
 // File paths for persistent storage
 const CONNECTIONS_FILE = path.join(process.cwd(), '.connections.json');
@@ -22,6 +22,10 @@ export interface HCS10Client {
   createTopic(): Promise<string>;
   sendMessage(topicId: string, message: string): Promise<{ success: boolean }>;
   getMessageStream(topicId: string): Promise<MessageStreamResponse>;
+  
+  // Add any other required methods for ConnectionsManager
+  retrieveCommunicationTopics?: (accountId: string) => Promise<any>;
+  getMessages?: (topicId: string) => Promise<any>;
 }
 
 // Interface for connection data
@@ -61,7 +65,7 @@ export class HCS10Agent {
   private pollingInterval: NodeJS.Timeout | null = null;
   private lastSequence: Record<string, number> = {};
   private profileTopicId: string | null = null;
-
+  
   constructor(
     client: HCS10Client, 
     inboundTopicId: string, 

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "outDir": "dist-esm",
+    "rootDir": "src",
+    "declaration": true
+  },
+  "include": [
+    "src/lib/hcs10-agent.ts",
+    "src/lib/hcs10-connection/hcs10-agent-with-connections.ts",
+    "src/lib/mock-hcs10-client.ts",
+    "src/lib/types/hcs10-types.ts"
+  ],
+  "exclude": ["node_modules", "dist", "dist-esm"]
+} 

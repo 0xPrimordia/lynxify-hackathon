@@ -72,12 +72,17 @@ export type ApplicationMessageType =
   | RebalanceApproved
   | RebalanceExecuted;
 
+// Extended message interface for the SDK
+export interface HCSMessage {
+  sequence_number: number;
+  contents: string;
+  timestamp: string;
+  topic_id: string;
+}
+
 // Message stream response type
 export interface MessageStreamResponse {
-  messages: Array<{
-    sequence_number: number;
-    contents: string;
-  }>;
+  messages: Array<HCSMessage>;
 }
 
 // HCS-10 Client Configuration
@@ -85,6 +90,10 @@ export interface HCS10ClientConfig {
   network: string;
   operatorId: string;
   operatorPrivateKey: string;
+  // Add additional configuration options
+  inboundTopicId?: string;
+  outboundTopicId?: string;
+  logLevel?: string;
 }
 
 // Interface for the HCS10Client
@@ -92,4 +101,7 @@ export interface HCS10Client {
   createTopic(): Promise<string>;
   sendMessage(topicId: string, message: string): Promise<{ success: boolean }>;
   getMessageStream(topicId: string): Promise<MessageStreamResponse>;
+  // Additional methods for ConnectionsManager compatibility
+  retrieveCommunicationTopics?(accountId: string): Promise<{ inboundTopic: string; outboundTopic: string }>;
+  getMessages?(topicId: string): Promise<HCSMessage[]>;
 } 

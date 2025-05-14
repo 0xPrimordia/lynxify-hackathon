@@ -2,16 +2,10 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   HCS10ClientConfig,
   MessageStreamResponse,
-  HCS10ConnectionRequest
-} from './types/hcs10-types';
-import { HCS10Client } from './hcs10-agent';
-
-interface HCS10Message {
-  contents: string;
-  sequence_number: number;
-  timestamp: string;
-  topic_id: string;
-}
+  HCS10ConnectionRequest,
+  HCSMessage
+} from './types/hcs10-types.js';
+import { HCS10Client } from './hcs10-agent.js';
 
 /**
  * Mock implementation of HCS10Client for testing purposes
@@ -20,13 +14,30 @@ interface HCS10Message {
 export class MockHCS10Client implements HCS10Client {
   private config: HCS10ClientConfig;
   private topics: Map<string, any>;
-  private messages: Map<string, HCS10Message[]>;
+  private messages: Map<string, HCSMessage[]>;
+  private accountTopics: Map<string, { inboundTopic: string; outboundTopic: string }>;
 
   constructor(config: HCS10ClientConfig) {
     this.config = config;
     this.topics = new Map();
     this.messages = new Map();
-    this.topics.set('inbound', '0.0.5956431'); // Use real inbound topic from registration
+    this.accountTopics = new Map();
+    
+    // Set up default inbound/outbound topics
+    const inboundTopicId = config.inboundTopicId || '0.0.5956431';
+    const outboundTopicId = config.outboundTopicId || '0.0.5956432';
+    
+    this.topics.set('inbound', inboundTopicId);
+    this.topics.set('outbound', outboundTopicId);
+    
+    // Store the mapping for this account
+    if (config.operatorId) {
+      this.accountTopics.set(config.operatorId, {
+        inboundTopic: inboundTopicId,
+        outboundTopic: outboundTopicId
+      });
+    }
+    
     console.log('🔄 Initialized MockHCS10Client');
   }
 
@@ -117,5 +128,41 @@ export class MockHCS10Client implements HCS10Client {
     // Send it to the requester's topic
     await this.sendMessage(requesterTopic, JSON.stringify(response));
     console.log(`🔄 Auto-responded to connection request on topic ${requesterTopic}`);
+  }
+  
+  /**
+   * Retrieves communication topics for an account
+   * Required for ConnectionsManager
+   * @param accountId The account ID to get topics for
+   */
+  async retrieveCommunicationTopics(accountId: string): Promise<{ inboundTopic: string; outboundTopic: string }> {
+    // Check if we have stored topics for this account
+    if (this.accountTopics.has(accountId)) {
+      return this.accountTopics.get(accountId)!;
+    }
+    
+    // If not, create and store them
+    const inboundTopicId = await this.createTopic();
+    const outboundTopicId = await this.createTopic();
+    
+    const topicInfo = {
+      inboundTopic: inboundTopicId,
+      outboundTopic: outboundTopicId
+    };
+    
+    this.accountTopics.set(accountId, topicInfo);
+    console.log(`🔄 Created communication topics for account ${accountId}`);
+    return topicInfo;
+  }
+  
+  /**
+   * Gets messages from a topic
+   * Required for ConnectionsManager
+   * This is an alias for getMessageStream adapted to the format ConnectionsManager expects
+   * @param topicId The topic ID to get messages from
+   */
+  async getMessages(topicId: string): Promise<HCSMessage[]> {
+    const response = await this.getMessageStream(topicId);
+    return response.messages;
   }
 } 

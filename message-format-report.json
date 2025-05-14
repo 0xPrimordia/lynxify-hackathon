@@ -1,0 +1,158 @@
+{
+  "timestamp": "2025-05-14T00:13:34.306Z",
+  "summary": {
+    "totalTests": 10,
+    "matches": 6,
+    "mismatches": 4,
+    "matchPercentage": 60
+  },
+  "results": [
+    {
+      "testName": "Simple text message",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "text": "Hello, this is a test message",
+        "sequence_number": 1,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "Hello, this is a test message",
+      "standardsExpertResult": "",
+      "matches": false
+    },
+    {
+      "testName": "JSON string in data field",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": "{\"text\":\"Hello, this is a test message with JSON in data field\"}",
+        "sequence_number": 2,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "Hello, this is a test message with JSON in data field",
+      "standardsExpertResult": "Hello, this is a test message with JSON in data field",
+      "matches": true
+    },
+    {
+      "testName": "Plain string in data field",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": "Hello, this is a plain text in data field",
+        "sequence_number": 3,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "Hello, this is a plain text in data field",
+      "standardsExpertResult": "Hello, this is a plain text in data field",
+      "matches": true
+    },
+    {
+      "testName": "Object in data field with text property",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": {
+          "text": "Hello, this is an object with text property"
+        },
+        "sequence_number": 4,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "{\"text\":\"Hello, this is an object with text property\"}",
+      "standardsExpertResult": {
+        "text": "Hello, this is an object with text property"
+      },
+      "matches": false
+    },
+    {
+      "testName": "Object in data field with message property",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": {
+          "message": "Hello, this is an object with message property"
+        },
+        "sequence_number": 5,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "{\"message\":\"Hello, this is an object with message property\"}",
+      "standardsExpertResult": {
+        "message": "Hello, this is an object with message property"
+      },
+      "matches": false
+    },
+    {
+      "testName": "JSON string in data with complex content",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": "{\"query\":\"What is Hedera?\",\"options\":{\"detailed\":true}}",
+        "sequence_number": 6,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "{\"query\":\"What is Hedera?\",\"options\":{\"detailed\":true}}",
+      "standardsExpertResult": "What is Hedera?",
+      "matches": false
+    },
+    {
+      "testName": "Empty data field",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": "",
+        "sequence_number": 7,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "",
+      "standardsExpertResult": "",
+      "matches": true
+    },
+    {
+      "testName": "Malformed JSON in data field",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": "{text:\"This is malformed JSON\"}",
+        "sequence_number": 8,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "{text:\"This is malformed JSON\"}",
+      "standardsExpertResult": "{text:\"This is malformed JSON\"}",
+      "matches": true
+    },
+    {
+      "testName": "Missing key fields",
+      "message": {
+        "op": "message",
+        "sequence_number": 9,
+        "created": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "",
+      "standardsExpertResult": "",
+      "matches": true
+    },
+    {
+      "testName": "Standards Expert style message",
+      "message": {
+        "p": "hcs-10",
+        "op": "message",
+        "data": "What is HCS-10?",
+        "sequence_number": 10,
+        "created": "2025-05-14T00:13:34.293Z",
+        "timestamp": "2025-05-14T00:13:34.293Z",
+        "connection_topic_id": "0.0.12345"
+      },
+      "lynxifyResult": "What is HCS-10?",
+      "standardsExpertResult": "What is HCS-10?",
+      "matches": true
+    }
+  ]
+}

@@ -1,91 +1,144 @@
 #!/usr/bin/env node
 
-import { HCS10Client, ConnectionsManager } from '@hashgraphonline/standards-sdk';
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-
-// Load environment variables
-dotenv.config({ path: '.env.local' });
-
-// Environment check
-const operatorId = process.env.NEXT_PUBLIC_OPERATOR_ID;
-const operatorKey = process.env.OPERATOR_KEY;
-const agentId = process.env.NEXT_PUBLIC_HCS_AGENT_ID;
-
-if (!operatorId || !operatorKey || !agentId) {
-  console.error('❌ Missing required environment variables');
-  process.exit(1);
-}
-
-// Path for connections file
-const CONNECTIONS_FILE = path.join(process.cwd(), '.connections.json');
-
 /**
- * Main function to fix connections
+ * Connection Fix Utility
+ * 
+ * This script fixes common issues with the .connections.json file:
+ * 1. Changes "pending" status connections to "established"
+ * 2. Removes connections with invalid topic ID formats
+ * 3. Removes duplicate connections for the same topic
+ * 
+ * Usage:
+ *   node scripts/fix-connections.mjs [--backup] [--dry-run]
+ * 
+ * Options:
+ *   --backup    Create a backup of the original file (default: true)
+ *   --dry-run   Show what changes would be made without applying them
  */
+
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Constants
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const CONNECTIONS_FILE = path.resolve(process.cwd(), '.connections.json');
+const BACKUP_FILE = path.resolve(process.cwd(), '.connections.json.backup');
+const HEDERA_ID_REGEX = /^0\.0\.\d+$/;
+
+// Command line arguments
+const DRY_RUN = process.argv.includes('--dry-run');
+const CREATE_BACKUP = !process.argv.includes('--no-backup');
+
 async function main() {
+  console.log('========== CONNECTION FIX UTILITY ==========');
+  console.log(`Mode: ${DRY_RUN ? 'Dry Run (no changes will be applied)' : 'Live Run'}`);
+  
   try {
-    console.log('🔧 Starting connection fix based on standards-expert example...');
-
-    // Create HCS10 client with proper credentials
-    console.log(`🔄 Creating HCS10Client for agent ${agentId}...`);
-    const client = new HCS10Client({
-      network: process.env.HEDERA_NETWORK || 'testnet',
-      operatorId,
-      operatorPrivateKey: operatorKey,
-      logLevel: 'debug'
-    });
-
-    // Create ConnectionsManager following the standards-expert example
-    console.log('🔄 Creating ConnectionsManager...');
-    const connectionsManager = new ConnectionsManager({
-      baseClient: client
-    });
-
-    // Backup existing connections file
-    if (fs.existsSync(CONNECTIONS_FILE)) {
-      const backupPath = `${CONNECTIONS_FILE}.backup-${Date.now()}`;
-      fs.copyFileSync(CONNECTIONS_FILE, backupPath);
-      console.log(`📦 Created backup of connections file at ${backupPath}`);
+    // Read the connections file
+    console.log(`Reading connections from ${CONNECTIONS_FILE}...`);
+    const data = await fs.readFile(CONNECTIONS_FILE, 'utf8');
+    let connections;
+    
+    try {
+      connections = JSON.parse(data);
+      console.log(`Loaded ${connections.length} connections`);
+    } catch (error) {
+      console.error(`Failed to parse connections file: ${error}`);
+      process.exit(1);
     }
-
-    // Fetch connections data using ConnectionsManager to get the source of truth
-    console.log('🔄 Fetching connection data from Hedera using ConnectionsManager...');
-    await connectionsManager.fetchConnectionData(agentId, true); // Force refresh
-
-    // Get all connections from the manager 
-    const managerConnections = connectionsManager.getAllConnections();
-    console.log(`📊 Found ${managerConnections.length} connections in ConnectionsManager`);
-
-    // Convert to the format needed for storage
-    const connectionsToStore = managerConnections.map(conn => ({
-      id: conn.connectionTopicId,
-      connectionTopicId: conn.connectionTopicId,
-      requesterId: conn.targetAccountId,
-      status: conn.status || 'established',
-      timestamp: conn.created?.getTime() || Date.now()
-    }));
-
-    // Save connections to file in the proper format
-    fs.writeFileSync(CONNECTIONS_FILE, JSON.stringify(connectionsToStore, null, 2));
-    console.log(`✅ Saved ${connectionsToStore.length} connections to ${CONNECTIONS_FILE}`);
     
-    // Output the fixed connections
-    console.log('📊 Connection Summary:');
-    const statusCounts = {};
-    managerConnections.forEach(conn => {
-      statusCounts[conn.status || 'unknown'] = (statusCounts[conn.status || 'unknown'] || 0) + 1;
-    });
+    // Create backup if not in dry-run mode
+    if (!DRY_RUN && CREATE_BACKUP) {
+      await fs.writeFile(BACKUP_FILE, data);
+      console.log(`Created backup at ${BACKUP_FILE}`);
+    }
     
-    console.log(statusCounts);
+    // Statistics for tracking changes
+    const stats = {
+      total: connections.length,
+      pendingFixed: 0,
+      invalidRemoved: 0,
+      duplicatesRemoved: 0
+    };
     
-    console.log('✅ Connection fix complete!');
+    // Maps to track connections
+    const connectionsByTopic = new Map();
+    const validatedConnections = [];
     
+    // Process each connection
+    for (const conn of connections) {
+      let isValid = true;
+      let status = 'processed';
+      
+      // Check connection status
+      if (conn.status === 'pending' && conn.connectionTopicId) {
+        console.log(`Fixing pending connection with topic ${conn.connectionTopicId}`);
+        conn.status = 'established';
+        stats.pendingFixed++;
+        status = 'fixed-pending';
+      }
+      
+      // Check connection topic ID format
+      if (conn.connectionTopicId && !HEDERA_ID_REGEX.test(conn.connectionTopicId)) {
+        console.log(`Removing connection with invalid topic format: ${conn.connectionTopicId}`);
+        isValid = false;
+        stats.invalidRemoved++;
+        status = 'removed-invalid';
+      }
+      
+      // Check for duplicates
+      if (isValid && conn.connectionTopicId) {
+        if (connectionsByTopic.has(conn.connectionTopicId)) {
+          const existingIndex = connectionsByTopic.get(conn.connectionTopicId);
+          console.log(`Removing duplicate connection for topic ${conn.connectionTopicId} (keeping index ${existingIndex})`);
+          isValid = false;
+          stats.duplicatesRemoved++;
+          status = 'removed-duplicate';
+        } else {
+          connectionsByTopic.set(conn.connectionTopicId, validatedConnections.length);
+        }
+      }
+      
+      // Add valid connections to the filtered list
+      if (isValid) {
+        validatedConnections.push(conn);
+      }
+      
+      // Log the action taken (for dry run)
+      if (DRY_RUN) {
+        console.log(`[DRY RUN] ${status}: ${conn.connectionTopicId || 'unknown'} (${conn.status || 'unknown'})`);
+      }
+    }
+    
+    // Calculate stats
+    stats.remaining = validatedConnections.length;
+    stats.totalRemoved = stats.invalidRemoved + stats.duplicatesRemoved;
+    stats.percentRemoved = ((stats.totalRemoved / stats.total) * 100).toFixed(2);
+    
+    // Print summary
+    console.log('\n========== SUMMARY ==========');
+    console.log(`Total original connections: ${stats.total}`);
+    console.log(`Pending connections fixed: ${stats.pendingFixed}`);
+    console.log(`Invalid topic formats removed: ${stats.invalidRemoved}`);
+    console.log(`Duplicate connections removed: ${stats.duplicatesRemoved}`);
+    console.log(`Total connections removed: ${stats.totalRemoved} (${stats.percentRemoved}%)`);
+    console.log(`Remaining valid connections: ${stats.remaining}`);
+    
+    // Save changes if not in dry-run mode
+    if (!DRY_RUN) {
+      await fs.writeFile(CONNECTIONS_FILE, JSON.stringify(validatedConnections, null, 2));
+      console.log(`\nSaved ${validatedConnections.length} connections to ${CONNECTIONS_FILE}`);
+    } else {
+      console.log('\n[DRY RUN] No changes were applied. Run without --dry-run to apply changes.');
+    }
+    
+    console.log('\n========== COMPLETE ==========');
   } catch (error) {
-    console.error('❌ Error fixing connections:', error);
+    console.error(`Error: ${error}`);
     process.exit(1);
   }
 }
 
-main(); 
+// Run the script
+main().catch(console.error); 

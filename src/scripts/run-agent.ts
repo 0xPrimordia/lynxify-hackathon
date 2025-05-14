@@ -34,7 +34,10 @@ async function getRealClient(): Promise<HCS10Client | null> {
     return new HederaHCS10Client({
       network: 'testnet',
       operatorId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
-      operatorPrivateKey: process.env.OPERATOR_KEY || ''
+      operatorPrivateKey: process.env.OPERATOR_KEY || '',
+      inboundTopicId: process.env.NEXT_PUBLIC_HCS_INBOUND_TOPIC,
+      outboundTopicId: process.env.NEXT_PUBLIC_HCS_OUTBOUND_TOPIC,
+      logLevel: 'debug'
     });
   } catch (error) {
     console.error('Failed to import real HCS10Client:', error);
@@ -76,10 +79,27 @@ async function runAgent(useRealClient: boolean = false): Promise<void> {
       }
       client = realClient;
     } else {
+      // Create a mock client with all required methods
       client = new MockHCS10Client({
         network: 'testnet',
         operatorId: process.env.NEXT_PUBLIC_OPERATOR_ID || '',
-        operatorPrivateKey: process.env.OPERATOR_KEY || ''
+        operatorPrivateKey: process.env.OPERATOR_KEY || '',
+        inboundTopicId: registrationInfo.inboundTopicId,
+        outboundTopicId: registrationInfo.outboundTopicId,
+        logLevel: 'debug'
+      });
+      
+      // Add logging for client capabilities
+      console.log('✅ Client methods:');
+      Object.keys(client).forEach(key => {
+        console.log(`   - ${key}`);
+      });
+      
+      // Log methods
+      Object.getOwnPropertyNames(Object.getPrototypeOf(client)).forEach(method => {
+        if (method !== 'constructor') {
+          console.log(`   - Method: ${method}`);
+        }
       });
     }
     

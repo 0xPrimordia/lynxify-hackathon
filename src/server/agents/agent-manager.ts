@@ -1,7 +1,7 @@
-import { HederaService } from '../hedera';
-import { PriceFeedAgent } from './price-feed-agent';
-import { RiskAssessmentAgent } from './risk-assessment-agent';
-import { RebalanceAgent } from './rebalance-agent';
+import { HederaService } from '../hedera.js';
+import { PriceFeedAgent } from './price-feed-agent.js';
+import { RiskAssessmentAgent } from './risk-assessment-agent.js';
+import { RebalanceAgent } from './rebalance-agent.js';
 
 export class AgentManager {
   private hederaService: HederaService;

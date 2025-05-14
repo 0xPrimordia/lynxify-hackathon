@@ -1,0 +1,11 @@
+{
+  "managerInitialization": {
+    "success": false,
+    "error": null
+  },
+  "availableMethods": [],
+  "methodTests": {},
+  "recommendations": [
+    "SDK import failed - ensure @hashgraphonline/standards-sdk is properly installed"
+  ]
+}

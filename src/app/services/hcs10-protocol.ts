@@ -1,6 +1,6 @@
-import { EventBus, EventType } from '../utils/event-emitter';
-import { SharedHederaService } from './shared-hedera-service';
-import { HCSMessage } from '../types/hcs';
+import { EventBus, EventType } from '../utils/event-emitter.js';
+import { SharedHederaService } from './shared-hedera-service.js';
+import { HCSMessage } from '../types/hcs.js';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
