@@ -13,8 +13,17 @@ import * as fs from 'node:fs';
 // Set up port for Render deployment
 const port = process.env.PORT || 3000;
 
-// Load environment variables - make sure to use the path option
-dotenv.config({ path: './.env.local' });
+// Check if .env.local exists before trying to load it
+try {
+  if (fs.existsSync('./.env.local')) {
+    dotenv.config({ path: './.env.local' });
+    console.log('✅ Loaded environment variables from .env.local');
+  } else {
+    console.log('⚠️ No .env.local file found, using environment variables from Render');
+  }
+} catch (error) {
+  console.log('⚠️ Error checking for .env.local, using environment variables from Render:', error.message);
+}
 
 // Print all environment variables for debugging
 console.log('Environment variables loaded:');
