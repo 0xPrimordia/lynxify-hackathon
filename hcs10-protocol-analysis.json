@@ -1,0 +1,452 @@
+{
+  "topicInfo": {
+    "0.0.5966032": {
+      "hasSubmitKey": false,
+      "hasAdminKey": true,
+      "memo": "hcs-10:0:60:0:0.0.5966030",
+      "raw": {
+        "topicId": {
+          "shard": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "realm": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "num": {
+            "low": 5966032,
+            "high": 0,
+            "unsigned": false
+          },
+          "_checksum": null
+        },
+        "topicMemo": "hcs-10:0:60:0:0.0.5966030",
+        "runningHash": {
+          "type": "Buffer",
+          "data": [
+            31,
+            22,
+            57,
+            254,
+            48,
+            224,
+            163,
+            250,
+            6,
+            168,
+            68,
+            119,
+            215,
+            249,
+            47,
+            64,
+            0,
+            39,
+            133,
+            175,
+            196,
+            149,
+            12,
+            225,
+            35,
+            171,
+            195,
+            77,
+            160,
+            18,
+            6,
+            97,
+            184,
+            243,
+            10,
+            61,
+            26,
+            117,
+            189,
+            34,
+            39,
+            90,
+            185,
+            130,
+            1,
+            123,
+            185,
+            179
+          ]
+        },
+        "sequenceNumber": {
+          "low": 849,
+          "high": 0,
+          "unsigned": true
+        },
+        "expirationTime": {
+          "seconds": {
+            "low": 1754442020,
+            "high": 0,
+            "unsigned": false
+          },
+          "nanos": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          }
+        },
+        "adminKey": {
+          "_key": {
+            "_key": {
+              "_keyData": {
+                "type": "Buffer",
+                "data": [
+                  72,
+                  110,
+                  156,
+                  40,
+                  138,
+                  85,
+                  215,
+                  213,
+                  248,
+                  47,
+                  201,
+                  77,
+                  163,
+                  54,
+                  184,
+                  250,
+                  139,
+                  223,
+                  231,
+                  134,
+                  89,
+                  199,
+                  46,
+                  191,
+                  22,
+                  65,
+                  55,
+                  238,
+                  160,
+                  21,
+                  226,
+                  120
+                ]
+              }
+            }
+          }
+        },
+        "submitKey": null,
+        "feeScheduleKey": null,
+        "feeExemptKeys": [],
+        "autoRenewPeriod": {
+          "seconds": {
+            "low": 7776000,
+            "high": 0,
+            "unsigned": false
+          }
+        },
+        "autoRenewAccountId": {
+          "shard": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "realm": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "num": {
+            "low": 5966030,
+            "high": 0,
+            "unsigned": false
+          },
+          "aliasKey": null,
+          "evmAddress": null,
+          "_checksum": null
+        },
+        "customFees": [],
+        "ledgerId": {
+          "_ledgerId": {
+            "type": "Buffer",
+            "data": [
+              1
+            ]
+          }
+        }
+      }
+    },
+    "0.0.5966031": {
+      "hasSubmitKey": true,
+      "hasAdminKey": true,
+      "memo": "hcs-10:0:60:1",
+      "raw": {
+        "topicId": {
+          "shard": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "realm": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "num": {
+            "low": 5966031,
+            "high": 0,
+            "unsigned": false
+          },
+          "_checksum": null
+        },
+        "topicMemo": "hcs-10:0:60:1",
+        "runningHash": {
+          "type": "Buffer",
+          "data": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "sequenceNumber": {
+          "low": 0,
+          "high": 0,
+          "unsigned": true
+        },
+        "expirationTime": {
+          "seconds": {
+            "low": 1754442018,
+            "high": 0,
+            "unsigned": false
+          },
+          "nanos": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          }
+        },
+        "adminKey": {
+          "_key": {
+            "_key": {
+              "_keyData": {
+                "type": "Buffer",
+                "data": [
+                  72,
+                  110,
+                  156,
+                  40,
+                  138,
+                  85,
+                  215,
+                  213,
+                  248,
+                  47,
+                  201,
+                  77,
+                  163,
+                  54,
+                  184,
+                  250,
+                  139,
+                  223,
+                  231,
+                  134,
+                  89,
+                  199,
+                  46,
+                  191,
+                  22,
+                  65,
+                  55,
+                  238,
+                  160,
+                  21,
+                  226,
+                  120
+                ]
+              }
+            }
+          }
+        },
+        "submitKey": {
+          "_key": {
+            "_key": {
+              "_keyData": {
+                "type": "Buffer",
+                "data": [
+                  72,
+                  110,
+                  156,
+                  40,
+                  138,
+                  85,
+                  215,
+                  213,
+                  248,
+                  47,
+                  201,
+                  77,
+                  163,
+                  54,
+                  184,
+                  250,
+                  139,
+                  223,
+                  231,
+                  134,
+                  89,
+                  199,
+                  46,
+                  191,
+                  22,
+                  65,
+                  55,
+                  238,
+                  160,
+                  21,
+                  226,
+                  120
+                ]
+              }
+            }
+          }
+        },
+        "feeScheduleKey": null,
+        "feeExemptKeys": [],
+        "autoRenewPeriod": {
+          "seconds": {
+            "low": 7776000,
+            "high": 0,
+            "unsigned": false
+          }
+        },
+        "autoRenewAccountId": {
+          "shard": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "realm": {
+            "low": 0,
+            "high": 0,
+            "unsigned": false
+          },
+          "num": {
+            "low": 5966030,
+            "high": 0,
+            "unsigned": false
+          },
+          "aliasKey": null,
+          "evmAddress": null,
+          "_checksum": null
+        },
+        "customFees": [],
+        "ledgerId": {
+          "_ledgerId": {
+            "type": "Buffer",
+            "data": [
+              1
+            ]
+          }
+        }
+      }
+    }
+  },
+  "messageFlow": {
+    "connectionRequestFlow": [
+      "connection_request_id && msg.operator_id\n            ? `req-${msg.connection_request_id}",
+      "connection_created' || !msg.connection_topic_id) {\n                return false;\n              }"
+    ],
+    "messageResponses": [
+      "sendMessage(\n    connectionTopicId: string,\n    data: string,\n    memo?: string,\n    submitKey?: PrivateKey,\n    options?: {\n      progressCallback?: RegistrationProgressCallback;\n      waitMaxAttempts?: number;\n      waitIntervalMs?: number;\n    }"
+    ],
+    "topicCreation": [
+      "submitKey = false",
+      "submitKey = true",
+      "submitKey = false",
+      "submitKey Optional submit key\n   * @returns Sequence number of the confirmed connection\n   */\n  async confirmConnection(\n    inboundTopicId: string,\n    connectionTopicId: string,\n    connectedAccountId: string,\n    connectionId: number,\n    memo: string,\n    submitKey?: PrivateKey\n  ): Promise<number> {\n    const operatorId = await this.getOperatorId()",
+      "submitKey) {\n      if (\n        typeof submitKey === 'boolean' &&\n        submitKey &&\n        this.client.operatorPublicKey\n      ) {\n        transaction.setSubmitKey(this.client.operatorPublicKey)",
+      "submitKey?: PrivateKey,\n    requiresFee: boolean = false\n  ): Promise<TransactionReceipt> {\n    const message =\n      typeof payload === 'string' ? payload : JSON.stringify(payload)",
+      "submitKey) {\n      const frozenTransaction = transaction.freezeWith(this.client)"
+    ]
+  },
+  "topicPurposes": {
+    "0.0.5966032": {
+      "purpose": "unknown",
+      "type": "unknown",
+      "memo": "hcs-10:0:60:0:0.0.5966030"
+    },
+    "0.0.5966031": {
+      "purpose": "unknown",
+      "type": "unknown",
+      "memo": "hcs-10:0:60:1"
+    }
+  },
+  "transactionPatterns": {
+    "inbound": {
+      "directExecute": true,
+      "freezeSign": true
+    },
+    "outbound": {
+      "directExecute": false,
+      "freezeSign": false
+    }
+  },
+  "validation": {
+    "inboundTopicNoSubmitKey": true,
+    "outboundTopicHasSubmitKey": true,
+    "topicPurposesCorrect": false
+  },
+  "protocolCompliant": true,
+  "sdkAnalysis": {
+    "usesConnectionTopics": true,
+    "usesDifferentSubmitKeyRules": true
+  }
+}

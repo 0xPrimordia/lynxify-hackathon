@@ -1,0 +1,67 @@
+{
+  "inbound": {
+    "success": 5,
+    "failure": 0
+  },
+  "outbound": {
+    "success": 0,
+    "failure": 5
+  },
+  "transactions": [
+    {
+      "topic": "inbound",
+      "index": 0,
+      "success": true
+    },
+    {
+      "topic": "inbound",
+      "index": 1,
+      "success": true
+    },
+    {
+      "topic": "inbound",
+      "index": 2,
+      "success": true
+    },
+    {
+      "topic": "inbound",
+      "index": 3,
+      "success": true
+    },
+    {
+      "topic": "inbound",
+      "index": 4,
+      "success": true
+    },
+    {
+      "topic": "outbound",
+      "index": 0,
+      "success": false,
+      "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747241090.635894204\",\"message\":\"receipt for transaction 0.0.4340026@1747241090.635894204 contained error status INVALID_SIGNATURE\"}"
+    },
+    {
+      "topic": "outbound",
+      "index": 1,
+      "success": false,
+      "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747241095.750975257\",\"message\":\"receipt for transaction 0.0.4340026@1747241095.750975257 contained error status INVALID_SIGNATURE\"}"
+    },
+    {
+      "topic": "outbound",
+      "index": 2,
+      "success": false,
+      "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747241096.797884218\",\"message\":\"receipt for transaction 0.0.4340026@1747241096.797884218 contained error status INVALID_SIGNATURE\"}"
+    },
+    {
+      "topic": "outbound",
+      "index": 3,
+      "success": false,
+      "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747241095.984054732\",\"message\":\"receipt for transaction 0.0.4340026@1747241095.984054732 contained error status INVALID_SIGNATURE\"}"
+    },
+    {
+      "topic": "outbound",
+      "index": 4,
+      "success": false,
+      "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747241101.647247128\",\"message\":\"receipt for transaction 0.0.4340026@1747241101.647247128 contained error status INVALID_SIGNATURE\"}"
+    }
+  ]
+}

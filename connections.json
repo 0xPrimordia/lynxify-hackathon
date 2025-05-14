@@ -1,0 +1,12 @@
+{
+  "0.0.5966032": {
+    "requesterTopic": "0.0.5966032",
+    "requesterId": "0.0.4340026",
+    "connectionTopicId": "0.0.6003675",
+    "created": 1747256142582,
+    "lastActivity": 1747256380072,
+    "state": "established",
+    "stateUpdatedAt": 1747256142582,
+    "messageCount": 6
+  }
+}

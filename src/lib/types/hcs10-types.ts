@@ -18,7 +18,11 @@ export interface HCS10ConnectionRequest extends HCS10ProtocolMessage {
 // Connection created response
 export interface HCS10ConnectionCreated extends HCS10ProtocolMessage {
   op: 'connection_created';
-  requesterId: string;
+  connection_topic_id: string;
+  connected_account_id: string;
+  operator_id: string;
+  connection_id: number;
+  requesterId?: string; // Keep for backward compatibility
 }
 
 // General message container

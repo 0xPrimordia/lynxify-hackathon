@@ -7,7 +7,8 @@ import {
   AccountId,
   TransactionResponse,
   TopicMessage,
-  TopicMessageQuery
+  TopicMessageQuery,
+  TopicInfoQuery
 } from "@hashgraph/sdk";
 import { HCSMessage, TokenWeights } from '../types/hcs';
 import { isValidHCSMessage } from '../types/hcs';
@@ -218,10 +219,42 @@ export class HederaService {
         throw error;
       }
 
-      console.log(`🔄 HEDERA: Executing transaction for topic ${topicId}...`);
+      // Check if the topic has a submit key
+      console.log(`🔄 HEDERA: Checking if topic ${topicId} has a submit key...`);
+      let hasSubmitKey = false;
+      try {
+        const topicInfo = await new TopicInfoQuery()
+          .setTopicId(TopicId.fromString(topicId))
+          .execute(this.client);
+        
+        hasSubmitKey = topicInfo.submitKey ? true : false;
+        console.log(`ℹ️ HEDERA: Topic ${topicId} submit key status: ${hasSubmitKey ? 'HAS SUBMIT KEY' : 'NO SUBMIT KEY'}`);
+      } catch (error) {
+        console.error(`⚠️ HEDERA: Failed to check topic info, will attempt direct execution:`, error);
+      }
+
+      console.log(`🔄 HEDERA: Executing transaction for topic ${topicId} using ${hasSubmitKey ? 'freeze+sign pattern' : 'direct execution'}...`);
       let response;
       try {
-        response = await transaction.execute(this.client);
+        if (hasSubmitKey) {
+          // For topics with submit key (like outbound topic), use freeze+sign+execute pattern
+          console.log(`🔒 HEDERA: Topic has submit key - using freeze+sign+execute pattern`);
+          
+          // Freeze the transaction
+          const frozenTx = await transaction.freezeWith(this.client);
+          
+          // Sign with our operator key
+          console.log(`🔑 HEDERA: Signing with operator private key`);
+          const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY!);
+          const signedTx = await frozenTx.sign(operatorKey);
+          
+          // Execute the signed transaction
+          response = await signedTx.execute(this.client);
+        } else {
+          // For topics without submit key (like inbound topic), use direct execution
+          console.log(`🔓 HEDERA: Topic has no submit key - using direct execution`);
+          response = await transaction.execute(this.client);
+        }
         
         // Extract transaction ID information safely
         let txId = "unknown";

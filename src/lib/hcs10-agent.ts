@@ -32,6 +32,7 @@ export interface HCS10Client {
 interface Connection {
   id: string;
   requesterTopic: string;
+  connectionTopicId?: string;
   timestamp: number;
 }
 
@@ -213,16 +214,39 @@ export class HCS10Agent {
     if (existingConnection) {
       console.log(`Connection already exists with ${requesterTopic}, reusing existing connection ${existingConnection.id}`);
       
+      // Get or create a dedicated connection topic for this client
+      let connectionTopicId = existingConnection.connectionTopicId;
+      
+      // If there's no connection topic yet, create one
+      if (!connectionTopicId) {
+        console.log(`No connection topic exists for ${requesterTopic}, creating one now`);
+        
+        try {
+          connectionTopicId = await this.client.createTopic();
+          console.log(`Created new connection topic: ${connectionTopicId}`);
+          
+          // Update the connection with the new topic ID
+          existingConnection.connectionTopicId = connectionTopicId;
+          await this.saveConnections();
+        } catch (error) {
+          console.error(`Failed to create connection topic: ${error}`);
+          return;
+        }
+      }
+      
       // Respond with connection created message to acknowledge the request
       const response: HCS10ConnectionCreated = {
         p: 'hcs-10',
         op: 'connection_created',
-        requesterId: this.outboundTopicId,
+        connection_topic_id: connectionTopicId,
+        connected_account_id: requesterId,
+        operator_id: `${this.inboundTopicId}@${this.outboundTopicId.split('.').pop() || 'agent'}`,
+        connection_id: parseInt(existingConnection.id.replace(/\D/g, '') || Date.now().toString()),
         timestamp: Date.now()
       };
       
       await this.client.sendMessage(requesterTopic, JSON.stringify(response));
-      console.log(`Sent connection created response to ${requesterTopic}`);
+      console.log(`Sent connection created response to ${requesterTopic} with connection topic ${connectionTopicId}`);
 
       // Update profile after successful connection reuse
       await this.updateProfile();
@@ -231,10 +255,21 @@ export class HCS10Agent {
     
     console.log(`No existing connection found with ${requesterTopic}, creating a new one`);
     
-    // Create a new connection record
+    // Create a dedicated connection topic for this client
+    let connectionTopicId;
+    try {
+      connectionTopicId = await this.client.createTopic();
+      console.log(`Created new connection topic: ${connectionTopicId}`);
+    } catch (error) {
+      console.error(`Failed to create connection topic: ${error}`);
+      return;
+    }
+    
+    // Create a new connection record with the connection topic
     const connection: Connection = {
       id: uuidv4(),
       requesterTopic,
+      connectionTopicId,
       timestamp: Date.now()
     };
     
@@ -251,12 +286,19 @@ export class HCS10Agent {
     const response: HCS10ConnectionCreated = {
       p: 'hcs-10',
       op: 'connection_created',
-      requesterId: this.outboundTopicId,
+      connection_topic_id: connectionTopicId,
+      connected_account_id: requesterId,
+      operator_id: `${this.inboundTopicId}@${this.outboundTopicId.split('.').pop() || 'agent'}`,
+      connection_id: parseInt(connection.id.replace(/\D/g, '') || Date.now().toString()),
       timestamp: Date.now()
     };
     
     await this.client.sendMessage(requesterTopic, JSON.stringify(response));
-    console.log(`Sent connection created response to ${requesterTopic}`);
+    console.log(`Sent connection created response to ${requesterTopic} with connection topic ${connectionTopicId}`);
+    
+    // Subscribe to the newly created connection topic
+    this.lastSequence[connectionTopicId] = 0;
+    console.log(`Added connection topic ${connectionTopicId} to polling`);
     
     // Update profile after successful connection
     await this.updateProfile();

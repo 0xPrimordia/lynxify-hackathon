@@ -10,6 +10,10 @@ declare module '@hashgraph/sdk' {
 
   export class PrivateKey {
     static fromString(key: string): PrivateKey;
+    static fromStringED25519(key: string): PrivateKey;
+    static fromStringECDSA(key: string): PrivateKey;
+    static fromStringDer(key: string): PrivateKey;
+    publicKey: any;
   }
 
   export class TopicId {
@@ -29,6 +33,18 @@ declare module '@hashgraph/sdk' {
     setTopicId(topicId: TopicId): this;
     setMessage(message: string): this;
     execute(client: Client): Promise<TransactionResponse>;
+    freezeWith(client: Client): Promise<this>;
+    sign(privateKey: PrivateKey): Promise<this>;
+  }
+
+  export class TopicInfoQuery {
+    setTopicId(topicId: TopicId): this;
+    execute(client: Client): Promise<{
+      topicId: TopicId;
+      adminKey?: any;
+      submitKey?: any;
+      topicMemo: string;
+    }>;
   }
 
   export class TopicMessageQuery {
@@ -42,9 +58,13 @@ declare module '@hashgraph/sdk' {
 
   export interface TransactionResponse {
     getReceipt(client: Client): Promise<{ topicId?: string }>;
+    transactionId: any;
   }
 
   export interface TopicMessage {
     contents: Uint8Array;
+    consensusTimestamp?: any;
+    sequenceNumber?: any;
+    topicId?: any;
   }
 } 

@@ -1,0 +1,383 @@
+[
+  {
+    "suite": "Inbound Topic - Direct Execute",
+    "results": [
+      {
+        "messageNum": 0,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240161.192673104",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 1,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.789129671",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 2,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.610674656",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 3,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240160.841899823",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 4,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240163.087209827",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 5,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.093737216",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 6,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240161.398581849",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 7,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.491767665",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 8,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.483502308",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 9,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240163.651101646",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 10,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.505000367",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 11,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240162.606842962",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 12,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.314380974",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 13,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240166.270252259",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 14,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.470245795",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 15,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.222513909",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 16,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.079971821",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 17,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240167.174655200",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 18,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.418317659",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 19,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.495275604",
+        "method": "Direct Execute"
+      }
+    ],
+    "successCount": 20,
+    "failureCount": 0
+  },
+  {
+    "suite": "Outbound Topic - Direct Execute",
+    "results": [
+      {
+        "messageNum": 0,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.972521852",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 1,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240163.702332817",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 2,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.202863398",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 3,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240166.321574500",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 4,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.959760179",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 5,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.777815148",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 6,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.197647284",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 7,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.613139434",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 8,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.587349611",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 9,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.078392923",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 10,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240168.190827693",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 11,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240166.934981197",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 12,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240168.022572862",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 13,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.423700186",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 14,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240164.901715164",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 15,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.508725086",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 16,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240168.994652944",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 17,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240167.127380944",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 18,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240165.165368066",
+        "method": "Direct Execute"
+      },
+      {
+        "messageNum": 19,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240168.690967568",
+        "method": "Direct Execute"
+      }
+    ],
+    "successCount": 20,
+    "failureCount": 0
+  },
+  {
+    "suite": "Outbound Topic - With Submit Key",
+    "results": [
+      {
+        "messageNum": 0,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240170.207333571",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 1,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240168.054990780",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 2,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240166.536057494",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 3,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240168.170252812",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 4,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240170.089573203",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 5,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240166.746439526",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 6,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240166.727805704",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 7,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240171.046503682",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 8,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240169.756448178",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 9,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240167.462120603",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 10,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240171.314066423",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 11,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240168.808049532",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 12,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240170.553496551",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 13,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240171.817544927",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 14,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240170.786228126",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 15,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240169.368720983",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 16,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240170.051807104",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 17,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240172.057433381",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 18,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240167.847200176",
+        "method": "With Submit Key"
+      },
+      {
+        "messageNum": 19,
+        "success": true,
+        "transactionId": "0.0.4340026@1747240169.702866254",
+        "method": "With Submit Key"
+      }
+    ],
+    "successCount": 20,
+    "failureCount": 0
+  }
+]

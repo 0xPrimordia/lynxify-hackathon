@@ -1,0 +1,28 @@
+{
+  "inboundTopic": {
+    "topicId": "0.0.5966032",
+    "description": "Inbound",
+    "hasSubmitKey": false,
+    "directExecute": {
+      "success": true
+    },
+    "freezeSign": {
+      "success": true
+    }
+  },
+  "outboundTopic": {
+    "topicId": "0.0.5966031",
+    "description": "Outbound",
+    "hasSubmitKey": true,
+    "directExecute": {
+      "success": false,
+      "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747245475.629472028\",\"message\":\"receipt for transaction 0.0.4340026@1747245475.629472028 contained error status INVALID_SIGNATURE\"}",
+      "isInvalidSignature": true
+    },
+    "freezeSign": {
+      "success": false,
+      "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747245481.874214034\",\"message\":\"receipt for transaction 0.0.4340026@1747245481.874214034 contained error status INVALID_SIGNATURE\"}"
+    }
+  },
+  "hypothesisConfirmed": false
+}

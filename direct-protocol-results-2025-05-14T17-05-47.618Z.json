@@ -1,0 +1,57 @@
+{
+  "inbound": {
+    "success": 3,
+    "failure": 0,
+    "transactions": [
+      {
+        "index": 0,
+        "success": true,
+        "timestamp": 1747242331228
+      },
+      {
+        "index": 1,
+        "success": true,
+        "timestamp": 1747242334391
+      },
+      {
+        "index": 2,
+        "success": true,
+        "timestamp": 1747242337442
+      }
+    ]
+  },
+  "outbound": {
+    "success": 0,
+    "failure": 3,
+    "transactions": [
+      {
+        "index": 0,
+        "success": false,
+        "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747242330.478036985\",\"message\":\"receipt for transaction 0.0.4340026@1747242330.478036985 contained error status INVALID_SIGNATURE\"}",
+        "timestamp": 1747242340400
+      },
+      {
+        "index": 1,
+        "success": false,
+        "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747242337.076746687\",\"message\":\"receipt for transaction 0.0.4340026@1747242337.076746687 contained error status INVALID_SIGNATURE\"}",
+        "timestamp": 1747242343449
+      },
+      {
+        "index": 2,
+        "success": false,
+        "error": "{\"name\":\"StatusError\",\"status\":\"INVALID_SIGNATURE\",\"transactionId\":\"0.0.4340026@1747242339.279145237\",\"message\":\"receipt for transaction 0.0.4340026@1747242339.279145237 contained error status INVALID_SIGNATURE\"}",
+        "timestamp": 1747242346616
+      }
+    ]
+  },
+  "topicInfo": {
+    "inbound": {
+      "submitKey": null,
+      "adminKey": "302a300506032b6570032100486e9c288a55d7d5f82fc94da336b8fa8bdfe78659c72ebf164137eea015e278"
+    },
+    "outbound": {
+      "submitKey": "302a300506032b6570032100486e9c288a55d7d5f82fc94da336b8fa8bdfe78659c72ebf164137eea015e278",
+      "adminKey": "302a300506032b6570032100486e9c288a55d7d5f82fc94da336b8fa8bdfe78659c72ebf164137eea015e278"
+    }
+  }
+}

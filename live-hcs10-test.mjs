@@ -2,6 +2,7 @@
 /**
  * Live on-chain test for ES Module compatible HCS10 agent
  * This test sends a real message to the Hedera network and verifies the agent responds
+ * following the proper HCS-10 protocol flow pattern
  */
 
 import * as dotenv from 'dotenv';
@@ -52,6 +53,9 @@ console.log(`Using outbound topic: ${outboundTopicId}`);
 
 // Store poll intervals for cleanup
 const globalPollIntervals = [];
+
+// Track connection topic for proper HCS-10 communication
+let connectionTopicId = null;
 
 // Create a real Hedera client that matches the agent exactly
 class HederaHCS10Client {
@@ -242,6 +246,8 @@ async function checkMirrorNodeForMessages(topicId, startTime, callback) {
     // Convert timestamp to seconds.nanoseconds format for the Mirror Node API
     // This is the format that the Mirror Node API expects
     const timeInSeconds = Math.floor(startTime.getTime() / 1000);
+    
+    // Fix: Use a simple seconds format to avoid timestamp conversion issues
     const formattedTimestamp = timeInSeconds.toString();
     
     // Construct the API URL with proper format for the Hedera Mirror Node
@@ -280,26 +286,46 @@ async function checkMirrorNodeForMessages(topicId, startTime, callback) {
       
       // Process each message
       for (const msg of data.messages) {
-        // Extract and decode the message content
-        const contents = Buffer.from(msg.message, 'base64').toString('utf8');
-        const consensusTimestamp = new Date(msg.consensus_timestamp);
-        
-        console.log(`\n📩 [REST API] Message on topic ${topicId} at ${consensusTimestamp.toISOString()}`);
-        console.log(`Content: ${contents}`);
-        
-        // Create a message object that matches the SDK format
-        const message = {
-          contents: Buffer.from(msg.message, 'base64'),
-          consensusTimestamp: {
-            toDate: () => consensusTimestamp
-          },
-          sequenceNumber: parseInt(msg.sequence_number),
-          topicId: msg.topic_id
-        };
-        
-        // Pass to callback
-        if (callback) {
-          callback(contents, message);
+        try {
+          // Extract and decode the message content
+          const contents = Buffer.from(msg.message, 'base64').toString('utf8');
+          
+          // Fix: Handle timestamp parsing safely
+          let consensusTimestamp;
+          try {
+            consensusTimestamp = new Date(msg.consensus_timestamp);
+            
+            // Validate timestamp to avoid invalid date errors
+            if (isNaN(consensusTimestamp.getTime())) {
+              console.log(`⚠️ Invalid timestamp format: ${msg.consensus_timestamp}, using current time instead`);
+              consensusTimestamp = new Date(); // Fallback to current time
+            }
+          } catch (timeError) {
+            console.log(`⚠️ Error parsing timestamp: ${timeError.message}, using current time instead`);
+            consensusTimestamp = new Date(); // Fallback to current time
+          }
+          
+          console.log(`\n📩 [REST API] Message on topic ${topicId} at ${consensusTimestamp.toISOString()}`);
+          console.log(`Content: ${contents}`);
+          
+          // Create a message object that matches the SDK format
+          const message = {
+            contents: Buffer.from(msg.message, 'base64'),
+            consensusTimestamp: {
+              toDate: () => consensusTimestamp
+            },
+            sequenceNumber: parseInt(msg.sequence_number),
+            topicId: msg.topic_id
+          };
+          
+          // Pass to callback
+          if (callback) {
+            callback(contents, message);
+          }
+        } catch (msgError) {
+          console.error(`❌ Error processing message: ${msgError.message}`);
+          // Continue with next message instead of failing completely
+          continue;
         }
       }
       
@@ -323,11 +349,11 @@ async function runLiveTest() {
     const hederaClient = new HederaHCS10Client();
     console.log('✅ Hedera client initialized with same implementation as agent');
     
-    // Subscribe to outbound topic to receive agent responses
-    let receivedResponse = false;
-    const messageCallback = (content, message) => {
+    // Subscribe to inbound topic to get connection_created response
+    let receivedConnectionResponse = false;
+    const connectionCallback = (content, message) => {
       try {
-        console.log('🔍 Analyzing received message:');
+        console.log('🔍 Analyzing message on inbound topic:');
         console.log('Raw content:', content);
         
         // Try to parse as JSON
@@ -342,13 +368,52 @@ async function runLiveTest() {
         
         // Check for HCS-10 message
         if (parsedContent.p === 'hcs-10') {
-          console.log('✅ Received valid HCS-10 message from agent!');
+          console.log('✅ Received valid HCS-10 message!');
           console.log('Operation:', parsedContent.op);
           
           // For connection_created messages
           if (parsedContent.op === 'connection_created') {
-            console.log('✅ Received connection confirmation from agent!');
+            console.log('✅ Received connection_created response!');
+            console.log('🔑 Connection Topic ID:', parsedContent.connection_topic_id);
+            
+            // Store the connection topic ID for subsequent messages
+            connectionTopicId = parsedContent.connection_topic_id;
+            
+            // Subscribe to this connection topic for future messages
+            console.log(`Setting up subscription to connection topic ${connectionTopicId}...`);
+            subscribeToTopic(hederaClient.client, connectionTopicId, messageCallback);
+            
+            receivedConnectionResponse = true;
           }
+        } else {
+          console.log('❌ Not an HCS-10 protocol message');
+        }
+      } catch (error) {
+        console.error('❌ Error analyzing message:', error);
+      }
+    };
+    
+    // Message callback for handling responses on the connection topic
+    let receivedMessageResponse = false;
+    const messageCallback = (content, message) => {
+      try {
+        console.log('🔍 Analyzing message on connection topic:');
+        console.log('Raw content:', content);
+        
+        // Try to parse as JSON
+        let parsedContent;
+        try {
+          parsedContent = JSON.parse(content);
+          console.log('Parsed content:', JSON.stringify(parsedContent, null, 2));
+        } catch (parseError) {
+          console.log('Not valid JSON content');
+          return;
+        }
+        
+        // Check for HCS-10 message
+        if (parsedContent.p === 'hcs-10') {
+          console.log('✅ Received valid HCS-10 message on connection topic!');
+          console.log('Operation:', parsedContent.op);
           
           // For standard message responses
           if (parsedContent.op === 'message' && parsedContent.data) {
@@ -359,9 +424,9 @@ async function runLiveTest() {
             } catch (e) {
               console.log('Data not in JSON format:', parsedContent.data);
             }
+            
+            receivedMessageResponse = true;
           }
-          
-          receivedResponse = true;
         } else {
           console.log('❌ Not an HCS-10 protocol message');
         }
@@ -370,7 +435,8 @@ async function runLiveTest() {
       }
     };
     
-    await subscribeToTopic(hederaClient.client, outboundTopicId, messageCallback);
+    // Subscribe to inbound topic to receive connection_created response
+    await subscribeToTopic(hederaClient.client, inboundTopicId, connectionCallback);
     
     // Send connection request message
     console.log('📤 Sending connection request...');
@@ -384,62 +450,73 @@ async function runLiveTest() {
       process.exit(1);
     }
     
-    // Wait for a response (connection_created)
-    console.log('⏳ Waiting for connection response (30 seconds)...');
+    // Wait for a response (connection_created) on the INBOUND topic
+    console.log('⏳ Waiting for connection_created response on inbound topic (30 seconds)...');
     
-    // Set up multiple checks to find messages on the outbound topic
+    // Set up multiple checks to find messages on the inbound topic
     let attempts = 0;
     const maxAttempts = 5;
     const pollInterval = 5000; // 5 seconds
     
-    while (!receivedResponse && attempts < maxAttempts) {
+    while (!receivedConnectionResponse && attempts < maxAttempts) {
       attempts++;
-      console.log(`Checking for messages (attempt ${attempts}/${maxAttempts})...`);
+      console.log(`Checking for connection responses (attempt ${attempts}/${maxAttempts})...`);
       
       // Check with progressively further back timestamps
       const connectionStartTime = new Date();
       connectionStartTime.setMinutes(connectionStartTime.getMinutes() - (10 * attempts)); // Look back 10, 20, 30... minutes
       
       try {
-        await checkMirrorNodeForMessages(outboundTopicId, connectionStartTime, messageCallback);
+        await checkMirrorNodeForMessages(inboundTopicId, connectionStartTime, connectionCallback);
       } catch (error) {
-        console.error('Error checking for messages:', error.message);
+        console.error('Error checking for connection responses:', error.message);
       }
       
       // Wait before next check
-      if (!receivedResponse && attempts < maxAttempts) {
+      if (!receivedConnectionResponse && attempts < maxAttempts) {
         await new Promise(resolve => setTimeout(resolve, pollInterval));
       }
     }
     
-    if (receivedResponse) {
-      console.log('✅ Agent responded to connection request!');
+    if (receivedConnectionResponse) {
+      console.log('✅ Agent responded with connection_created!');
+      console.log(`✅ Connection Topic: ${connectionTopicId}`);
     } else {
-      console.log('⚠️ No response received from agent within timeout');
-      console.log('Will still attempt to send a test message...');
+      console.log('⚠️ No connection_created response received from agent within timeout');
+      console.log('Cannot proceed with test message without a connection topic');
+      process.exit(1);
     }
     
-    // Send test message
-    console.log('📤 Sending test message...');
+    // Ensure we have a connection topic before proceeding
+    if (!connectionTopicId) {
+      console.error('❌ No connection topic ID received from agent, cannot send test message');
+      process.exit(1);
+    }
+    
+    // Wait a moment for the connection to be established
+    console.log('Pausing briefly to allow connection to establish...');
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    // Send test message to the CONNECTION TOPIC (not inbound topic)
+    console.log('📤 Sending test message to connection topic...');
     const testMessage = createTestMessage();
-    const testSendResult = await hederaClient.sendMessage(inboundTopicId, testMessage);
+    const testSendResult = await hederaClient.sendMessage(connectionTopicId, testMessage);
     
     if (testSendResult.success) {
-      console.log('✅ Test message sent successfully');
+      console.log(`✅ Test message sent successfully to connection topic ${connectionTopicId}`);
     } else {
       console.error('❌ Error sending test message:', testSendResult.error);
       process.exit(1);
     }
     
-    // Reset flag to check for response to this specific message
-    receivedResponse = false;
+    // Reset attempts counter
     attempts = 0;
     
-    // Wait for a response
-    console.log('⏳ Waiting for message response (30 seconds)...');
+    // Wait for a response on the CONNECTION TOPIC
+    console.log('⏳ Waiting for message response on connection topic (30 seconds)...');
     
     // Multiple checks for test message response
-    while (!receivedResponse && attempts < maxAttempts) {
+    while (!receivedMessageResponse && attempts < maxAttempts) {
       attempts++;
       console.log(`Checking for message responses (attempt ${attempts}/${maxAttempts})...`);
       
@@ -448,29 +525,29 @@ async function runLiveTest() {
       messageStartTime.setMinutes(messageStartTime.getMinutes() - (10 * attempts)); // Look back 10, 20, 30... minutes
       
       try {
-        await checkMirrorNodeForMessages(outboundTopicId, messageStartTime, messageCallback);
+        await checkMirrorNodeForMessages(connectionTopicId, messageStartTime, messageCallback);
       } catch (error) {
         console.error('Error checking for message responses:', error.message);
       }
       
       // Wait before next check
-      if (!receivedResponse && attempts < maxAttempts) {
+      if (!receivedMessageResponse && attempts < maxAttempts) {
         await new Promise(resolve => setTimeout(resolve, pollInterval));
       }
     }
     
     // Final status check
-    if (receivedResponse) {
+    if (receivedMessageResponse) {
       console.log('🎉 Live test completed successfully! Agent is responding properly.');
     } else {
-      console.log('⚠️ Live test completed, but no response was received from the agent.');
+      console.log('⚠️ Live test completed, but no response was received from the agent on the connection topic.');
       console.log('This could indicate an issue with the agent or its configuration.');
       
       // One last check with a very old timestamp to catch any historical messages
       console.log('Performing final message check with extended history...');
       const finalCheckTime = new Date();
       finalCheckTime.setHours(finalCheckTime.getHours() - 24); // Look back 24 hours
-      await checkMirrorNodeForMessages(outboundTopicId, finalCheckTime, messageCallback);
+      await checkMirrorNodeForMessages(connectionTopicId, finalCheckTime, messageCallback);
     }
     
     // Keep the process running to continue receiving messages

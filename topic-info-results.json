@@ -1,0 +1,17 @@
+{
+  "inboundTopic": {
+    "id": "0.0.5966032",
+    "hasSubmitKey": false,
+    "hasAdminKey": true,
+    "memo": "hcs-10:0:60:0:0.0.5966030",
+    "submitKeyType": null
+  },
+  "outboundTopic": {
+    "id": "0.0.5966031",
+    "hasSubmitKey": true,
+    "hasAdminKey": true,
+    "memo": "hcs-10:0:60:1",
+    "submitKeyType": "302a300506032b6570032100486e9c"
+  },
+  "timestamp": "2025-05-14T17:35:57.909Z"
+}
