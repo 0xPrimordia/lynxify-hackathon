@@ -92,7 +92,7 @@
     "@nextui-org/react": "^2.6.11",
     "@tanstack/react-query": "^5.74.4",
     "chart.js": "^4.4.9",
-    "next": "15.3.0",
+    "next": "15.3.8",
     "node-fetch": "^3.3.2",
     "openai": "^4.96.0",
     "react": "^19.0.0",
